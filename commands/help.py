@@ -20,6 +20,7 @@ async def help(message, client):
 		profile = []
 		utility = []
 		gamble = []
+		gather = []
 		for i in commands:
 			if commands[i]['category'] == 'misc':
 				misc.append(commands[i]['name'])
@@ -37,6 +38,8 @@ async def help(message, client):
 				gamble.append(commands[i]['name'])
 			if commands[i]['category'] == 'profile':
 				profile.append(commands[i]['name'])
+			if commands[i]['category'] == 'gather':
+				gather.append(commands[i]['name'])
 
 		r = ', '
 		misc = r.join(misc)
@@ -47,11 +50,13 @@ async def help(message, client):
 		profile = r.join(profile)
 		utility = r.join(utility)
 		gamble = r.join(gamble)
+		gather = r.join(gather)
 		e.add_field(name = '- :farmer:  Miscellaneous Commands:', value = misc, inline = False)
 		e.add_field(name = '- :1234:  Profile Commands: ', value = profile, inline = False)
 		e.add_field(name = '- :video_game:  Game Commands:', value = game, inline = False)
 		e.add_field(name = '- :shopping_cart:   Market Commands: ', value = market, inline = False)
 		e.add_field(name = '- :ear_of_rice:  Farming Commands: ', value = farming, inline = False)
+		e.add_field(name = '- :mag_right: Gather Commands: ', value = gather, inline = False)
 		e.add_field(name = '- :game_die:  Gamble Commands:', value = gamble, inline = False)
 		e.add_field(name = '- :tools:  Utility Commands: ',value = utility, inline = False)
 		e.add_field(name = '- :dash:  Other Commands: ', value = other, inline = False)

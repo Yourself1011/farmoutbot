@@ -1,5 +1,5 @@
 from replit import db
-from zstats import animals, tools, merch, seeds, convertInt
+from zstats import convertInt, getShop
 import random
 
 async def sell(message, client):
@@ -14,6 +14,9 @@ async def sell(message, client):
 	thing = None
 	allPos = []
 	objs = []
+	obj = {"animals": {}, "tools": {}, "seeds": {}, "merch": {}}
+	getShop(obj, db["members"][str(message.author.id)]["location"])
+	animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
 	for i in [seeds, merch, tools, animals]:
 		possibilities = [j for j in list(i.keys()) if args[2] in j and j != "name"]
 		if not bool(possibilities):
@@ -40,7 +43,6 @@ async def sell(message, client):
 	elif len(args) == 4 and args[3] in ['a', 'all', 'max']:
 		if thing['name'] in ['animals', 'seeds']:
 			amount = db['members'][str(message.author.id)][thing['name']][key]['amount']
-			print(amount)
 		if thing['name'] in ['merch']:
 			amount = db['members'][str(message.author.id)]['merch'][key]
 		if thing == tools:
@@ -54,7 +56,19 @@ async def sell(message, client):
 	if amount <= 0:
 		await message.channel.send(' ar ho hee no nor mee')
 		return
-	 	
+
+	thingr = random.randint(1,35)
+	if thingr == 1:
+		things = ['rock', 'tree', 'rock', 'stone']
+		thing2 = random.choice(things)
+		await message.channel.send(f'On the way over to sell your thingies, you accidentally punched a hard {thing2} and died. you paid 100 coins to be reborn.')
+		a = db['members']
+		if a[str(message.author.id)]['money']<100: a[str(message.author.id)]['money'] = 0
+		else:
+			a[str(message.author.id)]['money'] -= 100
+		db['members'] = a
+		return
+
 	got = thing[key]['sellcost']
 	if db['members'][str(message.author.id)]['reputation'] <= 250:
 		prefix = db['server'][str(message.guild.id)]['prefix']

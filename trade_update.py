@@ -6,19 +6,22 @@ import math #just use mental math kekw
 from time import time
 import asyncio
 from threading import Timer
+from drawlottery import drawlottery
+from requests import post, exceptions
 
 async def startLoop(client):
 	while True:
-		if (db["lastTradeDate"] + 1) * 21600 <= time():
+		if math.floor(((db['lastTradeDate'] + 1)  * 21600) - time()) <= 0:
 			db["lastTradeDate"] = math.floor(time()/21600)
 			await trade_update(client)
 
 		print(f"{math.floor(((db['lastTradeDate'] + 1)  * 21600) - time())}s to trade update")
 
-		await asyncio.sleep(math.floor(((db['lastTradeDate'] + 1)  * 21600) - time()))
+		await asyncio.sleep(max(math.floor(((db['lastTradeDate'] + 1)  * 21600) - time()), 10))
 
 diff = [3, 10, 20, 50, 100]
 limits = [2, 3, 5, 7, 9] 
+getTv = [5, 10, 50, 100, 300]
 def mapFunc(x):
 	return f"`{x[1]}x` **{x[0]['name']}**"
 
@@ -92,8 +95,8 @@ async def trade_update(client):
 				thing = obj[list(obj)[thingInt]]
 			
 		
-			maxAmount = math.floor((tradeval - sideTwoVal)/thing["tradevalue"])
-			fourCheck = math.ceil(tradeval/limits[j]/thing["tradevalue"])
+			maxAmount = math.floor((tradeval + getTv[j] - sideTwoVal)/thing["tradevalue"])
+			fourCheck = math.ceil(tradeval + getTv[j]/(limits[j] + j)/thing["tradevalue"])
 
 			if maxAmount == 0: continue
 
@@ -119,29 +122,44 @@ async def trade_update(client):
 
 				sideTwoVal += thing["tradevalue"] * amount
 
-			if sideTwoVal < tradeval + diff[j] and sideTwoVal > tradeval - diff[j]: break
+			if sideTwoVal < tradeval + getTv[j] + diff[j] and sideTwoVal > tradeval + getTv[j] - diff[j]: break
 
 		trades = db["trades"]
 		trades[j]["give"] = sideOne
 		trades[j]["get"] = sideTwo
 		db["trades"] = trades
 	
-	e = discord.Embed(
-			title = 'Trade Offers: ',
-			description = 'Trades update every 6 hours.',
-			colour = discord.Colour.red()
-	)
+	e = {
+			"title" : 'Trade Offers: ',
+			"description" : 'Trades update every 6 hours.',
+			"color" : 16711680,
+			"fields": []
+	}
 	db["tradeId"] += 1
 	
 	for i in range(len(db['trades'])):
 			give = db['trades'][i]['give']
 			get = db['trades'][i]['get']
 
-			e.add_field(name = f'{i}: ', value = f'Give: {", ".join(list(map(mapFunc, give)))}\nGet: {", ".join(list(map(mapFunc, get)))}', inline = False)
+			e["fields"].append({"name" : f'{i}: ', "value" : f'Give: {", ".join(list(map(mapFunc, give)))}\nGet: {", ".join(list(map(mapFunc, get)))}', "inline": False})
 
-	e.set_footer(text = 'Use <trade (tradenumber)> to request a trade. If your reputation is too low, they may not let you.')
+	e["footer"] = {"text" : 'Use <trade (tradenumber)> to request a trade. If your reputation is too low, they may not let you.'}
+
+	data = {
+		"username": "New trades!",
+		"embeds": [
+			e
+		]
+	}
 
 	for i in db['server']:
-			if db['server'][i]['channel'] != None:
-					channel = client.get_channel(db['server'][i]['channel'])
-					await channel.send("New trade offers", embed = e)	
+		if db['server'][i]['channel'] != None and "webhookUrl" in db["server"][i]:
+			result = post(db['server'][i]["webhookUrl"], json = data)
+			try:
+				result.raise_for_status()
+			except exceptions.HTTPError as err:
+				print(err)
+
+
+	if len(db['lottery'])<1: return 
+	else: drawlottery(client)

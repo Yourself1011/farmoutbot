@@ -1,5 +1,5 @@
 from replit import db
-from zstats import animals, tools, merch, seeds, market, convertInt
+from zstats import market, convertInt, getShop
 import time
 import random
 import asyncio
@@ -22,6 +22,11 @@ async def buy(message, client):
 	thing = None
 	allPos = []
 	objs = []
+
+	obj = {"animals": {}, "tools": {}, "seeds": {}, "merch": {}}
+	getShop(obj, db["members"][str(message.author.id)]["location"])
+	animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
+
 	for i in [seeds, merch, tools, animals]:
 		possibilities = [j for j in list(i.keys()) if args[2] in j and j != "name"]
 		if not bool(possibilities):
@@ -113,30 +118,12 @@ async def buy(message, client):
 			a[str(message.author.id)]['reputation'] += thingj
 			db['members'] = a
 		if thingi == 2:
-			thingj = random.randint(4,9)
-			await message.channel.send(f'{message.author.mention} bruh you bought something that the market didnt want to give, you lost `{thingj}` rep.')
+			thingj = random.randint(10,20)
+			await message.channel.send(f'{message.author.mention} bruh you bought something that the market didnt want to give, you lost `{thingj}` rep **and** `{int(round(thingj*2))} coins`.')
 			a = db['members']
+			if int(round(thingj*2)) > a[str(message.author.id)]['money']: a[str(message.author.id)]['money'] = 0
+			else: a[str(message.author.id)]['money'] -= int(round(thingj*2))
 			a[str(message.author.id)]['reputation'] -= thingj
 			db['members'] = a
 
-	if cost == regprice:
-		await buye()
-	else:
-		await message.channel.send(f'`Market:` Since your reputation is `{rep}`, I offer you `{cost}` dollars per `{key}`. The regular price is `{regprice}`. \nReply with `yes` or `no` in 30 seconds.')
-
-		channel = message.channel
-		msg = None
-
-		def check(msg):
-			msg = msg
-			return msg.content.lower() in ['yes', 'no'] and msg.author == message.author
-
-		try:	
-			msg = await client.wait_for('message', timeout=30.0, check=check)
-		except asyncio.TimeoutError:
-			await channel.send('too late kekw')
-			return
-		else:
-			if msg.content.lower() == 'yes':
-				await buye()
-	
+	await buye()

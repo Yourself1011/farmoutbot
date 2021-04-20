@@ -1,4 +1,4 @@
-# Jeff's not here. I can do whatever I want. heheheheheheh also i wonder when he will see this i saw it already stupid no you didn't you didn't see anything whoosh you never saw this yes i did mf
+# Jeff's not here. I can do whatever I want. heheheheheheh also i wonder when he will see this i saw it already stupid no you didn't you didn't see anything whoosh you never saw this yes i did mf nope yap
 
 import os
 from os.path import join, dirname
@@ -11,7 +11,6 @@ import sys
 import random
 import pprint
 import asyncio
-db['lottery'] = []
 
 from acommands import commands
 from zuseanimal import useanimal
@@ -21,6 +20,7 @@ from keep_alive import keep_alive
 import traceback
 from trade_update import startLoop, trade_update
 from thinghappen import thinghappen
+from drawlottery import drawlottery
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path) 
@@ -128,4 +128,4 @@ keep_alive()
 try:
 	client.run(BOT_TOKEN)	
 except discord.errors.HTTPException as err:
-	print(err)
+	print(err)	

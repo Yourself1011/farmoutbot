@@ -1,7 +1,8 @@
 from replit import db
-from zstats import merch, seeds, softSearch
+from zstats import merch, seeds, softSearch, locations
 import time
 import random
+from math import floor
 
 async def collect(message, client):
 	args = message.content.split(' ')
@@ -42,7 +43,7 @@ async def collect(message, client):
 
 	a = db['members']
 	amount = a[str(message.author.id)]['plantcooldowns'][plant]['amount']
-	chance = random.randint(0, 50)
+	chance = random.randint(0, 40)
 	if not bool(chance) and amount > 5:
 		things = ['whoops ur fat little fingers slipped and pulled out the plants by accident', 'you farted on the plants because you ate too many beans last night', 'you sneezed and blew all the plants away', 'some dumb animal came by and pulled them out', 'you were too fat and squeezed them by acccident', 'your plants ran away', 'you accidentally planted them in a volcano']
 		thing = random.choice(things)
@@ -55,11 +56,26 @@ async def collect(message, client):
 	if "stages" in seeds[seed] and now - a[str(message.author.id)]['plantcooldowns'][plant]["start"] > seeds[seed]["stages"][2]:
 		del a[str(message.author.id)]['plantcooldowns'][plant]
 		return await message.channel.send(f"Oop your {plant} died of old age")
+		a = db["members"]
+
+	user = a[str(message.author.id)]
+	location = locations[user["location"]]
+	if (not location["defaultLife"] and (plant not in location["lifeOverrides"] or not location["lifeOverrides"][plant])) or (location["defaultLife"] and plant in location["lifeOverrides"] and location["lifeOverrides"][plant]):
+		amountLost = floor(max(user["plantcooldowns"][plant]["amount"] * location["deathRate"], min(10, user["plantcooldowns"][plant]["amount"])))
+
+		user["plantcooldowns"][plant]["amount"] -= amountLost
+		await message.channel.send(f"Idiot your {plant}(s) couldn't live there and {amountLost} died.")
+
+		db["members"] = a
+
+	location = locations[db["members"][str(message.author.id)]["location"]]
 
 	amount = a[str(message.author.id)]['plantcooldowns'][plant]['amount']
 	fart = round(amount/13)
 	if fart > 10: fart = 10
 	fart += amount
+	fart *= location["multis"][plant] if plant in location["multis"] else location["baseMulti"]
+
 	if plant not in a[str(message.author.id)]['merch']:
 		a[str(message.author.id)]['merch'][plant] = fart
 	else:

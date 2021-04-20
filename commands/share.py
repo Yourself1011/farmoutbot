@@ -33,8 +33,11 @@ async def share(message, client):
 		return
 	if not person:
 		return await message.channel.send("That's not a user")
-	if person == message.author.id:
-		await message.channel.send("'-'")
+	if str(person) == str(message.author.id):
+		await message.channel.send('you tried to give coins to yourself, but you were too stupid and lost the coins in the process somehow kekw')
+		a = db['members']
+		a[str(message.author.id)]['money'] -= amount
+		db['members'] = a
 		return
 	
 	if amount > db['members'][str(message.author.id)]['money']:

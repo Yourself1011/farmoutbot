@@ -12,14 +12,14 @@ async def randomnumber(message, client):
 	if db['members'][str(message.author.id)]['reputation'] > 1000:
 		await message.channel.send('your reputation is too high to gamble,go do something better with your money')
 		return
-	number = args[2]
+	number = int(args[2])
 	num2 = random.randint(1, 20)
 	if number == num2:
 		a = db['members']
-		a[str(message.author.id)]['money'] += 5
+		a[str(message.author.id)]['money'] += 50
+		await message.channel.send('thats right, 50 coins for you')
+		a[str(message.author.id)]['amounts']['gambled'] += 50
 		db['members'] = a
-		await message.channel.send('oh wow you won 5 coins')
-		a[str(message.author.id)]['amounts']['gambled'] += 5
 		return
 	if number != num2:
 		a = db['members']

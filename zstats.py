@@ -1,5 +1,9 @@
 from random import uniform, randint
 from math import floor
+import collections.abc
+from copy import deepcopy
+import random
+from replit import db
 
 def getMember(search, guildId, client):
 	if type(search) is list:
@@ -72,11 +76,31 @@ def gatheringCmd(msg, loottable):
 	
 	return [itemKey, amount]
 
+def updateDict(d, u):
+    for k, v in u.items():
+        if isinstance(v, collections.abc.Mapping):
+            d[k] = updateDict(d.get(k, {}), v)
+        else:
+            d[k] = v
+    return d
+
+def getShop(shops, location):
+	for i, j in zip([animals, tools, seeds, merch], ["animals", "tools", "seeds", "merch"]):
+		update = {k: v for k, v in locations[location]["shop"].items() if k in i}
+		shops[j] = updateDict(deepcopy(i), update)
+
+# Paste in commands that use these shops (and import getShop)
+
+# obj = {"animals": {}, "tools": {}, "seeds": {}, "merch": {}}
+# getShop(obj, db["members"][str(message.author.id)]["location"])
+# animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
+
+eatable = ['applepie', 'mango', 'ginseng', 'mushroom', 'cake']
+
 animals = {
 	'name': 'animals',
-	'sheep': {'name': 'sheep :sheep:','cost': 250,'sellcost': 225,'tool': 'shears','result': 'wool','cooldown': 45000,'thing':'shear','tradevalue': 150},
-	'cow': {'name': 'cow :cow:','cost': 775,'sellcost': 500,'tool': 'bucket','result': 'milk','cooldown': 30000,'thing': 'milk','tradevalue': 375},
-	'babbon': {'name': 'babbon :monkey: ','cost':500,'sellcost':400,'tool':'babboner','result':'kidney','cooldown':30000,'thing':'babbon','tradevalue':250},
+	'sheep': {'name': 'sheep :sheep:','cost': 250,'sellcost': 225,'tool': 'shears','result': 'wool','cooldown': 60000,'thing':'shear','tradevalue': 150},
+	'cow': {'name': 'cow :cow:','cost': 775,'sellcost': 500,'tool': 'bucket','result': 'milk','cooldown': 50000,'thing': 'milk','tradevalue': 375},
 	'chicken': {
 		'name': 'chicken :chicken:',
 		'cost': 75,
@@ -93,7 +117,7 @@ animals = {
 		'sellcost': 125,
 		'tool': 'bowl',
 		'result': 'goatsmilk',
-		'cooldown': 40000,
+		'cooldown': 45000,
 		'tradevalue': 200,
 		'thing': 'milk'
 	},
@@ -103,7 +127,7 @@ animals = {
 		'sellcost': 650,
 		'tool': 'saddle',
 		'result': 'horsehair',
-		'cooldown': 27000,
+		'cooldown': 30000,
 		'tradevalue': 400,
 		'thing': 'haired'
 	},
@@ -111,7 +135,9 @@ animals = {
 	# Exotic animals
 
 	'camel': {'name': 'camel :dromedary_camel:','cost': "Only obtainable through trading",'sellcost': 500,'tool': 'toilet','result': 'cameldung','cooldown': 50000,'thing': 'milk','tradevalue': 350, "give": True},
-	'snake': {'name': 'snake :snake:','cost':'Only obtainable through trading','sellcost':350,'tool':'venomextractor','result':'snakevenom','cooldown':60000,'thing':'extract venom','tradevalue':200,'give':True}
+	'snake': {'name': 'snake :snake:','cost':'Only obtainable through trading','sellcost':350,'tool':'venomextractor','result':'snakevenom','cooldown':70000,'thing':'extract venom','tradevalue':200,'give':True},
+	
+	'babbon': {'name': 'babbon :monkey: ','cost':'trade only','sellcost':400,'tool':'babboner','result':'kidney','cooldown':30000,'thing':'babbon','tradevalue':250},
 }
 
 tools = {
@@ -123,6 +149,14 @@ tools = {
 		'sellcost': 9,
 		'animal': 'sheep',
 		'tradevalue': 5 
+	},
+	'sandals': {
+		'name': 'sandals',
+		'cost': 15,
+		'sellcost': 13,
+		'durability': 14,
+		'animal': 'beach',
+		'tradevalue': 10
 	},
 	'steelshears' :{
 		'name': 'steelshears',
@@ -271,7 +305,7 @@ seeds = {
 		'name': 'grassseeds',
 		'cost': 5,
 		'sellcost': 4,
-		'growtime': 30000,
+		'growtime': 40000,
 		'result': 'grass',
 		'tradevalue': 1
 	},
@@ -279,7 +313,7 @@ seeds = {
 		'name': 'cornseeds',
 		'cost': 13,
 		'sellcost': 12,
-		'growtime': 33000,
+		'growtime': 43000,
 		'result': 'corn',
 		'tradevalue': 2
 	},
@@ -287,7 +321,7 @@ seeds = {
 		'name': 'strawberryseeds',
 		'cost': 15,
 		'sellcost': 14,
-		'growtime': 29000,
+		'growtime': 39000,
 		'result': 'strawberry',
 		'tradevalue': 2
 	},
@@ -295,7 +329,7 @@ seeds = {
 		'name': 'mangoseeds',
 		'cost': 25,
 		'sellcost': 22,
-		'growtime': 20000,
+		'growtime': 45000,
 		'result': 'mango',
 		'tradevalue': 5
 	},
@@ -307,6 +341,14 @@ seeds = {
 		'result': 'apple',
 		'tradevalue': 2,
 		"amount": [10, 15]
+	 },
+	'cactusseeds': {
+		'name': 'cactusseeds',
+		'cost': 30,
+		'sellcost': 25,
+		"growtime": 30000,
+		'result': 'cactus',
+		'tradevalue': 5,
 	 },
 
 	# Seasonal seeds
@@ -351,6 +393,18 @@ seeds = {
 		"get": True,
 		"give": True
 	},
+
+	#exotic seeds
+	'ginsengseeds': {
+		'name': 'ginsengseeds',
+		'cost': 'Not buyable',
+		'sellcost': 'not sellable',
+		'result': 'ginseng',
+		'tradevalue': 50,
+		'get': True,
+		'give': True
+	}
+
 }
 
 merch = {
@@ -362,13 +416,13 @@ merch = {
 		'name': 'gem :gem:',
 		'cost': 750,
 		'sellcost': 'Not sellable',
-		'tradevalue': 400,
+		'tradevalue': 750,
 	},
 	'fish': {
 		'name': 'fish :fish:',
 		'cost': 7,
 		'sellcost': 6,
-		'tradevalue': 2,
+		'tradevalue': 6,
 	},
 	'fart': {
 		'name': 'fart :dash:',
@@ -380,37 +434,37 @@ merch = {
 		'name': 'rarepainting :frame_photo: ',
 		'cost': 175,
 		'sellcost': 'Not sellable',
-		'tradevalue': 150,
+		'tradevalue': 175,
 	},
 	'dragonegg': {
 		'name': 'dragonegg :dragon_face: :egg: ',
 		'cost': 1500,
 		'sellcost': 'Not sellable',
-		'tradevalue': 750,
+		'tradevalue': 1000,
 	},
 	'computer': {
 		'name': 'computer :computer:',
 		'cost': 1000,
 		'sellcost': 'Not sellable',
-		'tradevalue': 200,
+		'tradevalue': 875,
 	},
 	'rarecoin': {
 		'name' : 'rarecoin :coin: ',
 		'cost': 175,
 		'sellcost':'Not sellable',
-		'tradevalue': 140
+		'tradevalue': 165
 	},
 	'pebble': {
 		'name' : 'pebble :rock:',
 		'cost': 5,
 		'sellcost':3,
-		'tradevalue': 2
+		'tradevalue': 5
 	},
 	'voldysnose':{
 		'name': 'voldysnose :nose:',
 		'cost':20,
 		'sellcost':'Not sellable',
-		'tradevalue':50,
+		'tradevalue':20,
 	},
 	'croissant': {
 		'name': 'croissant :croissant: ',
@@ -422,65 +476,103 @@ merch = {
 		'name': 'gamingpc :video_game:',
 		'cost':5000,
 		'sellcost': 'Not sellable',
-		'tradevalue': 450,
+		'tradevalue': 4500,
 	},
 	'glasses': {
 		'name': 'glasses :eyeglasses:',
 		'cost': 20,
 		'sellcost':18,
-		'tradevalue':5,
+		'tradevalue':18,
 	},
 	'clock': {
 		'name': 'clock :clock1: ',
 		'cost': 30,
 		'sellcost': 25,
-		'tradevalue': 5,
+		'tradevalue': 25,
+	},
+	'applepie': {
+		'name': 'applepie :apple: :pie:',
+		'cost': 25,
+		'sellcost': 19,
+		'tradevalue': 19
+	},
+	'bread': {
+		'name': 'bread :bread:',
+		'cost': 20,
+		'sellcost': 16,
+		'tradevalue': 15
+	},
+	'umbrella': {
+		'name': 'umbrella :beach_umbrella: ',
+		'cost': 50,
+		'sellcost': 44,
+		'tradevalue': 43,
+	},
+	'keyboard': {
+		'name': 'keyboard :keyboard:',
+		'cost': 20,
+		'sellcost': 18,
+		'tradevalue': 17
+	},
+	'flatbread': {
+		'name': 'flatbread :flatbread:',
+		'cost': 10,
+		'sellcost': 8,
+		'tradevalue': 5
+	},
+	'xlorx': {
+		'name': 'xlorx :grey_question:',
+		'cost': "unbuyable",
+		'sellcost': "unsellable",
+		'tradevalue': 999999999999,
+		"give": True,
+		"get": True
 	},
 
 	# Animal merch
 
 	'wool': {
 		'name': 'wool :cloud:',
-		'cost': 17,
+		'cost': 'Not buyable',
 		'sellcost': 15,
-		'tradevalue': 5,
+		'tradevalue': 14,
 		'get': True
 	},
 	'goatsmilk': {
 		'name': 'goatsmilk :goat: :milk:',
-		'cost': 21,
+		'cost': 'Not buyable',
 		'sellcost': 19,
-		'tradevalue': 6,
+		'tradevalue': 18,
 		'get': True
 	},
 	'horsehair': {
 		'name': 'horsehair :horse: :person_bald:',
-		'cost': 21,
+		'cost': 'Not buyable',
 		'sellcost': 20,
-		'tradevalue': 5,
+		'tradevalue': 19,
 		'get': True
 	},
 	'milk': {
 		'name': 'milk :milk:',
-		'cost': 23,
+		'cost': 'Not buyable',
 		'sellcost': 21,
-		'tradevalue': 8,
+		'tradevalue': 20,
 		'get': True
 	},
 	'cheese': {
 		'name': 'cheese :cheese:',
-		'cost': 10,
+		'cost': 11,
 		'sellcost': 9,
-		'tradevalue': 3,
+		'tradevalue': 8,
 	},
 	'egg': {
 		'name': 'egg :egg:',
-		'cost': 14,
+		'cost': 'Not buyable',
 		'sellcost': 13,
-		'tradevalue': 5,
+		'tradevalue': 12,
 		'get': True
 	},
-	'kidney':{'name':'kidney :potato:', 'cost': 21,'sellcost':19,'tradevalue':15},
+	'kidney':{'name':'kidney :potato:', 'cost': 'Not buyable','sellcost':19,'tradevalue':18},
 
 	# Plant merch
 
@@ -488,36 +580,50 @@ merch = {
 		'name': 'grass :seedling:',
 		'cost': 6,
 		'sellcost': 5,
-		'tradevalue': 1,
+		'tradevalue': 4,
 		'get': True
 	},
 	'mango': {
 		'name': 'mango :mango:',
 		'cost': 29,
 		'sellcost': 26,
-		'tradevalue': 5,
+		'tradevalue': 24,
 		'get': True
 	},
 	'apple': {
 		'name': 'apple :apple:',
 		'cost': 19,
 		'sellcost': 17,
-		'tradevalue': 2,
+		'tradevalue': 16,
 		'get': True
 	},
 	'corn': {
 		'name': 'corn :corn:',
 		'cost': 19,
 		'sellcost': 17,
-		'tradevalue': 3,
+		'tradevalue': 16,
 		'get': True
 	},
 	'strawberry': {
 		'name': 'strawberry :strawberry:',
 		'cost': 21,
 		'sellcost': 19,
-		'tradevalue': 3,
+		'tradevalue': 18,
 		'get': True
+	},
+	'ginseng': {
+		'name': 'ginseng',
+		'cost': 'not buyable',
+		'sellcost': 'not sellable',
+		'tradevalue': 100,
+		'give': True,
+		'get': True
+	},
+	'cactus': {
+		'name': 'cactus :cactus:',
+		'cost': 35,
+		'sellcost': 32,
+		'tradevalue': 20
 	},
 
 	# Gather only merch
@@ -525,7 +631,17 @@ merch = {
 		"name": "mushroom :mushroom:",
 		"cost": "Cannot be bought",
 		"sellcost": 15,
-		"tradevalue": 5
+		"tradevalue": 13
+	},
+
+	#Contract only merch
+	'cake': {
+		'name': 'cake :cake:',
+		'cost': 'Cannot be bought',
+		'sellcost': 10,
+		'tradevalue': 5,
+		'get': False,
+		'give': True
 	},
 
 	# Seasonal merch
@@ -542,7 +658,7 @@ merch = {
 		"name": "tulip :tulip:",
 		"cost": 25, # "Only available during spring",
 		"sellcost": 20,
-		"tradevalue": 4,
+		"tradevalue": 16,
 		"get": False,
 		"give": False
 	},
@@ -572,11 +688,11 @@ merch = {
 	},
 	'easteregg':{ 
 		'name': 'easteregg :egg: :rabbit: ',
-		'cost': 10, #Only available from good friday to easter monday
+		'cost': 'Only available from good friday to easter monday', #10
 		'sellcost': 9,
 		'tradevalue': 15,
-		'get': False,
-		'give': False
+		'get': True,
+		'give': True
 	},
 
 	# Exotic merch
@@ -597,11 +713,115 @@ merch = {
 		'get': True,
 		'give': True
 	},
+	'anktoken': {
+		'name': 'anktoken :crab:',
+		'cost': 'Not purchasable',
+		'sellcost': 'Not sellable',
+		'tradevalue': 100,
+		'get': True,
+		'give': True
+	},
+	'yogotrophy': {
+		'name': 'yogotrophy :trophy:',
+		'cost': 'not buyable',
+		'sellcost': 'not sellable',
+		'tradevalue': 100,
+		'get': True,
+		'give': True
+	},
+	'yourselfcoin':{
+		'name': 'yourselfcoin :cow2: ',
+		'cost': 'cant buy',
+		'sellcost': 'cant sell',
+		'tradevalue': 100,
+		'get': True, 'give': True	
+	}
 }
+
+locations = {
+	"default": {
+		"name": "default ",
+		"desc": "You start here.",
+		"baseMulti": 1,
+		"shop": {},
+		"cost": 1000000,
+		"multis": {},
+		"defaultLife": True,
+		"lifeOverrides": {},
+		"deathRate": 0
+	},
+	"desert": {
+		"name": "desert :desert:",
+		"desc": "A hot tundra without much",
+		"baseMulti": 0.75,
+		"shop": {
+			"camel": {
+				"cost": 775,
+				"give": False
+			},
+			"cameldung": {
+				"cost": 75,
+				"give": False,
+				"get": False
+			},
+			"cactusseeds": {
+				"cost": 20,
+				"sellcost": 19
+			},
+			"cactus": {
+				"cost": 27,
+				"sellcost": 24
+			}
+		},
+		"cost": 10000000,
+		"multis": {
+			"camel": 1.5,
+			"sunflower": 0.9,
+			"snake": 1.5,
+			"cactus": 2
+		},
+		"defaultLife": False,
+		"lifeOverrides": {
+			"camel": True,
+			"sunflower": True,
+			"snake": True,
+			"cactus": True,
+		},
+		"deathRate": 0.5
+	},
+	"devlocation": {
+		"name": "devlocation :test_tube:",
+		"desc": "Only for the devs",
+		"baseMulti": 69,
+		"shop": {
+			"xlorx": {
+				"cost": 1,
+				"sellcost": 9999999999
+			}
+		},
+		"cost": "unbuyable",
+		"multis": {
+		},
+		"defaultLife": True,
+		"lifeOverrides": {},
+		"deathRate": 0
+	}
+}
+# "": { # Location name, self-explanatory
+# 	"name": "", # displayed name
+# 	"desc": "", #description
+# 	"baseMulti": 1, # the multi for everything that isn't in the multis key
+# 	"shop": {}, # differences in the shop
+# 	"cost": 0, # cost to buy 
+# 	"multis": {}, # multiplier overrides
+# 	"defaultLife": True, # whether or not this location will keep animals/plants alive by default
+# 	"lifeOverrides": {}, # life overrides
+# 	"deathRate": 0 # amount that will die if stated in lifeOverrides or if defaultLife is False. deadAmount = userAmount * deathRate
+# },
 
 tradeexclusive = {}
 
-tips = ['Admins, use `setchannel` to set a system messages channel for your server.', 'Do `donate` to get rep fast', 'You can use `profile` to see things like when your farm started, and how many commands you\'ve used.', '`trades` will you show you available trades.', 'come join our support server at `discord.gg/tvCmtkBAkc`', 'encounter a bug while playing? use `report` to report it directly to our support server.', 'do `suggest` to suggest anything from new animals to new tips!', '`showtrades` can show currently available trades.', 'You may be tempted to sell all your merchandise right away, but you should save some to do trades.', '`crops` is a handy command to show all the things currently planted and how long they\'ve been growing.', 'mar mar marino papido appeal', 'do `trade (trade number)` to do trades.', 'use the name of the animal for its command, ie. `sheep` and `cow`', '`help (command)` to get help about a specific command', 'trades update every 6 hours']
+tips = ['Admins, use `setchannel` to set a system messages channel for your server.', 'Do `donate` to get rep fast', 'You can use `profile` to see things like when your farm started, and how many commands you\'ve used.', '`trades` will you show you available trades.', 'come join our support server at `discord.gg/tvCmtkBAkc`', 'encounter a bug while playing? use `report` to report it directly to our support server.', 'do `suggest` to suggest anything from new animals to new tips!', '`showtrades` can show currently available trades.', 'You may be tempted to sell all your merchandise right away, but you should save some to do trades.', '`crops` is a handy command to show all the things currently planted and how long they\'ve been growing.', 'mar mar marino papido appeal', 'do `trade (trade number)` to do trades.', 'use the name of the animal for its command, ie. `sheep` and `cow`', '`help (command)` to get help about a specific command', 'trades update every 6 hours', 'we have a lottery!??!', 'farmout used to be really really really bad', 'the creator of farmout made some really weird things like heavenheck bot, which is on display in the support server, before he made farmout', '`contracts show` will show you some contracts that you can sign for items', 'eating your ginseng fruit can give you items']
 
 dailys = ['from going outside and smelling stuff', 'by farting 2 times in a row', 'by begging yogogiddap for money', 'by working at macdunnerds', 'by working as a cop', 'by working as a garbage smeller', 'by robbing old ladies', 'by gambling', 'by watching ads for 2 hours', 'by sniffing', 'by tasting concrete', 'by testing pepper spray', 'by *deception*', 'from farting', 'from perparra', 'from HACKS', 'from working as a doctor', 'from pretending to be a doctor', 'from working as a dentist', 'from stealing people\'s teeth', 'from asdfhbjlkasfd', 'from rewriting the alphabet', 'from joining the nhl', 'from farming pumpkins for 48 years straight', 'from streaming video games', 'from scamming people', 'from working as a teacher', 'from working as a chef', 'from working as a rhino watcher', 'from working as a potato man', 'from working as a music artist', "from stealing the neighbour's wallet", 'from having big farts at the big fat mart', 'by taking care of babbons for a day', 'by dumming', 'by sitting in elevators humming music to people because the speakers broke', 'by working as a janitor at bear\'s waterpark', 'by being a statbot', 'for counting blades of grass', 'for washing the road', 'for smelling flowers', 'for wiping grease off of cars', 'for seeing a cow', "for using double quotation marks instead of single quotation marks"]
 

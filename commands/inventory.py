@@ -42,7 +42,7 @@ async def inventory(message, client):
 		aout = "".join(  # Join an array together
 			[
 				# If the index is a multiple of, add a newline
-				f"{val}\n" if (index + 1) % 3 == 0 else f"{val}, "
+				f"{val}\n" if (index + 1) % 5 == 0 else f"{val}, "
 				for index, val in enumerate(aout)  # For every element in arr
 			],
 		)
@@ -77,7 +77,7 @@ async def inventory(message, client):
 		mout = "".join(  # Join an array together
 			[
 				# If the index is a multiple of, add a newline
-				f"{val}\n" if (index + 1) % 3 == 0 else f"{val}, "
+				f"{val}\n" if (index + 1) % 4 == 0 else f"{val}, "
 				for index, val in enumerate(mout)  # For every element in arr
 			],
 		)
@@ -95,7 +95,7 @@ async def inventory(message, client):
 		sout = "".join(  # Join an array together
 			[
 				# If the index is a multiple of, add a newline
-				f"{val}\n" if (index + 1) % 3 == 0 else f"{val}, "
+				f"{val}\n" if (index + 1) % 5 == 0 else f"{val}, "
 				for index, val in enumerate(sout)  # For every element in arr
 			],
 		)

@@ -2,6 +2,7 @@ from replit import db
 import discord
 import time
 from zstats import seeds, merch
+import random
 
 async def crops(message, client):
 	if str(message.author.id) not in db['members']:
@@ -9,6 +10,17 @@ async def crops(message, client):
 		return
 	if db['members'][str(message.author.id)]['plantcooldowns'] == {} or 'plantcooldowns' not in db['members'][str(message.author.id)]:
 		await message.channel.send('no plants here')
+		return
+	thing = random.randint(1,35)
+	if thing == 1:
+		things = ['pebble', 'stone', 'slipper', 'sweater', 'ice', 'tree branch', 'neighbour\'s crops']
+		thing2 = random.choice(things)
+		await message.channel.send(f'On the way over to looking at your crops, you accidentally slipped on a slippery {thing2} and died. you paid 100 coins to be reborn.')
+		a = db['members']
+		if a[str(message.author.id)]['money']<100: a[str(message.author.id)]['money'] = 0
+		else:
+			a[str(message.author.id)]['money'] -= 100
+		db['members'] = a
 		return
 	name = message.author.name
 	e = discord.Embed(

@@ -15,6 +15,16 @@ async def plant(message, client):
 	if len(args) == 2:
 		await message.channel.send(' what are you planting lol')
 		return
+	thing = random.randint(1,35)
+	if thing == 1:
+		await message.channel.send('On the way over to plant some plants, you accidentally read a really dumb book and died. you paid 100 coins to be reborn.')
+		a = db['members']
+		if a[str(message.author.id)]['money']<100: a[str(message.author.id)]['money'] = 0
+		else:
+			a[str(message.author.id)]['money'] -= 100
+		db['members'] = a
+		return
+
 	seed = softSearch(seeds, args[2], ["name"])
 	if not bool(seed):
 		await message.channel.send('don\'t try to fool me, that\'s not a seed')

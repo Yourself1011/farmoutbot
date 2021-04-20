@@ -1,17 +1,9 @@
 from random import randint
 from replit import db
-from zstats import tools
+from zstats import tools, updateDict, getMember
 from datetime import date
 import collections.abc
 from json import loads
-
-def update(d, u):
-    for k, v in u.items():
-        if isinstance(v, collections.abc.Mapping):
-            d[k] = update(d.get(k, {}), v)
-        else:
-            d[k] = v
-    return d
 
 async def devmode(message, client):
 	args = message.content.lower().split(" ")
@@ -69,6 +61,13 @@ async def devmode(message, client):
 				'multi': 1.0,
 				'commandsused': 0,
 				'datemade': datemade,
+				'donecontracts': [{
+					'1': [],
+					'2': [],
+					'3': [],
+					'4': []
+				}],
+				'currentcontract': [],
 				"trades": {
 					"lastTradeId": 0,
 					"tradeAmts": [0, 0, 0],
@@ -140,7 +139,9 @@ async def devmode(message, client):
 					"tradeAmts": [0, 0, 0],
 					"stock": [0, 0, 0]
 				},
-				"cooldowns": {}
+				"cooldowns": {},
+				"location": "default",
+				"locations": {}
 			} 
 			await message.channel.send("Devmode is now ON")
 		db["members"] = members
@@ -158,7 +159,23 @@ async def devmode(message, client):
 			return
 		members = db["members"]
 
-		members[str(message.author.id)] = update(db["members"][str(message.author.id)], loads("".join(args[3:len(args)]).replace("'", "\"")))
+		members[str(message.author.id)] = updateDict(db["members"][str(message.author.id)], loads("".join(args[3:len(args)]).replace("'", "\"")))
+
+		db["members"] = members
+		await message.channel.send(":white_check_mark: yessir")
+
+	elif args[2] == "other":
+		if message.author.id not in [690577156006477875, 690575294674894879]:
+			return await message.channel.send("not 4 u")
+
+		user = getMember(args[3], message.guild.id, client)
+
+		if not user:
+			return await message.channel.send("nobody found")
+
+		members = db["members"]
+
+		members[str(user.id)] = updateDict(db["members"][str(user.id)], loads("".join(args[4:len(args)]).replace("'", "\"")))
 
 		db["members"] = members
 		await message.channel.send(":white_check_mark: yessir")

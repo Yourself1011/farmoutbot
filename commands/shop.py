@@ -1,9 +1,14 @@
 import discord
 from replit import db
-from zstats import tools, animals, merch, seeds, softSearch
+from zstats import softSearch, getShop
+import random
 
 async def shop(message, client):
 	args = message.content.split(' ')
+
+	obj = {"animals": {}, "tools": {}, "seeds": {}, "merch": {}}
+	getShop(obj, db["members"][str(message.author.id)]["location"] if str(message.author.id) in db["members"] else "default")
+	animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
 
 	check = []
 	check.extend(list(animals.keys()) + list(tools.keys()) + list(merch.keys()) + list(seeds.keys()))
@@ -17,6 +22,18 @@ async def shop(message, client):
 	if len(args) == 2:
 		await message.channel.send('**shops:** \n-animals\n-tools\n-seeds\n-merch')
 		return
+
+	thing = random.randint(1,35)
+	if thing == 1:
+		things = ['pebble', 'stone', 'slipper', 'sweater', 'ice', 'tree branch', 'neighbour\'s crops', 'raindrop', 'sock']
+		thing2 = random.choice(things)
+		await message.channel.send(f'On the way over to see the shop, you accidentally slipped on a slippery {thing2} and died. you paid 100 coins to be reborn.')
+		a = db['members']
+		if a[str(message.author.id)]['money']<100: a[str(message.author.id)]['money'] = 0
+		else:
+			a[str(message.author.id)]['money'] -= 100
+		db['members'] = a
+
 	if args[2] not in ['animals', 'tools', 'merch', 'merchandise', 'seeds']:
 		search = softSearch(check, args[2], ["name"])
 		

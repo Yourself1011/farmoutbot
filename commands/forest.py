@@ -3,8 +3,11 @@ from replit import db
 from time import time
 from math import floor
 from random import randint
+import random
 
 async def forest(message, client):
+	user = str(message.author.id)
+	if user not in db['members']: await message.channel.send('make an account to search the forest'); return
 	user = db["members"][str(message.author.id)]
 	if "gather" in user["cooldowns"] and user["cooldowns"]["gather"] > time():
 		await message.channel.send(f"you already gathered stuff, wait {floor(user['cooldowns']['gather'] - time())}s")
@@ -13,6 +16,18 @@ async def forest(message, client):
 	if "hikingboots" not in user["tools"]:
 		await message.channel.send("buy hiking boots")
 		return
+	 
+	thing = random.randint(1,35)
+	if thing == 1:
+		things = ['bug', 'fish', 'tree', 'plant', 'elephant', 'neighbour']
+		thing2 = random.choice(things)
+		await message.channel.send(f'On the way over to the forest, you accidentally saw a weird {thing2} and died. you paid 100 coins to be reborn.')
+		a = db['members']
+		if a[str(message.author.id)]['money']<100: a[str(message.author.id)]['money'] = 0
+		else:
+			a[str(message.author.id)]['money'] -= 100
+		db['members'] = a
+		return
 
 	item = gatheringCmd(
 		message,
@@ -20,7 +35,7 @@ async def forest(message, client):
 			"mushroom": [50, 10, 1, 2],
 			"grass": [75, 10, 1, 3],
 			"strawberry": [50, 10, 1, 2],
-			"dragonegg": [5, 2, 1, 10],
+			"dragonegg": [5, 2, 1, 10],	
 			"rarecoin": [10, 3, 1, 5],
 			"pebble": [75, 15, 3, 2],
 			"nothing": [50, 1, 1, 1],
@@ -78,4 +93,4 @@ async def forest(message, client):
 
 	else:
 		responses = ["looked in the forest and found", "walked around a little and picked up", "discovered", "picked", "looked in the stump of a dead tree and found"]
-		await message.channel.send(f"You {responses[randint(0, len(responses)-1)]} {item[1]}x {itemName}\n{durabilityMsg}\n{reserveMsg}")
+		await message.channel.send(f"You {responses[randint(0, len(responses)-1)]} {item[1]}x {itemName}\n{durabilityMsg}\n{reserveMsg}")	

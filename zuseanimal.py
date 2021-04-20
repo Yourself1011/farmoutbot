@@ -1,8 +1,9 @@
 from replit import db
-from zstats import animals, tools, deaths, births
+from zstats import animals, tools, deaths, births, locations
 import time
 import random
 import asyncio
+from math import floor
 
 async def useanimal(message, animal, client, thing):
 	if str(message.author.id) not in db['members']:
@@ -72,6 +73,10 @@ async def useanimal(message, animal, client, thing):
 	a = db['members']
 	a[str(message.author.id)]['animals'][animal]['lastused'] = now
 	merch = animals[animal]['result']
+
+	location = locations[db['members'][str(message.author.id)]["location"]]
+
+	amount += location["multis"][animal] if animal in location["multis"] else location["baseMulti"]
 	if merch not in a[str(message.author.id)]['merch']:
 		a[str(message.author.id)]['merch'][merch] = amount
 	else:
@@ -82,10 +87,21 @@ async def useanimal(message, animal, client, thing):
 	cooldown = animals[animal]['cooldown']/1000
 	await message.reply(f'You {thing}ed `{amount}` `{animal}(s)`, gaining `{amount}` `{merch}`. Wait `{cooldown}` seconds before {thing}ing your {animal} again')
 
-	echance = random.randint(1,10)
-	if echance >= 6:
-		whatthingchance = random.randint(1, 10)
-		if whatthingchance in [1, 2]:
+	a = db["members"]
+	user = a[str(message.author.id)]
+	location = locations[user["location"]]
+	if (not location["defaultLife"] and (animal not in location["lifeOverrides"] or not location["lifeOverrides"][animal])) or (location["defaultLife"] and animal in location["lifeOverrides"] and location["lifeOverrides"][animal]):
+		amountLost = floor(max(user["animals"][animal]["amount"] * location["deathRate"], min(10, user["animals"][animal]["amount"])))
+
+		user["animals"][animal]["amount"] -= amountLost
+		await message.channel.send(f"Idiot your {animal}(s) couldn't live there and {amountLost} died.")
+
+		db["members"] = a
+
+	echance = random.randint(1,2)
+	if echance ==2:
+		whatthingchance = random.randint(1,2)
+		if whatthingchance == 1:
 			if amount > 11:
 				death = random.choice(list(deaths.keys()))
 				deadamount = random.randint(1,round(amount/5))
@@ -113,7 +129,7 @@ async def useanimal(message, animal, client, thing):
 					await channel.send('phew you saved ur animals in time')
 					return
 
-		elif whatthingchance in [3, 4, 5, 6]:
+		elif whatthingchance == 2:
 			if amount > 8:
 				thingtotype = random.choice(births)
 				await message.channel.send(f'{message.author.mention} ar ur animals are trying to breed, better type `{thingtotype}` or else they won\'t')

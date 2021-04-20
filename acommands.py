@@ -225,7 +225,7 @@ commands = {
 	},
 	'gift': {
 		'name': 'gift',
-		'usage': '<gift> <@user> <thinggifted> <amount>',
+		'usage': '<gift> <@user> <item> <amount>',
 		'description': 'Gifts stuff',
 		'aliases': ['gf'],
 		'category': 'game'
@@ -260,14 +260,14 @@ commands = {
 	},
 	"blackjack": {
 		"name": "blackjack",
-		"usage": "blackjack <amount>",
+		"usage": "blackjack",
 		"description": "An authentic blackjack experience",
 		"aliases": ["bj"],
 		"category": "gamble"
 	},
 	"devmode": {
 		"name": "devmode",
-		"usage": "devmode",
+		"usage": "devmode <update|toggle|on|off|check>",
 		"description": "Only for the dev to get infinite everything for testing purposes",
 		"aliases": [],
 		"category": "misc"
@@ -291,7 +291,7 @@ commands = {
 		"usage": "forest",
 		"description": "What will you find in the forest?",
 		"aliases": ["ft"],
-		"category": "game"
+		"category": "gather"
 	},
 	'rules': {
 		'name': 'rules',
@@ -302,17 +302,37 @@ commands = {
 	},
 	'lottery': {
 		'name': 'lottery',
-		'usage': 'lottery',
-		'description': 'Enter in the farmout lottery, winners every week',
+		'usage': 'lottery <view>',
+		'description': 'Enter in the farmout lottery, winners every 6 hours or smth',
 		'aliases': ['lo'],
 		'category': 'game'
 	},
 	'contract': {
 		'name': 'contract',
-		'usage': '<contract> <show, sign, get>',
-		'description': 'idk man just do the command see what happens',
+		'usage': '<contract> <show, sign (contract number), complete, current>',
+		'description': 'Sign some contracts or quests with other farms and the marketplace.\nShow: shows all contracts\nSign: signs a contract\nComplete: completes your currently signed contract\nCurrent: view your currently signed contract',
 		'aliases':['co'],
 		'category': 'market'
+	},
+	'eat': {
+		'name': 'eat',
+		'usage': 'eat some stuff',
+		'aliases': [],
+		'category': 'misc'
+	},
+	"location": {
+		"name": "location",
+		"usage": "location <my|view [page]|buy <location> ['liquidate']|transfer [animals] <location>>",
+		"description": "Looks at locations",
+		"aliases": ["l", "loc", "locations"],
+		"category": "game"
+	},
+	'beach': {
+		'name': 'beach',
+		'usage': '<beach>',
+		'description': 'go look in the beach for some cool stuff',
+		'aliases': ['bea'],
+		'category': 'gather'
 	}
 }
 

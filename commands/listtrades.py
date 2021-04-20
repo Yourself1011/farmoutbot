@@ -4,6 +4,7 @@ from replit import db
 import discord
 from math import floor
 from random import randint
+import random
 
 def mapFunc(x):
 	return f"`{x[1]}x` **{x[0]['name']}**"
@@ -17,7 +18,17 @@ async def listtrades(message, client):
 		m[str(message.author.id)]["trades"] = {"lastTradeId": db["tradeId"], "tradeAmts": [0, 0, 0, 0, 0], "stock": [floor((user["reputation"]/randint(200, 300))*10), floor((user["reputation"]/randint(200, 300))*4), floor(user["reputation"]/randint(200, 300)), floor(user["reputation"]/randint(300, 400)), floor(user["reputation"]/randint(400, 500))]}
 
 		db["members"] = m
-	
+
+	thing = random.randint(1,35)
+	if thing == 1:
+		await message.channel.send('On the way over to see the trades, you accidentally farted a big fat fart and died. you paid 100 coins to be reborn.')
+		a = db['members']
+		if a[str(message.author.id)]['money']<100: a[str(message.author.id)]['money'] = 0
+		else:
+			a[str(message.author.id)]['money'] -= 100
+		db['members'] = a
+		return
+
 	user = db["members"][str(message.author.id)]
 
 	e = discord.Embed(

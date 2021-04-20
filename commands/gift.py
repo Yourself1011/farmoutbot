@@ -7,7 +7,7 @@ async def gift(message, client):
 		await message.channel.send('bruh')
 		return
 	if len(args) <= 4:
-		await message.channel.send('`prefix gift person thinggifted amount` please')
+		await message.channel.send('`prefix gift person item amount` please')
 		return
 	
 	userObj = getMember(args[2], message.guild.id, client)
@@ -25,10 +25,12 @@ async def gift(message, client):
 	if len(args) == 4:
 		amount = 1
 	if len(args) > 4:
-		amount = convertInt(args[4])
-		if not bool(amount):
+		amount = args[4]
+		if not amount.isnumeric() and not amount in ['a', 'all', 'max']:
 			amount = 1
-	if amount <= 0:
+		if amount.isnumeric():
+			amount = int(amount)
+	if str(amount.isnumeric()) and amount <= 0:
 		await message.channel.send('whut')
 		return
 	
@@ -44,6 +46,13 @@ async def gift(message, client):
 	if thinggifted not in db['members'][str(message.author.id)][thing['name']]:
 		await message.channel.send('you don\'t own that, go buy it somewhere dumbo')
 		return
+	
+	if amount in ['a', 'all', 'max']:
+		if thing == animals or thing == seeds:
+			amount = db['members'][str(message.author.id)][thing['name']][thinggifted]['amount']
+		if thing == tools: amount = 1
+		if thing == merch: amount = db['members'][str(message.author.id)][thing['name']][thinggifted]
+
 	if thing == animals:
 		a = db['members']
 		if amount > a[str(message.author.id)]['animals'][thinggifted]['amount']:

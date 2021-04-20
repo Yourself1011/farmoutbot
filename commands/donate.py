@@ -1,8 +1,8 @@
 from replit import db
 from zstats import convertInt
+import random
 
 async def donate(message, client):
-	print('hi')
 	args = message.content.split(' ')
 	if str(message.author.id) not in db['members']:
 		await message.channel.send('you don\'t exist LOL')
@@ -12,6 +12,26 @@ async def donate(message, client):
 		return
 	if db['members'][str(message.author.id)]['money'] == 0:
 		await message.channel.send('you have no money, dummy')
+		return
+
+	thing = random.randint(1,35)
+	if thing == 1:
+		things = ['pebble', 'stone', 'slipper', 'sweater', 'ice', 'tree branch', 'neighbour\'s crops']
+		thing2 = random.choice(things)
+		await message.channel.send(f'On the way over to donate some money, you accidentally slipped on a slippery {thing2} and died. you paid 100 coi3ns to be reborn.')
+		a = db['members']
+		if a[str(message.author.id)]['money']<100: a[str(message.author.id)]['money'] = 0
+		else:
+			a[str(message.author.id)]['money'] -= 100
+		db['members'] = a
+		return
+	if db['members'][str(message.author.id)]['reputation'] < 250:
+		await message.channel.send('market: nah, your reputation is too low so i\'m not giving you anything')
+		chance = random.randint(1,5)
+		if chance > 3:
+			a = db['members']
+			a[str(message.author.id)]['reputation']+=chance
+			db['members'] = a
 		return
 
 	gave = convertInt(args[2])

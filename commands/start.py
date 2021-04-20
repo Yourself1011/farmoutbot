@@ -44,8 +44,16 @@ async def start(message, client):
 				"stock": [0, 0, 0]
 			},
 			"cooldowns": {},
-			'contracts': {},
-			'prestige': 0
+			'donecontracts': [{
+				'1': [],
+				'2': [],
+				'3': [],
+				'4': []
+			}],
+			'currentcontract': [],
+			'prestige': 0,
+			"location": "default",
+			"locations": {}
 		} 
 		db['members'] = a
 		prefix = db['server'][str(message.guild.id)]['prefix']
