@@ -47,7 +47,7 @@ async def on_ready():
 async def on_guild_join(guild):
 	a = db['server']
 	a[str(guild.id)] = {
-		'prefix': 'i',
+		'prefix': 'eye',
 		'channel': None
 	}
 	db['server'] = a
