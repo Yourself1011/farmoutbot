@@ -59,6 +59,15 @@ async def on_message(message):
 		return
 	if client.user == message.author:
 		return
+
+	if str(message.guild.id) not in db["server"]:
+		a = db['server']
+		a[str(message.guild.id)] = {
+			'prefix': 'eye',
+			'channel': None
+		}
+		db['server'] = a
+		print(f'woah woah woah new serverrrrr: {message.guild.name}')
 		
 	mention = f'<@!{client.user.id}>'
 	if mention in message.content:
@@ -93,6 +102,7 @@ async def on_message(message):
 	if command == None:
 		return
 	if command:
+
 		try:
 			await commands[command['name']]['execute'](message, client)
 			name = commands[command['name']]['name']
