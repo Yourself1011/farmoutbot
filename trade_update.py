@@ -17,7 +17,7 @@ async def startLoop(client):
 
 		print(f"{math.floor(((db['lastTradeDate'] + 1)  * 21600) - time())}s to trade update")
 
-		await asyncio.sleep(max(math.floor(((db['lastTradeDate'] + 1)  * 21600) - time()), 10))
+		await asyncio.sleep(math.ceil(((db['lastTradeDate'] + 1)  * 21600) - time()))
 
 diff = [3, 10, 20, 50, 100]
 limits = [2, 3, 5, 7, 9] 

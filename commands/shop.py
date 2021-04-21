@@ -211,6 +211,7 @@ async def shop(message, client):
 				if r[i] != 'name':
 					cost = seeds[r[i]]['cost']
 					sellcost = seeds[r[i]]['sellcost']
+					
 					growtime = f"Grow time: `{seeds[r[i]]['stages'][0]/1000}`\nCooldown: `{seeds[r[i]]['stages'][1]/1000}`\nLifespan: `{seeds[r[i]]['stages'][2]/1000}`" if "stages" in seeds[r[i]] else  f"Grow time: {seeds[r[i]]['growtime']/1000}"
 					
 					tradevalue = seeds[r[i]]['tradevalue']
