@@ -28,9 +28,9 @@ async def gift(message, client):
 		amount = args[4]
 		if not amount.isnumeric() and not amount in ['a', 'all', 'max']:
 			amount = 1
-		if amount.isnumeric():
+		elif amount.isnumeric():
 			amount = int(amount)
-	if str(amount.isnumeric()) and amount <= 0:
+	if type(amount) is str or amount <= 0:
 		await message.channel.send('whut')
 		return
 	
