@@ -169,11 +169,11 @@ tools = {
 	'shaver':{
 		'name':'shaver',
 		'cost':80,
-		'sellcost'50,
+		'sellcost':50,
 		'durability': 100,
 		'animal':'sheep',
-		'tradevalue':
-	}
+		'tradevalue':45
+	},
 	'wateringcan': {
 		'name': 'wateringcan',
 		'cost': 25,
