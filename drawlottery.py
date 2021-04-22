@@ -16,7 +16,7 @@ async def drawlottery(client):
 	db['lottery'] = a
 	data = {
 		"username": "Lottery winner!",
-		"content": f'{person.name}  won the lottery, there were {people} entries so they won {people*200} coins'
+		"content": f'{person.name} won the lottery, there were {people} entries so they won {people*200} coins'
 	}
 	for i in db['server']:
 		if db['server'][i]['channel'] != None and "webhookUrl" in db["server"][i]:

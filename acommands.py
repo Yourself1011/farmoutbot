@@ -333,6 +333,13 @@ commands = {
 		'description': 'go look in the beach for some cool stuff',
 		'aliases': ['bea'],
 		'category': 'gather'
+	},
+	'sitdown':{
+		'name':'sitdown',
+		'usage': '<sitdown>',
+		'description': 'SIDDOWN',
+		'aliases': [],
+		'category': 'misc'
 	}
 }
 
