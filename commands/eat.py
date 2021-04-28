@@ -1,6 +1,9 @@
 from replit import db
 import random
-from zstats import animals, tools, merch, seeds, eatable
+from zstats import animals, tools, merch, seeds, eatable, softSearch, gatheringCmd
+from random import uniform, randint
+from math import floor
+
 async def eat(message, client):
 	args = message.content.split(' ')
 	if len(args) == 2:
@@ -9,8 +12,8 @@ async def eat(message, client):
 	if str(message.author.id) not in db['members']:
 		await message.channel.send('cant eat if you dont exist')
 		return
-	eated = args[2].lower()
-	if eated not in eatable:
+	eated = softSearch(eatable, args[2])
+	if not bool(eated):
 		await message.channel.send('cant eat that')
 		return
 	if eated not in db['members'][str(message.author.id)]['merch']:
@@ -68,6 +71,77 @@ async def eat(message, client):
 		a = db['members']
 		a[str(message.author.id)]['merch']['cake'] += 1
 		db['members'] = a
+
+	if "loottable" in merch[eated]:
+
+		itemOut = ""
+		allItems = {}
+		money = 0
+		repeat = int(args[3]) if len(args) == 4 and args[3].isnumeric() else 1
+
+		user = db["members"][str(message.author.id)]
+		if eated not in user["merch"]:
+			return await message.channel.send("You don't have that")
+
+		if user["merch"][eated] < repeat:
+			return await message.channel.send("You don't have that many")
+
+		msg = await message.channel.send(f"Opening {repeat} {eated}(s)...")
+
+		for i in range(repeat):
+			items = gatheringCmd(message, merch[eated]["loottable"], merch[eated]["amount"])
+
+			money += floor(merch[eated]["money"][1] + (merch[eated]["money"][0] - merch[eated]["money"][1]) * (uniform(0, 1)**merch[eated]["money"][2]))
+
+			itemsObj = {}
+
+			for j in items:
+				if j[0] in itemsObj:
+					itemsObj[j[0]] += j[1]
+				else:
+					itemsObj[j[0]] = j[1]
+			
+			allItems.update(itemsObj)
+
+			a = db["members"]
+			user = a[str(message.author.id)]
+			for i in items:
+				for j in [merch, tools, animals, seeds]:
+					if i[0] in j: itemType = j["name"]
+
+				if i[0] in user[itemType] and itemType != "tools" and itemType != "merch":
+					user[itemType][i[0]]["amount"] += i[1]
+
+				elif i[0] in user[itemType] and itemType == "merch":
+					user["merch"][i[0]] += i[1]
+
+				elif i[0] in user[itemType] and itemType == "tools":
+					user["tools"][i[0]]["durability"] = tools[i[0]]["durability"]
+
+				elif itemType == "merch":
+					user["merch"][i[0]] = i[1]
+
+				elif itemType == "animals":
+					user["merch"][i[0]] = {"lastused": 0, "amount": i[1]}
+					
+				elif itemType == "tools":
+					user["merch"][i[0]] = tools[i[0]]["durability"]
+					
+				elif itemType == "seeds":
+					user["seeds"][i[0]] = {"amount": i[1]}
+
+			user["money"] += money
+
+		user["merch"][eated] -= repeat
+		if user["merch"][eated] <= 0:
+			del user["merch"][eated]
+
+		verb1 = ["ate", "opened", "used"]
+		verb2 = ["out came", "received", "got", "farted out", "burped out", "found", "out of thick ear appeared", "a ufo came and dropped off"]
+
+		itemOut = ", ".join([f"{j} {i}(s)" for i, j in allItems.items()])
+
+		await msg.edit(content = f"You {verb1[randint(0, len(verb1) - 1)]} {repeat} {eated}(s) and {verb2[randint(0, len(verb2) - 1)]} {itemOut}, and {money} coins")
 
 	a = db['members']
 	a[str(message.author.id)]['merch'][eated] -= 1

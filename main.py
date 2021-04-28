@@ -21,6 +21,8 @@ import traceback
 from trade_update import startLoop, trade_update
 from thinghappen import thinghappen
 from drawlottery import drawlottery
+from time import time
+from vote import vote
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path) 
@@ -55,6 +57,10 @@ async def on_guild_join(guild):
 
 @client.event
 async def on_message(message):
+	if message.author.id == 835153690155024454:
+		args = message.content.replace("|", "").split(" ")
+		print(f"{args[2]} has voted for {args[0]} on {args[1]}")
+		vote(args[2], args[1])
 	if message.author.bot:
 		return
 	if client.user == message.author:
@@ -104,6 +110,25 @@ async def on_message(message):
 	if command:
 
 		try:
+			if str(message.author.id) in db["members"]:
+				user = db["members"][str(message.author.id)]
+				sites = []
+				links = []
+				a = db["members"]
+
+				if "discordbotlist.com" in user["cooldowns"] and user["cooldowns"]["discordbotlist.com"]/10 <= time() and not bool(int(str(user["cooldowns"]["discordbotlist.com"])[-1])):
+					sites.append("discordbotlist.com")
+					links.append("https://discordbotlist.com/bots/farmout/upvote")
+					a[str(message.author.id)]["cooldowns"]["discordbotlist.com"] += 1
+
+				db["members"] = a
+
+				if bool(sites) and bool(links):
+					embed = discord.Embed(
+						title = "You can vote again at",
+						description = "\n".join([f"[{site}]({link})" for site, link in zip(sites, links)])
+					)
+					await message.author.send(embed = embed)
 			await commands[command['name']]['execute'](message, client)
 			name = commands[command['name']]['name']
 			print(f'{message.author.name} did {name} command in {message.guild.name}')

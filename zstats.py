@@ -50,31 +50,45 @@ def convertInt(string):
 	except:
 		return None
 
-def gatheringCmd(msg, loottable):
+def gatheringCmd(msg, loottable, amount = [1, 1, 1]):
 	"""
-	Returns an array of the item gathered and the amount, or an array with. Loottable should be an object with keys as the item name, and values as an array of chance (out of total chances), maximum amount, minimum amount (optional, defaults to 1), and weight (defaults to 1).
+	Returns an array of the item gathered and the amount, or an array with. Loottable should be an object with keys as the item name, and values as an array of chance (out of total chances), maximum amount, minimum amount (optional, defaults to 1), and weight (defaults to 1).	
 	"""
-	# Gets the item itself
-	totalChances = 0
-	for i in list(loottable.values()):
-		totalChances += i[0]
-	chosen = randint(0, totalChances)
-	newList = {}
-	sum = 0
-	for k, v in loottable.items():
-		newList[k] = [v[0] + sum] + v[1:]
-		sum += v[0]
 
-	itemKey = min({k: v for k, v in newList.items() if v[0] >= chosen}.items(), key = lambda x: x[1][0])[0]
-	item = loottable[itemKey]
+	repeat = floor(amount[0] + (amount[1] - amount[0]) * (uniform(0, 1)**amount[2]))
+	out = []
 
-	# Gets the amount
-	p = item[3] if len(item) >= 4 else 1
-	minimum = item[2] if len(item) >= 3 else 1
-	maximum = item[1]
-	amount = floor(minimum + (maximum - minimum) * (uniform(0, 1)**p))
-	
-	return [itemKey, amount]
+	for i in range(repeat):
+		# Gets the item itself
+		itemKey = ""
+
+		while True:
+			totalChances = 0
+			for i in list(loottable.values()):
+				totalChances += i[0]
+			chosen = randint(0, totalChances)
+			newList = {}
+			sum = 0
+			for k, v in loottable.items():
+				newList[k] = [v[0] + sum] + v[1:]
+				sum += v[0]
+
+			itemKey = min({k: v for k, v in newList.items() if v[0] >= chosen}.items(), key = lambda x: x[1][0])[0]
+
+			if not itemKey in out:
+				break
+		item = loottable[itemKey]
+
+		# Gets the amount
+		p = item[3] if len(item) >= 4 else 1
+		minimum = item[2] if len(item) >= 3 else 1
+		maximum = item[1]
+		amount = floor(minimum + (maximum - minimum) * (uniform(0, 1)**p))
+		
+		if amount == [1, 1, 1]: return [itemKey, amount]
+		else: out.append([itemKey, amount])
+
+	return out
 
 def updateDict(d, u):
     for k, v in u.items():
@@ -95,7 +109,6 @@ def getShop(shops, location):
 # getShop(obj, db["members"][str(message.author.id)]["location"])
 # animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
 
-eatable = ['applepie', 'mango', 'ginseng', 'mushroom', 'cake']
 
 animals = {
 	'name': 'animals',
@@ -735,7 +748,53 @@ merch = {
 		'sellcost': 'cant sell',
 		'tradevalue': 100,
 		'get': True, 'give': True	
-	}
+	},
+	
+	# Lootboxes
+
+	"smallbox": {
+		"name": "smallbox :package:",
+		"cost": "can't buy",
+		"sellcost": 25,
+		"tradevalue": 50,
+		"loottable": {
+			"pebble": [50, 1, 10, 2],
+			"grass": [50, 1, 10, 2],
+			"gem": [2, 1, 2, 2],
+			"rarecoin": [5, 1, 5, 3],
+			"cheese": [35, 1, 10, 3],
+			"cactus": [35, 1, 10, 3], 
+			"grassseeds": [50, 1, 10, 2],
+			"fart": [10, 1, 5, 3],
+			"cornseeds": [50, 1, 10, 2],
+			"mediumbox": [15, 1, 1, 1]
+		},
+		"amount": [1, 3, 2],
+		"money": [5, 15, 2],
+		"give": True
+	},
+	"uncommonbox": {
+		"name": "uncommonbox <:uncommon:836784385307050014>",
+		"cost": "can't buy",
+		"sellcost": 100,
+		"tradevalue": 50,
+		"loottable": {
+			"pebble": [50, 1, 10, 2],
+			"grass": [50, 1, 10, 2],
+			"gem": [5, 1, 2, 2],
+			"rarecoin": [8, 1, 5, 3],
+			"cheese": [40, 1, 10, 3],
+			"cactus": [40, 1, 10, 3], 
+			"grassseeds": [50, 1, 10, 2],
+			"fart": [15, 1, 5, 3],
+			"cornseeds": [50, 1, 10, 2],
+			"smallbox": [25, 1, 2, 3],
+			"dragonegg": [2, 1, 1, 1]
+		},
+		"amount": [1, 5, 2],
+		"money": [50, 100, 2],
+		"give": True
+	},
 }
 
 locations = {
@@ -820,6 +879,10 @@ locations = {
 # },
 
 tradeexclusive = {}
+
+eatable = [i for i, j in merch.items() if "loottable" in j]
+
+eatable.extend(['applepie', 'mango', 'ginseng', 'mushroom', 'cake'])
 
 tips = ['Admins, use `setchannel` to set a system messages channel for your server.', 'Do `donate` to get rep fast', 'You can use `profile` to see things like when your farm started, and how many commands you\'ve used.', '`trades` will you show you available trades.', 'come join our support server at `discord.gg/tvCmtkBAkc`', 'encounter a bug while playing? use `report` to report it directly to our support server.', 'do `suggest` to suggest anything from new animals to new tips!', '`showtrades` can show currently available trades.', 'You may be tempted to sell all your merchandise right away, but you should save some to do trades.', '`crops` is a handy command to show all the things currently planted and how long they\'ve been growing.', 'mar mar marino papido appeal', 'do `trade (trade number)` to do trades.', 'use the name of the animal for its command, ie. `sheep` and `cow`', '`help (command)` to get help about a specific command', 'trades update every 6 hours', 'we have a lottery!??!', 'farmout used to be really really really bad', 'the creator of farmout made some really weird things like heavenheck bot, which is on display in the support server, before he made farmout', '`contracts show` will show you some contracts that you can sign for items', 'eating your ginseng fruit can give you items']
 
