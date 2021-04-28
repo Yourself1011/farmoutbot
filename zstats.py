@@ -894,3 +894,4 @@ market = ['in the bathroom', 'eating lunch', 'too busy watching yt', 'farting', 
 
 births = ['baby', 'breed', 'yes', 'shoo!', 'fart', 'babbon', "push"]
 emojis = [':money_with_wings:', ':dollar:', ':euro:', ':yen:', ':pound:', ':coin:', ':moneybag:', ':credit_card:', ':gem:']
+# thing
