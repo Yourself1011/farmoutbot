@@ -767,7 +767,7 @@ merch = {
 			"grassseeds": [50, 1, 10, 2],
 			"fart": [10, 1, 5, 3],
 			"cornseeds": [50, 1, 10, 2],
-			"mediumbox": [15, 1, 1, 1]
+			"uncommonbox": [15, 1, 1, 1]
 		},
 		"amount": [1, 3, 2],
 		"money": [5, 15, 2],
@@ -783,16 +783,38 @@ merch = {
 			"grass": [50, 1, 10, 2],
 			"gem": [5, 1, 2, 2],
 			"rarecoin": [8, 1, 5, 3],
-			"cheese": [40, 1, 10, 3],
-			"cactus": [40, 1, 10, 3], 
+			"cheese": [40, 1, 10, 2],
+			"cactus": [40, 1, 10, 2], 
 			"grassseeds": [50, 1, 10, 2],
 			"fart": [15, 1, 5, 3],
 			"cornseeds": [50, 1, 10, 2],
-			"smallbox": [25, 1, 2, 3],
-			"dragonegg": [2, 1, 1, 1]
+			"smallbox": [25, 1, 2, 2],
+			"epicbox": [10, 1, 1, 1],
+			"dragonegg": [2, 1, 1, 1],
+			"cow": [40, 1, 5, 3]
 		},
 		"amount": [1, 5, 2],
 		"money": [50, 100, 2],
+		"give": True
+	},
+	"epicbox": {
+		"name": "epicbox <:epic:839130060509937704>",
+		"cost": "can't buy",
+		"sellcost": 500,
+		"tradevalue": 250,
+		"loottable": {
+			"gem": [8, 1, 5, 4],
+			"rarecoin": [10, 1, 5, 3],
+			"cheese": [40, 1, 10, 3],
+			"cactus": [40, 1, 10, 3], 
+			"fart": [15, 1, 5, 3],
+			"smallbox": [15, 2, 3, 3],
+			"uncommonbox": [25, 1, 2, 3],
+			"dragonegg": [5, 1, 2, 2],
+			"gamingpc": [2, 1, 1, 1]
+		},
+		"amount": [2, 5, 2],
+		"money": [100, 250, 2],
 		"give": True
 	},
 }

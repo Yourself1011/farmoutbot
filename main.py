@@ -76,7 +76,7 @@ async def on_message(message):
 		print(f'woah woah woah new serverrrrr: {message.guild.name}')
 		
 	mention = f'<@!{client.user.id}>'
-	if mention in message.content:
+	if mention in message.content or f'<@{client.user.id}>' in message.content:
 		prefix = db['server'][str(message.guild.id)]['prefix']
 		await message.reply('hi my prefix for this server is `'+prefix+'`. use `'+prefix+' help` to see all commands.')
 		return

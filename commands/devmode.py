@@ -74,7 +74,9 @@ async def devmode(message, client):
 					"tradeAmts": [0, 0, 0],
 					"stock": [0, 0, 0]
 				},
-				"cooldowns": {}
+				"cooldowns": {},
+				"location": "default",
+				"locations": {} 
 			} 
 			await message.channel.send("Devmode is now ON")
 		db["members"] = members

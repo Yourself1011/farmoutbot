@@ -72,6 +72,12 @@ async def eat(message, client):
 		a[str(message.author.id)]['merch']['cake'] += 1
 		db['members'] = a
 
+	a = db['members']
+	a[str(message.author.id)]['merch'][eated] -= 1
+	if a[str(message.author.id)]['merch'][eated] == 0:
+		del a[str(message.author.id)]['merch'][eated]
+	db['members'] = a
+	
 	if "loottable" in merch[eated]:
 
 		itemOut = ""
@@ -88,6 +94,9 @@ async def eat(message, client):
 
 		msg = await message.channel.send(f"Opening {repeat} {eated}(s)...")
 
+		a = db["members"]
+		user = a[str(message.author.id)]
+
 		for i in range(repeat):
 			items = gatheringCmd(message, merch[eated]["loottable"], merch[eated]["amount"])
 
@@ -103,8 +112,6 @@ async def eat(message, client):
 			
 			allItems.update(itemsObj)
 
-			a = db["members"]
-			user = a[str(message.author.id)]
 			for i in items:
 				for j in [merch, tools, animals, seeds]:
 					if i[0] in j: itemType = j["name"]
@@ -135,6 +142,8 @@ async def eat(message, client):
 		user["merch"][eated] -= repeat
 		if user["merch"][eated] <= 0:
 			del user["merch"][eated]
+		
+		db["members"] = a
 
 		verb1 = ["ate", "opened", "used"]
 		verb2 = ["out came", "received", "got", "farted out", "burped out", "found", "out of thick ear appeared", "a ufo came and dropped off"]
@@ -143,8 +152,7 @@ async def eat(message, client):
 
 		await msg.edit(content = f"You {verb1[randint(0, len(verb1) - 1)]} {repeat} {eated}(s) and {verb2[randint(0, len(verb2) - 1)]} {itemOut}, and {money} coins")
 
-	a = db['members']
-	a[str(message.author.id)]['merch'][eated] -= 1
-	if a[str(message.author.id)]['merch'][eated] == 0:
-		del a[str(message.author.id)]['merch'][eated]
-	db['members'] = a
+		a = db["betatesters"]
+		a.append(str(message.author.id))
+		db["betatesters"] = a
+
