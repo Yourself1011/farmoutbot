@@ -58,7 +58,7 @@ async def collect(message, client):
 	if "stages" in seeds[seed] and now - a[str(message.author.id)]['plantcooldowns'][plant]["start"] > seeds[seed]["stages"][2]:
 		del a[str(message.author.id)]['plantcooldowns'][plant]
 		return await message.channel.send(f"Oop your {plant} died of old age")
-		a = db["members"]
+		db["members"] = a
 
 	user = a[str(message.author.id)]
 	location = locations[user["location"]]

@@ -1,4 +1,5 @@
 from random import uniform, randint
+from numpy.random import choice
 from math import floor
 import collections.abc
 from copy import deepcopy
@@ -50,39 +51,71 @@ def convertInt(string):
 	except:
 		return None
 
-def gatheringCmd(msg, loottable):
+# Chooses k unique random elements from a population sequence or set.
+
+# Returns a new list containing elements from the population while
+# leaving the original population unchanged.  The resulting list is
+# in selection order so that all sub-slices will also be valid random
+# samples.  This allows raffle winners (the sample) to be partitioned
+# into grand prize and second place winners (the subslices).
+
+# Members of the population need not be hashable or unique.  If the
+# population contains repeats, then each occurrence is a possible
+# selection in the sample.
+
+# To choose a sample in a range of integers, use range as an argument.
+# This is especially fast and space efficient for sampling from a
+# large population:   sample(range(10000000), 60)
+
+def gatheringCmd(msg, loottable, amount = [1, 1, 1]):
 	"""
-	Returns an array of the item gathered and the amount, or an array with. Loottable should be an object with keys as the item name, and values as an array of chance (out of total chances), maximum amount, minimum amount (optional, defaults to 1), and weight (defaults to 1).
+	Returns an array of the item gathered and the amount, or an array with. Loottable should be an object with keys as the item name, and values as an array of chance (out of total chances), maximum amount, minimum amount (optional, defaults to 1), and weight (defaults to 1).	
 	"""
-	# Gets the item itself
-	totalChances = 0
-	for i in list(loottable.values()):
-		totalChances += i[0]
-	chosen = randint(0, totalChances)
-	newList = {}
+
+	repeat = floor(amount[0] + (amount[1] - amount[0]) * (uniform(0, 1)**amount[2]))
+	out = []
+
 	sum = 0
-	for k, v in loottable.items():
-		newList[k] = [v[0] + sum] + v[1:]
-		sum += v[0]
+	for i in loottable.values():
+		sum += i[0]
 
-	itemKey = min({k: v for k, v in newList.items() if v[0] >= chosen}.items(), key = lambda x: x[1][0])[0]
-	item = loottable[itemKey]
+	if repeat > sum:
+		for i, j in loottable.items():
+			out.append([i, 
+			floor(
+				# Average amount of times to get this item, plus or minus a little
+				((j[0] / sum) + ((j[0] / sum) * uniform(0, 0.10) * choice([-1, 1], 1))) * repeat *
 
-	# Gets the amount
-	p = item[3] if len(item) >= 4 else 1
-	minimum = item[2] if len(item) >= 3 else 1
-	maximum = item[1]
-	amount = floor(minimum + (maximum - minimum) * (uniform(0, 1)**p))
-	
-	return [itemKey, amount]
+				# average amounts per land
+				(j[2] + (j[1] - j[2]) * (uniform(0, 1) ** j[3]))
+			)])
+		return out
+
+	# Gets all the items
+	sample = choice(list(loottable.keys()), repeat, p = [i[0] / sum for i in loottable.values()], replace = False)
+
+	for i in range(repeat):
+
+		item = loottable[sample[i]]
+
+		# Gets the amount
+		p = item[3] if len(item) >= 4 else 1
+		minimum = item[2] if len(item) >= 3 else 1
+		maximum = item[1]
+		amt = floor(minimum + (maximum - minimum) * (uniform(0, 1)**p))
+		
+		if amount == [1, 1, 1]: return [sample[i], amt]
+		else: out.append([sample[i], amt])
+
+	return out
 
 def updateDict(d, u):
-    for k, v in u.items():
-        if isinstance(v, collections.abc.Mapping):
-            d[k] = updateDict(d.get(k, {}), v)
-        else:
-            d[k] = v
-    return d
+	for k, v in u.items():
+		if isinstance(v, collections.abc.Mapping):
+			d[k] = updateDict(d.get(k, {}), v)
+		else:
+			d[k] = v
+	return d
 
 def getShop(shops, location):
 	for i, j in zip([animals, tools, seeds, merch], ["animals", "tools", "seeds", "merch"]):
@@ -95,7 +128,6 @@ def getShop(shops, location):
 # getShop(obj, db["members"][str(message.author.id)]["location"])
 # animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
 
-eatable = ['applepie', 'mango', 'ginseng', 'mushroom', 'cake']
 
 animals = {
 	'name': 'animals',
@@ -349,7 +381,7 @@ seeds = {
 		'result': 'apple',
 		'tradevalue': 2,
 		"amount": [10, 15]
-	 },
+	},
 	'cactusseeds': {
 		'name': 'cactusseeds',
 		'cost': 30,
@@ -357,7 +389,7 @@ seeds = {
 		"growtime": 30000,
 		'result': 'cactus',
 		'tradevalue': 5,
-	 },
+	},
 
 	# Seasonal seeds
 
@@ -752,6 +784,74 @@ merch = {
 		'tradevalue': 100,
 		'get': True, 'give': True	
 	},
+	
+	# Lootboxes
+
+	"smallbox": {
+		"name": "smallbox :package:",
+		"cost": "can't buy",
+		"sellcost": 25,
+		"tradevalue": 50,
+		"loottable": {
+			"pebble": [50, 1, 10, 2],
+			"grass": [50, 1, 10, 2],
+			"gem": [2, 1, 2, 2],
+			"rarecoin": [5, 1, 5, 3],
+			"cheese": [35, 1, 10, 3],
+			"cactus": [35, 1, 10, 3], 
+			"grassseeds": [50, 1, 10, 2],
+			"fart": [10, 1, 5, 3],
+			"cornseeds": [50, 1, 10, 2],
+			"uncommonbox": [15, 1, 1, 1]
+		},
+		"amount": [1, 3, 2],
+		"money": [5, 15, 2],
+		"give": True
+	},
+	"uncommonbox": {
+		"name": "uncommonbox <:uncommon:836784385307050014>",
+		"cost": "can't buy",
+		"sellcost": 100,
+		"tradevalue": 50,
+		"loottable": {
+			"pebble": [50, 1, 10, 2],
+			"grass": [50, 1, 10, 2],
+			"gem": [5, 1, 2, 2],
+			"rarecoin": [8, 1, 5, 3],
+			"cheese": [40, 1, 10, 2],
+			"cactus": [40, 1, 10, 2], 
+			"grassseeds": [50, 1, 10, 2],
+			"fart": [15, 1, 5, 3],
+			"cornseeds": [50, 1, 10, 2],
+			"smallbox": [25, 1, 2, 2],
+			"epicbox": [10, 1, 1, 1],
+			"dragonegg": [2, 1, 1, 1],
+			"cow": [40, 1, 5, 3]
+		},
+		"amount": [1, 5, 2],
+		"money": [50, 100, 2],
+		"give": True
+	},
+	"epicbox": {
+		"name": "epicbox <:epic:839130060509937704>",
+		"cost": "can't buy",
+		"sellcost": 500,
+		"tradevalue": 250,
+		"loottable": {
+			"gem": [8, 1, 5, 4],
+			"rarecoin": [10, 1, 5, 3],
+			"cheese": [40, 1, 10, 3],
+			"cactus": [40, 1, 10, 3], 
+			"fart": [15, 1, 5, 3],
+			"smallbox": [15, 2, 3, 3],
+			"uncommonbox": [25, 1, 2, 3],
+			"dragonegg": [5, 1, 2, 2],
+			"gamingpc": [2, 1, 1, 1]
+		},
+		"amount": [2, 5, 2],
+		"money": [100, 250, 2],
+		"give": True
+	},
 }
 
 locations = {
@@ -805,6 +905,23 @@ locations = {
 		},
 		"deathRate": 0.5
 	},
+	"jungle": {
+		"name": "jungle :coconut:",
+		"desc": "A thick forest",
+		"baseMulti": 1.25,
+		"shop": {},
+		"cost": 1500000,
+		"multis": {
+			"mango": 1.75,
+		},
+		"defaultLife": True,
+		"lifeOverrides": {
+			"cactus": False,
+			"camel": False
+		},
+		"deathRate": 0.75
+	},
+
 	"devlocation": {
 		"name": "devlocation :test_tube:",
 		"desc": "Only for the devs",
@@ -837,6 +954,10 @@ locations = {
 
 tradeexclusive = {}
 
+eatable = [i for i, j in merch.items() if "loottable" in j]
+
+eatable.extend(['applepie', 'mango', 'ginseng', 'mushroom', 'cake'])
+
 tips = ['Admins, use `setchannel` to set a system messages channel for your server.', 'Do `donate` to get rep fast', 'You can use `profile` to see things like when your farm started, and how many commands you\'ve used.', '`trades` will you show you available trades.', 'come join our support server at `discord.gg/tvCmtkBAkc`', 'encounter a bug while playing? use `report` to report it directly to our support server.', 'do `suggest` to suggest anything from new animals to new tips!', '`showtrades` can show currently available trades.', 'You may be tempted to sell all your merchandise right away, but you should save some to do trades.', '`crops` is a handy command to show all the things currently planted and how long they\'ve been growing.', 'mar mar marino papido appeal', 'do `trade (trade number)` to do trades.', 'use the name of the animal for its command, ie. `sheep` and `cow`', '`help (command)` to get help about a specific command', 'trades update every 6 hours', 'we have a lottery!??!', 'farmout used to be really really really bad', 'the creator of farmout made some really weird things like heavenheck bot, which is on display in the support server, before he made farmout', '`contracts show` will show you some contracts that you can sign for items', 'eating your ginseng fruit can give you items']
 
 dailys = ['from going outside and smelling stuff', 'by farting 2 times in a row', 'by begging yogogiddap for money', 'by working at macdunnerds', 'by working as a cop', 'by working as a garbage smeller', 'by robbing old ladies', 'by gambling', 'by watching ads for 2 hours', 'by sniffing', 'by tasting concrete', 'by testing pepper spray', 'by *deception*', 'from farting', 'from perparra', 'from HACKS', 'from working as a doctor', 'from pretending to be a doctor', 'from working as a dentist', 'from stealing people\'s teeth', 'from asdfhbjlkasfd', 'from rewriting the alphabet', 'from joining the nhl', 'from farming pumpkins for 48 years straight', 'from streaming video games', 'from scamming people', 'from working as a teacher', 'from working as a chef', 'from working as a rhino watcher', 'from working as a potato man', 'from working as a music artist', "from stealing the neighbour's wallet", 'from having big farts at the big fat mart', 'by taking care of babbons for a day', 'by dumming', 'by sitting in elevators humming music to people because the speakers broke', 'by working as a janitor at bear\'s waterpark', 'by being a statbot', 'for counting blades of grass', 'for washing the road', 'for smelling flowers', 'for wiping grease off of cars', 'for seeing a cow', "for using double quotation marks instead of single quotation marks"]
@@ -847,3 +968,4 @@ market = ['in the bathroom', 'eating lunch', 'too busy watching yt', 'farting', 
 
 births = ['baby', 'breed', 'yes', 'shoo!', 'fart', 'babbon', "push"]
 emojis = [':money_with_wings:', ':dollar:', ':euro:', ':yen:', ':pound:', ':coin:', ':moneybag:', ':credit_card:', ':gem:']
+# thing

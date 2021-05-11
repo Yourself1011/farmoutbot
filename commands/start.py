@@ -53,8 +53,23 @@ async def start(message, client):
 			'currentcontract': [1, 1],
 			'prestige': 0,
 			"location": "default",
-			"locations": {}
+			"locations": {},
+            "settings": {
+                "votedm": True,
+				"tips": True
+            }
 		} 
 		db['members'] = a
 		prefix = db['server'][str(message.guild.id)]['prefix']
 		await message.channel.send(f'{message.author.mention}\nWelcome to the start of your farming career in Farmout! Here, you will plant seeds for crops, take care of animals, and trade for new items. \n\nTo start, you should use some of these commands:\n-`{prefix} help` shows all commands, do `{prefix} help (command)` to get help about a specific command\n-`{prefix} plant grassseeds 5` plants 5 grassseeds. Do `{prefix} crops` to see all the things you\'ve planted, and `{prefix} collect` to collect them once they are ready.\n-`{prefix} daily` claims your daily reward\n-`{prefix} shop` opens the shop, where you can buy and sell items\n \nIf you need more help, you can join our support server. Good luck for now!')
+
+"""
+from replit import db
+a = db["members"]
+for i in a: 
+    a[i][""] = 
+
+
+db["members"] = a
+
+"""

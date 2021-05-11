@@ -1,4 +1,5 @@
 from random import shuffle
+import discord
 
 async def gibberish(message, client):
 	wordList = message.content.replace("\n", "\n ").split(" ")
@@ -37,5 +38,5 @@ async def gibberish(message, client):
 		else:
 			out.append(i)
 
-	await message.channel.send(" ".join(out).replace(r'\n', '+ "\n" +'))
+	await message.channel.send(" ".join(out).replace(r'\n', '+ "\n" +'), allowed_mentions = discord.AllowedMentions().none())
 	#whatcha doin yes

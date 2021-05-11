@@ -66,16 +66,24 @@ async def help(message, client):
 		await message.channel.send(embed = e)
 
 	if len(args) > 2:
-		if args[2] not in commands:
+		allcommands = {}
+
+		for i in commands:
+			allcommands[i] = i
+			allcommands.update({aliases: i for aliases in commands[i]["aliases"]})
+
+		if args[2] not in allcommands:
 			await message.channel.send('thats not a command dummy')
 			return
-		description = commands[args[2]]['description']
-		usage = commands[args[2]]['usage']
-		if commands[args[2]]['aliases'] == []:
+
+		command = commands[allcommands[args[2]]]
+		description = command['description']
+		usage = command['usage']
+		if command['aliases'] == []:
 			aliases = None
 		else:
-			aliases = ', '.join(commands[args[2]]['aliases'])
-		sfasd = commands[args[2]]['name']
+			aliases = ', '.join(command['aliases'])
+		sfasd = command['name']
 		e = discord.Embed(
 			title = sfasd,
 			colour = discord.Colour.gold(),
