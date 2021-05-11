@@ -13,6 +13,7 @@ async def crops(message, client):
 		return
 	thing = random.randint(1,35)
 	if thing == 1:
+		if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return	
 		things = ['pebble', 'stone', 'slipper', 'sweater', 'ice', 'tree branch', 'neighbour\'s crops']
 		thing2 = random.choice(things)
 		await message.channel.send(f'On the way over to looking at your crops, you accidentally slipped on a slippery {thing2} and died. you paid 100 coins to be reborn.')

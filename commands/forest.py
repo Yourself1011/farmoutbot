@@ -19,6 +19,7 @@ async def forest(message, client):
 	 
 	thing = random.randint(1,35)
 	if thing == 1:
+		if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
 		things = ['bug', 'fish', 'tree', 'plant', 'elephant', 'neighbour']
 		thing2 = random.choice(things)
 		await message.channel.send(f'On the way over to the forest, you accidentally saw a weird {thing2} and died. you paid 100 coins to be reborn.')

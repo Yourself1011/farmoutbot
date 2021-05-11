@@ -16,6 +16,7 @@ async def donate(message, client):
 
 	thing = random.randint(1,35)
 	if thing == 1:
+		if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
 		things = ['pebble', 'stone', 'slipper', 'sweater', 'ice', 'tree branch', 'neighbour\'s crops']
 		thing2 = random.choice(things)
 		await message.channel.send(f'On the way over to donate some money, you accidentally slipped on a slippery {thing2} and died. you paid 100 coi3ns to be reborn.')

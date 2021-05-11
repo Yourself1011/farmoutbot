@@ -6,6 +6,8 @@ async def drawlottery(client):
 	person = random.choice(db['lottery'])
 	person = client.get_user(person)
 	people = len(db['lottery'])
+	if people == 1:
+		return
 	print(f'{person.name} won a {people} entry lottery')
 	await person.send(f'lmao you won the lottery, there were {people} entries so you won {people*200} coins') #only 100 eh? uhh /shrug
 	a = db['members']

@@ -85,7 +85,7 @@ async def useanimal(message, animal, client, thing):
 	thing = animals[animal]['thing']
 	db['members'] = a
 	cooldown = animals[animal]['cooldown']/1000
-	await message.reply(f'You {thing}ed `{amount}` `{animal}(s)`, gaining `{amount}` `{merch}`. Wait `{cooldown}` seconds before {thing}ing your {animal} again')
+	amountr = db['members'][str(message.author.id)]['animals'][animal]['amount']
 
 	a = db["members"]
 	user = a[str(message.author.id)]
@@ -95,18 +95,20 @@ async def useanimal(message, animal, client, thing):
 
 		user["animals"][animal]["amount"] -= amountLost
 		await message.channel.send(f"Idiot your {animal}(s) couldn't live there and {amountLost} died.")
-
 		db["members"] = a
+		return
 
+	thingsaid = ''
 	echance = random.randint(1,2)
 	if echance ==2:
 		whatthingchance = random.randint(1,2)
 		if whatthingchance == 1:
+			if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
 			if amount > 11:
 				death = random.choice(list(deaths.keys()))
 				deadamount = random.randint(1,round(amount/5))
 				thingtotype = deaths[death]
-				await message.channel.send(f'Oh no! {message.author.mention}, {deadamount} of your {animal}s are trying to die {death}! quick, type `{thingtotype}` in the chat now!')
+				thingsaid = f'Oh no! {message.author.mention}, {deadamount} of your {animal}s are trying to die {death}! quick, type `{thingtotype}` in the chat now!'
 
 				channel = message.channel
 
@@ -132,7 +134,7 @@ async def useanimal(message, animal, client, thing):
 		elif whatthingchance == 2:
 			if amount > 8:
 				thingtotype = random.choice(births)
-				await message.channel.send(f'{message.author.mention} ar ur animals are trying to breed, better type `{thingtotype}` or else they won\'t')
+				thingsaid = f'{message.author.mention} ar ur animals are trying to breed, better type `{thingtotype}` or else they won\'t'
 
 				channel = message.channel
 
@@ -153,3 +155,4 @@ async def useanimal(message, animal, client, thing):
 					a[str(message.author.id)]['animals'][animal]['amount'] += bornedamount
 					db['members'] = a
 					return
+	await message.reply(f'You {thing}ed `{amountr}` `{animal}(s)`, gaining `{amount}` `{merch}`. Wait `{cooldown}` seconds before {thing}ing your {animal} again\n{thingsaid}')

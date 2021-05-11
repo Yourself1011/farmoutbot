@@ -3,7 +3,8 @@
 import os
 from os.path import join, dirname
 from importlib import import_module
-
+ 
+ 
 import discord
 from dotenv import load_dotenv
 from replit import db
@@ -47,7 +48,7 @@ async def on_ready():
 async def on_guild_join(guild):
 	a = db['server']
 	a[str(guild.id)] = {
-		'prefix': 'eye',
+		'prefix': 'i',
 		'channel': None
 	}
 	db['server'] = a
@@ -63,7 +64,7 @@ async def on_message(message):
 	if str(message.guild.id) not in db["server"]:
 		a = db['server']
 		a[str(message.guild.id)] = {
-			'prefix': 'eye',
+			'prefix': 'i',
 			'channel': None
 		}
 		db['server'] = a
@@ -117,7 +118,7 @@ async def on_message(message):
 				tip = random.choice(tips)
 				await message.channel.send(tip)
 				return
-			thingchance = random.randint(1,80)
+			thingchance = random.randint(1,250)
 			if thingchance == 1 and str(message.author.id) in db['members']:
 				await thinghappen(message, client)
 

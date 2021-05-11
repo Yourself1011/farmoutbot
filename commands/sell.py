@@ -54,11 +54,12 @@ async def sell(message, client):
 	else:
 		amount = 1
 	if amount <= 0:
-		await message.channel.send(' ar ho hee no nor mee')
+		await message.channel.send('what are you doing, how are you supposed to sell negative things, go back to kindergarten u idiot')
 		return
 
 	thingr = random.randint(1,35)
 	if thingr == 1:
+		if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
 		things = ['rock', 'tree', 'rock', 'stone']
 		thing2 = random.choice(things)
 		await message.channel.send(f'On the way over to sell your thingies, you accidentally punched a hard {thing2} and died. you paid 100 coins to be reborn.')

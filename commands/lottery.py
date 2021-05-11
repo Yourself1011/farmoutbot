@@ -3,10 +3,15 @@ from replit import db
 async def lottery(message, client):
 	if str(message.author.id) not in db['members']:
 		return
+	args = message.content.split(' ')
+	if len(args) == 3:
+		if args[2].lower() == 'view':
+			thing = len(db['lottery'])
+			await message.channel.send(f'there are currently {thing} people in the lottery')
+			return
 	if message.author.id in db['lottery']:
 		await message.channel.send('you\'re already in the lottery drumbo')
 		return
-	args = message.content.split(' ')
 	if len(args) == 2:
 		if db['members'][str(message.author.id)]['reputation'] < 250:
 			await message.channel.send('your reputation is too low to participate in the lottery')
@@ -21,8 +26,3 @@ async def lottery(message, client):
 		a = db['lottery']
 		a.append(message.author.id)
 		db['lottery'] = a
-	if len(args) == 3:
-		if args[2].lower() == 'view':
-			thing = len(db['lottery'])
-			await message.channel.send(f'there are currently {thing} people in the lottery')
-			return

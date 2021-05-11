@@ -15,7 +15,8 @@ async def top(message, client):
 
 	embed = discord.Embed(
 		title = f"Richest users in {message.guild.name}",
-		description = f"You are #{[i[0] for i in sort].index(message.author.id) + 1 if str(message.author.id) in db['members'] else '-1 since you do not have an account'}\n\n{thing}"
+		description = f"You are #{[i[0] for i in sort].index(message.author.id) + 1 if str(message.author.id) in db['members'] else '-1 since you do not have an account'}\n\n{thing}",
+		colour = discord.Colour.red()
 	)
 
 	await message.channel.send(embed=embed)

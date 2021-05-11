@@ -3,8 +3,10 @@ from replit import db
 import asyncio
 
 async def thinghappen(message, client):
+	if str(message.author.id) not in db['members']: return
 	if db['members'][str(message.author.id)]['animals'] == {}:
 		return
+	if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
 	thing = False
 	for i in db['members'][str(message.author.id)]['animals']:
 		if db['members'][str(message.author.id)]['animals'][i]['amount'] > 5: thing = True
@@ -21,7 +23,7 @@ async def thinghappen(message, client):
 	thingr = random.randint(1,5)
 	print(thingr)
 	if thingr in [1, 2]: amountpaid = random.randint(1,5)
-	if thingr == [3, 4]: amountpaid = random.randint(15,35)
+	if thingr in [3, 4]: amountpaid = random.randint(15,35)
 	if thingr == 5: amountpaid = random.randint(50,100)
 	if amountpaid > db['members'][str(message.author.id)]['money']: amountpaid = int(round(db['members'][str(message.author.id)]['money']/5))
 	await message.channel.send(f'{message.author.mention} hey {amount} of your `{animal}(s)` have gotten {disease}, say `pay` to pay for their {amountpaid} coin treatment or they will die')
@@ -46,5 +48,7 @@ async def thinghappen(message, client):
 		await channel.send(f'your animals are saved, but you paid {amountpaid*amount} coins for the medical bills')
 		a = db['members']
 		a[str(message.author.id)]['money'] -= amountpaid*amount
+		if a[str(message.author.id)]['money'] < 0:
+			a[str(message.author.id)]['money'] = 0
 		db['members'] = a
 		return
