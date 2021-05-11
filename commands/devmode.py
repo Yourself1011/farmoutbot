@@ -76,7 +76,11 @@ async def devmode(message, client):
 				},
 				"cooldowns": {},
 				"location": "default",
-				"locations": {} 
+				"locations": {},
+                "settings": {
+                    "votedm": True,
+					"tips": True
+                }
 			} 
 			await message.channel.send("Devmode is now ON")
 		db["members"] = members
@@ -144,7 +148,11 @@ async def devmode(message, client):
 				},
 				"cooldowns": {},
 				"location": "default",
-				"locations": {}
+				"locations": {},
+                "settings": {
+                    "votedm": True,
+					"tips": True
+                }
 			} 
 			await message.channel.send("Devmode is now ON")
 		db["members"] = members

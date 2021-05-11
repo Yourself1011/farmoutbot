@@ -333,7 +333,14 @@ commands = {
 		'description': 'go look in the beach for some cool stuff',
 		'aliases': ['bea'],
 		'category': 'gather'
-	}
+	},
+	"settings": {
+		"name": "settings",
+		"usage": "settings [setting [value]]",
+		"description": "Look at your current settings or change a setting.",
+		"aliases": ["set", "config"],
+		"category": "utility"
+	},
 }
 
 # "": {

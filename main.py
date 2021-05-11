@@ -87,8 +87,7 @@ async def on_message(message):
 
 	msg = message.content
 	msg = msg.split(' ')
-	msg.pop(0)
-	msg = ' '.join(msg)
+	msg = msg[1]
 
 	if msg.lower() in animals and msg.lower() != 'name':
 		thing = animals[msg.lower()]['thing']
@@ -97,11 +96,11 @@ async def on_message(message):
 
 	command = None
 	for i in commands:
-		if msg.lower().startswith(commands[i]['name']):
+		if msg.lower() == commands[i]['name']:
 			command = commands[i]
 			break
 		for j in commands[i]['aliases']:
-			if msg.lower().startswith(j):
+			if msg.lower() == j:
 				command = commands[i]
 				break
 
@@ -123,7 +122,7 @@ async def on_message(message):
 
 				db["members"] = a
 
-				if bool(sites) and bool(links):
+				if bool(sites) and bool(links) and user["settings"]["votedm"]:
 					embed = discord.Embed(
 						title = "You can vote again at",
 						description = "\n".join([f"[{site}]({link})" for site, link in zip(sites, links)])
