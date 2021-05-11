@@ -164,10 +164,6 @@ async def eat(message, client):
 			f"You {verb1[randint(0, len(verb1) - 1)]} {repeat} {eated}(s) and {verb2[randint(0, len(verb2) - 1)]} {itemOut}, and {money} coins"
 		)
 
-		a = db["betatesters"]
-		a.append(str(message.author.id))
-		db["betatesters"] = a
-
 	a = db['members']
 	if eated in a[str(message.author.id)]["merch"]:
 		a[str(message.author.id)]['merch'][eated] -= 1
