@@ -137,7 +137,7 @@ async def on_message(message):
 				db['members'] = a
 			
 			tipchance = random.randint(1,50)
-			if tipchance == 1:
+			if tipchance == 1 and db["members"][str(message.author.id)]["settings"]["tips"]:
 				tip = random.choice(tips)
 				await message.channel.send(tip)
 				return
