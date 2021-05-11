@@ -33,11 +33,10 @@ async def inventory(message, client):
 	if db['members'][user]['animals'] == {}:	
 		aout = None
 	else:
-		for i in animals:
-			if i in db['members'][user]['animals']:
-				c = db['members'][user]['animals'][i]['amount']
-				kare=animals[i]['name']
-				aout.append(f'{kare}: {c}')
+		for i in db['members'][user]['animals']:
+			c = db['members'][user]['animals'][i]['amount']
+			kare=animals[i]['name']
+			aout.append(f'{kare}: {c}')
 
 		aout = "".join(  # Join an array together
 			[
@@ -50,12 +49,10 @@ async def inventory(message, client):
 	if db['members'][user]['tools'] == {}:
 		tout = None
 	else:
-		for i in tools:
-			if i != 'name':
-				if tools[i]['name'] in db['members'][user]['tools']:
-					c = db['members'][user]['tools'][tools[i]['name']]
-					name = tools[i]['name']
-					tout.append(f'{name}: {c} durability')
+		for i in db['members'][user]['tools']:
+			c = db['members'][user]['tools'][tools[i]['name']]
+			name = tools[i]['name']
+			tout.append(f'{name}: {c} durability')
 
 		tout = "".join(  # Join an array together
 			[
@@ -69,10 +66,8 @@ async def inventory(message, client):
 	if mercha == {}:
 		mout = None
 	else:
-		for m in merch:
-			if m != 'name':
-				if m in mercha:
-					mout.append(f"{merch[m]['name']}: {str(mercha[m])}")
+		for m in mercha:
+			mout.append(f"{merch[m]['name']}: {str(mercha[m])}")
 
 		mout = "".join(  # Join an array together
 			[
@@ -86,11 +81,9 @@ async def inventory(message, client):
 	if seed == {}:
 		sout = None
 	else:
-		for m in seeds:
-			if m != 'name':
-				if seeds[m]['name'] in db['members'][user]['seeds']:
-					amount = str(db['members'][user]['seeds'][m]['amount'])
-					sout.append(f"{seeds[m]['name']}: {amount}")
+		for m in db['members'][user]['seeds']:
+			amount = str(db['members'][user]['seeds'][m]['amount'])
+			sout.append(f"{seeds[m]['name']}: {amount}")
 
 		sout = "".join(  # Join an array together
 			[

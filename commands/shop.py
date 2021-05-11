@@ -2,6 +2,7 @@ import discord
 from replit import db
 from zstats import softSearch, getShop
 import random
+from math import ceil
 
 async def shop(message, client):
 	args = message.content.split(' ')
@@ -22,17 +23,6 @@ async def shop(message, client):
 	if len(args) == 2:
 		await message.channel.send('**shops:** \n-animals\n-tools\n-seeds\n-merch')
 		return
-
-	thing = random.randint(1,35)
-	if thing == 1:
-		things = ['pebble', 'stone', 'slipper', 'sweater', 'ice', 'tree branch', 'neighbour\'s crops', 'raindrop', 'sock']
-		thing2 = random.choice(things)
-		await message.channel.send(f'On the way over to see the shop, you accidentally slipped on a slippery {thing2} and died. you paid 100 coins to be reborn.')
-		a = db['members']
-		if a[str(message.author.id)]['money']<100: a[str(message.author.id)]['money'] = 0
-		else:
-			a[str(message.author.id)]['money'] -= 100
-		db['members'] = a
 
 	if args[2] not in ['animals', 'tools', 'merch', 'merchandise', 'seeds']:
 		search = softSearch(check, args[2], ["name"])
@@ -118,8 +108,16 @@ async def shop(message, client):
 	else:
 		i =0
 		amount = 0
+	shopObj = {"animals": animals, "tools": tools, "seeds": seeds, "merch": merch}
+	maxPage = ceil(len(shopObj[shop])/9)
+
+	if i >= maxPage:
+		i = maxPage - 1
+		amount = maxPage
+	
 	i *= 9
 	a2 = i+9
+
 	if shop == 'animals':
 		dictCopy = dict(animals)
 		del dictCopy["name"]
@@ -207,7 +205,7 @@ async def shop(message, client):
 
 		r = intsSorted + strsSorted
 		while i<a2:
-			if True:
+			try:
 				if r[i] != 'name':
 					cost = seeds[r[i]]['cost']
 					sellcost = seeds[r[i]]['sellcost']
@@ -217,12 +215,12 @@ async def shop(message, client):
 					tradevalue = seeds[r[i]]['tradevalue']
 					e.add_field(name = seeds[r[i]]['name'], value = f'Cost: `{cost}`\nSell amount: `{sellcost}`\n{growtime}\nTrade value: `{tradevalue}`')
 				i += 1
-			# except:
-			# 	break
+			except:
+			 	break
 	thing = int(amount)+1
 	thing = str(thing)
 	if thing == '1':
 		thing = '2'
-	e.set_footer(text = f'Use <{prefix} shop {args[2].lower()} {thing}> to see the next page of {args[2].lower()}.')
+	e.set_footer(text = f'Use <{prefix} shop {args[2].lower()} {thing}> to see the next page of {args[2].lower()}. Page {int(thing) - 1}/{maxPage}')
 	e.set_author(name=f'{args[2].lower()} shop:', icon_url=message.author.avatar_url)
 	await message.channel.send(embed = e)

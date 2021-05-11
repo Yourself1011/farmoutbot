@@ -15,14 +15,10 @@ async def contract(message, client):
 		await message.channel.send('uhh wrong')
 		return
 	command = args[2].lower()
-	currentpart = False
-
-	for i in db['members'][str(message.author.id)]['donecontracts'][0]:
-		if len(i) < 3:
-			currentpart = i
-			break
-	if not currentpart: await message.channel.send('you\'ve already done all the contracts lol'); return
-	currentpart = str(currentpart)
+	try:
+		currentpart = str(db['members'][str(message.author.id)]['currentcontract'][0])
+	except: 
+		currentpart = '1'
 
 	if command == 'show':
 		e = discord.Embed(
@@ -51,7 +47,7 @@ async def contract(message, client):
 		signed = int(args[3])
 		if signed not in [1, 2, 3]: await message.channel.send('what'); return
 		if signed in db['members'][str(message.author.id)]['donecontracts'][0][currentpart]: await message.channel.send('oy you\'ve already done that contract'); return
-		if not db['members'][str(message.author.id)]['currentcontract'] == [] and signed == db['members'][str(message.author.id)]['currentcontract'][1] and currentpart == db['members'][str(message.author.id)]['currentcontract'][0]: await message.channel.send('you\'re doing that contract right now idot'); return
+		if not db['members'][str(message.author.id)]['currentcontract'] == [] and signed == db['members'][str(message.author.id)]['currentcontract'][1]: await message.channel.send('you\'re doing that contract right now idot'); return
 		a = db['members']
 		a[str(message.author.id)]['currentcontract'] = [currentpart, signed]
 		db['members'] = a
@@ -59,7 +55,7 @@ async def contract(message, client):
 		return
 
 	if command == 'current':
-		if db['members'][str(message.author.id)]['currentcontract'] == []:
+		if db['members'][str(message.author.id)]['currentcontract'] == []or len(db['members'][str(message.author.id)]['currentcontract']) == 1:
 			await message.channel.send('you havent signed a contract yet')
 			return
 		e = discord.Embed(
@@ -78,24 +74,33 @@ async def contract(message, client):
 		await message.reply(embed = e)
 
 	if command == 'complete':
-		if db['members'][str(message.author.id)]['currentcontract'] == []:
+		if db['members'][str(message.author.id)]['currentcontract'] == [] or len(db['members'][str(message.author.id)]['currentcontract']) == 1:
 			await message.channel.send('you havent signed a contract yet bruh')
 			return
 		completed = str(db['members'][str(message.author.id)]['currentcontract'][1])
-		currentpart = db['members'][str(message.author.id)]['currentcontract'][0]
-		print(completed, currentpart)
+		currentpart = str(db['members'][str(message.author.id)]['currentcontract'][0])
 		if contracts[currentpart][completed]['need'][2] not in db['members'][str(message.author.id)]['merch'] or contracts[currentpart][completed]['need'][1] > db['members'][str(message.author.id)]['merch'][contracts[currentpart][completed]['need'][2]]:
 			await message.channel.send('you dont have what you need to complete the contract'); return
 		a = db['members']
-		a[str(message.author.id)]['currentcontract'] = []
+		if a[str(message.author.id)]['currentcontract'][1] == 3:
+			a[str(message.author.id)]['currentcontract'] = [currentpart+1]
+		else:
+			a[str(message.author.id)]['currentcontract'] = [currentpart]
 		try:
 			a[str(message.author.id)]['donecontracts'][0][int(currentpart)].append(completed)
 		except:
 			a[str(message.author.id)]['donecontracts'][0][int(currentpart)] = [completed]
-		if contracts[currentpart][completed]['reward'][2] not in db['members'][str(message.author.id)]['merch']:
-			a[str(message.author.id)]['merch'][contracts[currentpart][completed]['reward'][2]] = contracts[currentpart][completed]['reward'][1]
+		if contracts[currentpart][completed]['reward'][2] != 'ginsengseeds':
+			if contracts[currentpart][completed]['reward'][2] not in db['members'][str(message.author.id)]['merch']:
+				a[str(message.author.id)]['merch'][contracts[currentpart][completed]['reward'][2]] = contracts[currentpart][completed]['reward'][1]
+			else:
+				a[str(message.author.id)]['merch'][contracts[currentpart][completed]['reward'][2]] += contracts[currentpart][completed]['reward'][1]
 		else:
-			a[str(message.author.id)]['merch'][contracts[currentpart][completed]['reward'][2]] += contracts[currentpart][completed]['reward'][1]
+			if contracts[currentpart][completed]['reward'][2] not in db['members'][str(message.author.id)]['seeds']:
+				a[str(message.author.id)]['seeds'][contracts[currentpart][completed]['reward'][2]]['amount'] = contracts[currentpart][completed]['reward'][1]
+			else:
+				a[str(message.author.id)]['seeds'][contracts[currentpart][completed]['reward'][2]]['amount'] += contracts[currentpart][completed]['reward'][1]
+
 		if len(contracts[currentpart][completed]['reward']) == 4:
 			a[str(message.author.id)]['money'] += contracts[currentpart][completed]['reward'][3]
 		a[str(message.author.id)]['merch'][contracts[currentpart][completed]['need'][2]] -= contracts[currentpart][completed]['need'][1]
@@ -103,7 +108,10 @@ async def contract(message, client):
 			del a[str(message.author.id)]['merch'][contracts[currentpart][completed]['need'][2]]
 		db['members'] = a
 		if currentpart == 4 and completed == 3:
-			await message.channel.send('woah you did all the contracts already? i better add more soon lol')
+			await message.reply('as you come home with the eggs, you notice something. one of the eggs is very, very heavy, much heavier than the rest of them. \n\nyou crack it open, and see something that only has been mentioned in myths, stories, and rumors. you find the undead wool.\n\nthis wool will protect you, your animals, and your crops from death as long as you have it. you cannot trade for it, but you can gift it to others.\n**undeadwool +1**')
+			a = db['members']
+			a[str(message.author.id)]['merch']['undeadwool'] = 1
+			db['members'] = a
 			return
 		else:
 			await message.reply(f'yay you completed contract #{completed} of part {currentpart}.')

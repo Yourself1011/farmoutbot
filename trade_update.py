@@ -162,4 +162,4 @@ async def trade_update(client):
 
 
 	if len(db['lottery'])<1: return 
-	else: drawlottery(client)
+	else: await drawlottery(client)

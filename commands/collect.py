@@ -45,9 +45,11 @@ async def collect(message, client):
 	amount = a[str(message.author.id)]['plantcooldowns'][plant]['amount']
 	chance = random.randint(0, 40)
 	if not bool(chance) and amount > 5:
+		if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
 		things = ['whoops ur fat little fingers slipped and pulled out the plants by accident', 'you farted on the plants because you ate too many beans last night', 'you sneezed and blew all the plants away', 'some dumb animal came by and pulled them out', 'you were too fat and squeezed them by acccident', 'your plants ran away', 'you accidentally planted them in a volcano']
 		thing = random.choice(things)
 		thing2 = random.randint(1,3)
+		if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
 		await message.channel.send(f'{thing}. `{thing2}` of your plants died.')
 		a[str(message.author.id)]['plantcooldowns'][plant]['amount'] -= thing2
 		db['members'] = a

@@ -15,7 +15,7 @@ contracts = {
 		'3': {
 			'title': 'Tiktok :clock:',
 			'description': 'The market wants some clocks. You don\'t know why, or what they\'ll do with them, but give them 80 clocks and you\'ll recieve 10 camel dungs.',
-			'need': ['80 clocks', 80, 'clocks'],
+			'need': ['80 clocks', 80, 'clock'],
 			'reward': ['10 camel dungs', 10, 'cameldung']
 		},
 	},
@@ -28,8 +28,8 @@ contracts = {
 		},
 		'2': {
 			'title': 'Business Offers :handshake: ',
-			'description': 'A large business has put in an order for 100 wool. They\'ll give you 7 computers in return.',
-			'need': ['100 wool', 100, 'wool'],
+			'description': 'A large business has put in an order for 15 umbrellas. They\'ll give you 7 computers in return.',
+			'need': ['15 umbrellas', 15, 'umbrella'],
 			'reward': ['7 computers', 7, 'computers']
 		},
 		'3': {
@@ -74,7 +74,9 @@ contracts = {
 		},
 		'3': {
 			'title': 'Endangered',
-			'description': 'The city, along with a big business, wants to pressure you into selling your farm to them so that they can build	skyrises and buildings there. They are saying that your farm doesn\'t provide enough resources to be useful, or as useful as the buildings that they are planning to build. '
+			'description': 'The city, along with a big business, wants to pressure you into selling your farm to them so that they can build	skyrises and buildings there. They are saying that your farm doesn\'t provide enough resources to be useful, or as useful as the buildings that they are planning to build. You must produce 10000 milk, enough to feed the entire city for 2 weeks, in order to prove that your farm is worth keeping. You\'ll get 500 eggs in return.',
+			'need': ['10000 milk', 10000, 'milk'],
+			'reward': ['500 eggs', 500, 'egg']
 		},
 	}
 }

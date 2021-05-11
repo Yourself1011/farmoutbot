@@ -50,7 +50,7 @@ async def start(message, client):
 				'3': [],
 				'4': []
 			}],
-			'currentcontract': [],
+			'currentcontract': [1, 1],
 			'prestige': 0,
 			"location": "default",
 			"locations": {},

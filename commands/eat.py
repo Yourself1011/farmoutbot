@@ -21,36 +21,35 @@ async def eat(message, client):
 		return
 	if eated == 'ginseng':
 		thing = random.choice([animals, tools, merch, seeds])
-		thingr = random.choice(list(thing.keys))
-		if not str(thing[thingr]['cost']).isnumeric():
-			while not str(thing[thingr]['cost'].isnumeric()):
+		values = thing.values()
+		things = list(values)
+		thingr = random.choice(things)
+		name = thingr['name'].split(' ')[0]
+		if not str(thing[name]['cost']).isnumeric():
+			while not str(thing[name]['cost'].isnumeric()):
 				thing = random.choice([animals, tools, merch, seeds])
-				if str(thing[thingr]['cost'].isnumeric()):
+				if str(thing[name]['cost'].isnumeric()):
 					break
 		if thing == animals: amount = random.randint(1, 3)
 		if thing == tools: amount = 1
-		if thing == merch: amount = random.randint(3, 6)
-		if thing == seeds: amount = random.randint(10, 20)
-		await message.channel.send(
-			f'you ate your ginseng, and the ginseng gods gifted you `{amount} {thingr}(s)`.'
-		)
+		if thing == merch: amount = random.randint(5,10)
+		if thing == seeds: amount = random.randint(10,20)
+		await message.channel.send(f'you ate your ginseng, and the ginseng gods gifted you `{amount} {name}(s)`.')
 		a = db['members'][str(message.author.id)]
-		if thing not in a[thing['name']]:
-			if thing == animals:
-				a['animals'][thingr] = {'amount': amount, 'lastused': 0}
-			if thing == tools:
-				a['tools'][thingr] = {
-					'durability': tools[thingr]['durability']
-				}
-			if thing == merch: a['merch'][thingr] = amount
-			if thing == seeds: a['seeds'][thingr] = {'amount': amount}
+		if name not in a[thing['name']]:
+			if thing == animals: a['animals'][name] = {'amount': amount, 'lastused': 0}
+			if thing == tools: a['tools'][name] = {'durability': tools[name]['durability']}
+			if thing == merch: a['merch'][name] = amount
+			if thing == seeds: a['seeds'][name] = {'amount': amount}
 		else:
 			if thing in [animals, seeds]:
-				a[thing['name']][thingr]['amount'] += amount
+				a[thing['name']][name]['amount'] += amount
 			if thing == tools:
-				a['tools'][thingr]['durability'] = tools[thingr]['durability']
+				a['tools'][name]['durability'] = tools[name]['durability']
 			if thing == merch:
-				a['merch'][thingr] += amount
+        
+				a['merch'][name] += amount
+		a = db['members']
 
 	if eated == 'mushroom':
 		await message.channel.send(

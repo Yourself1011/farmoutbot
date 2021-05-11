@@ -318,13 +318,13 @@ commands = {
 		'name': 'eat',
 		'usage': 'eat some stuff',
 		'aliases': [],
-		'category': 'misc'
+		'category': 'game'
 	},
 	"location": {
 		"name": "location",
 		"usage": "location <my|view [page]|buy <location> ['liquidate']|transfer [animals] <location>>",
 		"description": "Looks at locations",
-		"aliases": ["l", "loc", "locations"],
+		"aliases": ["lc", "loc", "locations"],
 		"category": "game"
 	},
 	'beach': {
@@ -341,6 +341,41 @@ commands = {
 		"aliases": ["set", "config"],
 		"category": "utility"
 	},
+	'sitdown':{
+		'name':'sitdown',
+		'usage': '<sitdown>',
+		'description': 'SIDDOWN',
+		'aliases': [],
+		'category': 'other'
+	},
+	'zoo': {
+		'name': 'zoo',
+		'usage': '<zoo>',
+		'description': 'what weird and unusual events will occur at the zoo?',
+		'aliases':[],
+		'category': 'other'
+	},
+	'vote': {
+		'name': 'vote',
+		'usage': '<vote>',
+		'description': 'pls vote so i can get more players',
+		'aliases':[],
+		'category': 'misc'
+	},
+	'sigh': {
+		'name': 'sigh',
+		'usage': '<sigh>',
+		'description': 'what will happen when you sigh?',
+		'aliases':['sighuh', 'sihg'],
+		'category': 'other'
+	},
+	'fixed': {
+		'name': 'fixed',
+		'usage': 'lol',
+		'description': 'yes',
+		'aliases': ['fd'],
+		'category': 'utility'
+	}
 }
 
 # "": {

@@ -198,6 +198,14 @@ tools = {
 		'animal': 'sheep',
 		'tradevalue': 15
 	},
+	'shaver':{
+		'name':'shaver',
+		'cost':80,
+		'sellcost':50,
+		'durability': 100,
+		'animal':'sheep',
+		'tradevalue':45
+	},
 	'wateringcan': {
 		'name': 'wateringcan',
 		'cost': 25,
@@ -433,6 +441,7 @@ seeds = {
 		'sellcost': 'not sellable',
 		'result': 'ginseng',
 		'tradevalue': 50,
+		'growtime': 1000000,
 		'get': True,
 		'give': True
 	}
@@ -533,12 +542,6 @@ merch = {
 		'cost': 20,
 		'sellcost': 16,
 		'tradevalue': 15
-	},
-	'umbrella': {
-		'name': 'umbrella :beach_umbrella: ',
-		'cost': 50,
-		'sellcost': 44,
-		'tradevalue': 43,
 	},
 	'keyboard': {
 		'name': 'keyboard :keyboard:',
@@ -644,7 +647,7 @@ merch = {
 		'get': True
 	},
 	'ginseng': {
-		'name': 'ginseng',
+		'name': 'ginseng :herb:',
 		'cost': 'not buyable',
 		'sellcost': 'not sellable',
 		'tradevalue': 100,
@@ -665,6 +668,12 @@ merch = {
 		"sellcost": 15,
 		"tradevalue": 13
 	},
+	'umbrella': {
+		'name': 'umbrella :beach_umbrella: ',
+		'cost': 'gather only',
+		'sellcost': 44,
+		'tradevalue': 43,
+	},
 
 	#Contract only merch
 	'cake': {
@@ -674,6 +683,13 @@ merch = {
 		'tradevalue': 5,
 		'get': False,
 		'give': True
+	},
+	'undeadwool': {
+		'name': 'undeadwool :skull_crossbones: :cloud: ', 
+		'cost': 'cannot be bought, protects you and all your animals and plants from death',
+		'sellcost': 'cant sell',
+		'tradevalue': 'not tradeable',
+		'get': True, 'give': True
 	},
 
 	# Seasonal merch

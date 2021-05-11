@@ -19,6 +19,7 @@ async def beach(message, client):
 
 	thing = random.randint(1,35)
 	if thing == 1:
+		if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
 		things = ['bug', 'fish', 'tree', 'plant', 'elephant', 'neighbour']
 		thing2 = random.choice(things)
 		await message.channel.send(f'On the way over to the beach, you accidentally smelled a really smelly {thing2} and died. you paid 100 coins to be reborn.')
@@ -61,13 +62,13 @@ async def beach(message, client):
 
 	breakAmt = randint(3, 6)
 
-	user["tools"]["hikingboots"] -= breakAmt
+	user["tools"]["sandals"] -= breakAmt
 	
 	if user["tools"]["sandals"] <= 0:
 		del user["tools"]["sandals"]
 		durabilityMsg = "Your sandals broke!"
 	else:
-		durabilityMsg = f"Your sandals lost {breakAmt} durability! They are now at {user['tools']['hikingboots']} durability."
+		durabilityMsg = f"Your sandals lost {breakAmt} durability! They are now at {user['tools']['sandals']} durability."
 
 	reserveMsg = ""
 	if not bool(randint(0, 7)):
@@ -87,6 +88,7 @@ async def beach(message, client):
 		await message.channel.send(f"You found nothing on the beach\n{durabilityMsg}\n{reserveMsg}")
 
 	elif item[0] == 'death':
+		if 'undeadwool' in db['members'][message.author.id]['merch']: return
 		await message.channel.send('You were searching the beach when, all of a sudden, a huge horde of seagulls swooped down on you and pecked you to death. you paid 100 coins to be reborn.')
 		m = db['members']
 		m[str(message.author.id)]['money'] -= 100

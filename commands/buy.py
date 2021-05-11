@@ -50,6 +50,8 @@ async def buy(message, client):
 		else:
 			amount = db['members'][str(message.author.id)]['money']//item['cost']
 	elif len(args) == 4:
+		if args[3] == '0':
+			await message.channel.send('you bought 0 things. are you proud of yourself?'); return
 		amount = convertInt(args[3])
 		if not bool(amount):
 			await message.channel.send(" That's not a number")
