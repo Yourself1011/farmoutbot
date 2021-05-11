@@ -163,9 +163,10 @@ async def eat(message, client):
 			f"You {verb1[randint(0, len(verb1) - 1)]} {repeat} {eated}(s) and {verb2[randint(0, len(verb2) - 1)]} {itemOut}, and {money} coins"
 		)
 
-	a = db['members']
-	if eated in a[str(message.author.id)]["merch"]:
-		a[str(message.author.id)]['merch'][eated] -= 1
-		if a[str(message.author.id)]['merch'][eated] == 0:
-			del a[str(message.author.id)]['merch'][eated]
-	db['members'] = a
+	else:
+		a = db['members']
+		if eated in a[str(message.author.id)]["merch"]:
+			a[str(message.author.id)]['merch'][eated] -= 1
+			if a[str(message.author.id)]['merch'][eated] == 0:
+				del a[str(message.author.id)]['merch'][eated]
+		db['members'] = a
