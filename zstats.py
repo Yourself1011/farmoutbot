@@ -333,6 +333,14 @@ tools = {
 		'sellcost': 27,
 		'animal': 'forest',
 		'tradevalue': 9
+	},
+	'shoes': {
+		'name': 'shoes',
+		'cost': 75,
+		'durability': 40,
+		'sellcost': 40,
+		'animal': 'jungle',
+		'tradevalue': 15
 	}
 }
 
@@ -443,6 +451,16 @@ seeds = {
 		'tradevalue': 50,
 		'growtime': 1000000,
 		'get': True,
+		'give': True
+	},
+	'pridewatermelonseeds': {
+		'name': 'pridewatermelonseeds',
+		'cost': 100,
+		'sellcost': 90,
+		'result': 'pridewatermelon',
+		'tradevalue': 10,
+		'growtime': 60000,
+		'get': False,
 		'give': True
 	}
 
@@ -659,6 +677,12 @@ merch = {
 		'cost': 35,
 		'sellcost': 32,
 		'tradevalue': 20
+	},
+	'pridewatermelon': {
+		'name': 'pridewatermelon :watermelon: :rainbow_flag:',
+		'cost': 80,
+		'sellcost': 75,
+		'tradevalue': 65
 	},
 
 	# Gather only merch

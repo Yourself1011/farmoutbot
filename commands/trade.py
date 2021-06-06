@@ -95,7 +95,7 @@ async def trade(message, client):
 				a[str(message.author.id)]['merch'][i[2]] = i[1]
 	
 	reps = {0: [0, 5], 1: [7, 15], 2: [20, 35], 3: [35, 45], 4: [50, 60]}
-	repGain = round(randint(reps[trade][0], reps[trade][1])/2)
+	repGain = round(randint(reps[trade][0], reps[trade][1])/3)
 	a[str(message.author.id)]['reputation'] += repGain
 
 	db['members'] = a

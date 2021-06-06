@@ -43,7 +43,12 @@ async def start(message, client):
 				"tradeAmts": [0, 0, 0],
 				"stock": [0, 0, 0]
 			},
-			"cooldowns": {},
+			"cooldowns": {
+				'daily': 0,
+				'hourly': 0,
+				'lastdaily': ' ¯\_(ツ)_/¯',
+				'dailystreak': 0
+			},
 			'donecontracts': [{
 				'1': [],
 				'2': [],
@@ -54,10 +59,10 @@ async def start(message, client):
 			'prestige': 0,
 			"location": "default",
 			"locations": {},
-            "settings": {
-                "votedm": True,
+      "settings": {
+        "votedm": True,
 				"tips": True
-            }
+      }
 		} 
 		db['members'] = a
 		prefix = db['server'][str(message.guild.id)]['prefix']

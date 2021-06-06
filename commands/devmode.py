@@ -62,26 +62,32 @@ async def devmode(message, client):
 				'multi': 1.0,
 				'commandsused': 0,
 				'datemade': datemade,
+				"trades": {
+					"lastTradeId": 0,
+					"tradeAmts": [0, 0, 0],
+					"stock": [0, 0, 0]
+				},
+				"cooldowns": {
+					'daily': 0,
+					'hourly': 0,
+					'lastdaily': ' ¯\_(ツ)_/¯',
+					'dailystreak': 0
+				},
 				'donecontracts': [{
 					'1': [],
 					'2': [],
 					'3': [],
 					'4': []
 				}],
-				'currentcontract': [],
-				"trades": {
-					"lastTradeId": 0,
-					"tradeAmts": [0, 0, 0],
-					"stock": [0, 0, 0]
-				},
-				"cooldowns": {},
+				'currentcontract': [1, 1],
+				'prestige': 0,
 				"location": "default",
 				"locations": {},
-                "settings": {
-                    "votedm": True,
+				"settings": {
+					"votedm": True,
 					"tips": True
-                }
-			} 
+				}
+			}
 			await message.channel.send("Devmode is now ON")
 		db["members"] = members
 

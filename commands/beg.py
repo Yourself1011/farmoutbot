@@ -28,10 +28,10 @@ async def beg(message, client):
 	rep = 0
 	thing = random.randint(1, 3)
 	if thing == 1:
-		rep = random.randint(20,50)
+		rep = random.randint(10,20)
 		await message.channel.send(f'**market:** no.\n{message.author.mention} you lost `{rep} rep`')
 	if thing == 2:
-		rep = random.randint(5,10)
+		rep = random.randint(1,6)
 		coins = random.randint(5,10)
 		await message.channel.send(f'**market:** UGH fineeeee\n{message.author.mention} you gained `{coins} coins` but lost `{rep} rep`.')
 	if thing == 3:

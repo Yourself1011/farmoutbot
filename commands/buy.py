@@ -114,13 +114,13 @@ async def buy(message, client):
 		await message.reply(f'{thingsaid}')
 		thingi = random.randint(1,20)
 		if thingi == 1:
-			thingj = random.randint(4,9)
+			thingj = random.randint(1,5)
 			await message.channel.send(f'{message.author.mention} you lucky ducky, you bought something that the market was trying to get rid of and your rep increased by `{thingj}`.')
 			a = db['members']
 			a[str(message.author.id)]['reputation'] += thingj
 			db['members'] = a
 		if thingi == 2:
-			thingj = random.randint(10,20)
+			thingj = random.randint(1,5)
 			await message.channel.send(f'{message.author.mention} bruh you bought something that the market didnt want to give, you lost `{thingj}` rep **and** `{int(round(thingj*2))} coins`.')
 			a = db['members']
 			if int(round(thingj*2)) > a[str(message.author.id)]['money']: a[str(message.author.id)]['money'] = 0

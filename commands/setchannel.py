@@ -1,5 +1,6 @@
 from replit import db
 import discord
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 
 async def setchannel(message, client):
 	if not message.author.guild_permissions.manage_guild:
@@ -25,10 +26,25 @@ async def setchannel(message, client):
 			await message.channel.send("I don't have enough permissions! Make sure I can create webhooks in that channel")
 			return
 
-		a = db['server']
-		a[str(message.guild.id)]['channel'] = int(channel)
-		a[str(message.guild.id)]["webhookUrl"] = webhook.url
-		db['server'] = a
-		server = message.guild.name
-		channel = db['server'][str(message.guild.id)]['channel']
-		await message.channel.send(f'The system messages channel for `{server}` is now <#{channel}>.')
+		await message.reply(
+			f"are you sure you want to change the system messages channel to <#{channel}>?",
+			components=[
+				Button(style=ButtonStyle.green, label="Yes"),
+				Button(style=ButtonStyle.red, label="No"),
+			],
+		)
+
+		res = await client.wait_for("button_click")
+		if res.author == message.author:
+			if res.component.label == 'No':
+				await message.reply('alr looks like we\'re not changing today')
+				return
+			else:
+				a = db['server']
+				a[str(message.guild.id)]['channel'] = int(channel)
+				a[str(message.guild.id)]["webhookUrl"] = webhook.url
+				db['server'] = a
+				server = message.guild.name
+				channel = db['server'][str(message.guild.id)]['channel']
+				await message.reply(f'The system messages channel for `{server}` is now <#{channel}>.')
+		return
