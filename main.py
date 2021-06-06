@@ -42,7 +42,9 @@ async def on_ready():
 	slkfjhasldkjfkan = random.choice(kljkalsdhfasjdkf)
 	await client.change_presence(status=discord.Status.idle, activity=discord.Game(name = slkfjhasldkjfkan))
 
-	print('babbon babbon bot babbon burp')
+	things = ["bong bong bong this is my song the bot is on", "babbon babbon bot babbon burp", "unga unga bunga boo, the bot is on, now time for poo"]
+
+	print(things[random.randint(0, len(things) - 1)])
 
 	await startLoop(client)
 
@@ -129,22 +131,40 @@ async def on_message(message):
 						description = "\n".join([f"[{site}]({link})" for site, link in zip(sites, links)])
 					)
 					await message.author.send(embed = embed)
-			await commands[command['name']]['execute'](message, client)
+			outRaw = await commands[command['name']]['execute'](message, client)
 			name = commands[command['name']]['name']
 			print(f'{message.author.name} did {name} command in {message.guild.name}')
 			if str(message.author.id) in db['members']:
 				a = db['members']
 				a[str(message.author.id)]['commandsused'] += 1
 				db['members'] = a
+
+			reply = outRaw[1] if (type(outRaw) == list or type(outRaw) == tuple) and len(outRaw) == 2 else False
+
+			out = outRaw[0] if type(outRaw) == list or type(outRaw) == tuple else ""
+
+			embed = outRaw if type(outRaw) == discord.Embed else None
 			
-			tipchance = random.randint(1,50)
+			tipchance = random.randint(1, 50)
 			if tipchance == 1 and db["members"][str(message.author.id)]["settings"]["tips"]:
 				tip = random.choice(tips)
-				await message.channel.send(tip)
+				out += f"\n\ntip: {tip}"
 				return
-			thingchance = random.randint(1,250)
+			thingchance = random.randint(1, 250)
 			if thingchance == 1 and str(message.author.id) in db['members']:
-				await thinghappen(message, client)
+				thing = thinghappen(message, client)
+				thingg = await thing.__anext__()
+
+				out += f"\n\n{thingg}" if type(thingg) == str else ""
+
+			if type(out) == str and not reply and (out != "" or bool(embed)):
+				await message.channel.send(out, embed = embed)
+
+			elif type(out) == str and reply and (out != "" or bool(embed)):
+				await message.reply(out, mention_author = db["members"][str(message.author.id)]["settings"]["replypings"], embed = embed)
+
+			if thingchance == 1 and str(message.author.id) in db['members']:
+				await thing.__anext__()
 
 		except:
 			traceback.print_exc()

@@ -17,7 +17,12 @@ async def settings(message, client):
 			"name": "Tips",
 			"desc": "Enable or disable whether you get tips",
 			"options": boolean
-		}
+		},
+		"replypings": {
+			"name": "Reply pings",
+			"desc": "Enable or disable whether you get pings on replies",
+			"options": boolean
+		},
     }
 
     if len(args) == 2 or (len(args) >= 3 and args[2].isnumeric()):
@@ -33,7 +38,7 @@ async def settings(message, client):
 
             embed.add_field(
                 name = values[i]['name'],
-                value = f"`{ids[i]}`\nDescription: {values[i]['desc']}\nOptions: {', '.join(values[i]['options'])}\nCurrently: {currentValue}"
+                value = f"`{ids[i]}`\n- Description: {values[i]['desc']}\n- Options: {', '.join(values[i]['options'])}\n- Currently: {currentValue}"
             )
 
         return await message.channel.send(embed = embed)

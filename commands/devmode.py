@@ -1,6 +1,6 @@
 from random import randint
 from replit import db
-from zstats import tools, updateDict, getMember
+from zstats import tools, updateDict, getMember, newUser
 from datetime import date
 import collections.abc
 from json import loads
@@ -34,54 +34,7 @@ async def devmode(message, client):
 			today = date.today()
 			datemade = today.strftime("%B %d, %Y")
 			
-			members[str(message.author.id)] = {
-				'animals': {},
-				'tools': {
-					'wateringcan': tools['wateringcan']['durability']
-				},
-				'merch': {},
-				'seeds': {
-					'grassseeds': {
-						'amount': 5
-					}
-				},
-				'plantcooldowns': {},
-				'plants': {},
-				'dailytimer': 0,
-				'hourlytimer': 0,
-				'money': 100,
-				'reputation': 500,
-				'amounts': {
-					'shared': 0,
-					'gambled': 0,
-					'bought': 0,
-					'sold': 0,
-					'used': 0,
-				},
-				'prestige': 0,
-				'multi': 1.0,
-				'commandsused': 0,
-				'datemade': datemade,
-				'donecontracts': [{
-					'1': [],
-					'2': [],
-					'3': [],
-					'4': []
-				}],
-				'currentcontract': [],
-				"trades": {
-					"lastTradeId": 0,
-					"tradeAmts": [0, 0, 0],
-					"stock": [0, 0, 0]
-				},
-				"cooldowns": {},
-				"location": "default",
-				"locations": {},
-                "settings": {
-                    "votedm": True,
-					"tips": True
-                }
-			} 
+			members[str(message.author.id)] = newUser(datemade)
 			await message.channel.send("Devmode is now ON")
 		db["members"] = members
 
@@ -113,47 +66,7 @@ async def devmode(message, client):
 			today = date.today()
 			datemade = today.strftime("%B %d, %Y")
 			
-			members[str(message.author.id)] = {
-				'animals': {},
-				'tools': {
-					'wateringcan': tools['wateringcan']['durability']
-				},
-				'merch': {},
-				'seeds': {
-					'grassseeds': {
-						'amount': 5
-					}
-				},
-				'plantcooldowns': {},
-				'plants': {},
-				'dailytimer': 0,
-				'hourlytimer': 0,
-				'money': 100,
-				'reputation': 500,
-				'amounts': {
-					'shared': 0,
-					'gambled': 0,
-					'bought': 0,
-					'sold': 0,
-					'used': 0,
-				},
-				'prestige': 0,
-				'multi': 1.0,
-				'commandsused': 0,
-				'datemade': datemade,
-				"trades": {
-					"lastTradeId": 0,
-					"tradeAmts": [0, 0, 0],
-					"stock": [0, 0, 0]
-				},
-				"cooldowns": {},
-				"location": "default",
-				"locations": {},
-                "settings": {
-                    "votedm": True,
-					"tips": True
-                }
-			} 
+			members[str(message.author.id)] = newUser(datemade)
 			await message.channel.send("Devmode is now ON")
 		db["members"] = members
 

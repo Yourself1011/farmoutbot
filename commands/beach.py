@@ -7,22 +7,20 @@ from zstats import gatheringCmd, merch, tools, seeds, animals
 
 async def beach(message, client):
 	user = str(message.author.id)
-	if user not in db['members']: await message.channel.send('make an account to search the beach'); return
+	if user not in db['members']: return ('make an account to search the beach');
 	user = db["members"][str(message.author.id)]
 	if "gather" in user["cooldowns"] and user["cooldowns"]["gather"] > time():
-		await message.channel.send(f"you already gathered stuff, wait {floor(user['cooldowns']['gather'] - time())}s")
-		return
+		return (f"you already gathered stuff, wait {floor(user['cooldowns']['gather'] - time())}s")
 	
 	if 'sandals' not in user['tools']:
-		await message.channel.send('buy sandals')
-		return
+		return ('buy sandals')
 
 	thing = random.randint(1,35)
 	if thing == 1:
 		if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
 		things = ['bug', 'fish', 'tree', 'plant', 'elephant', 'neighbour']
 		thing2 = random.choice(things)
-		await message.channel.send(f'On the way over to the beach, you accidentally smelled a really smelly {thing2} and died. you paid 100 coins to be reborn.')
+		return (f'On the way over to the beach, you accidentally smelled a really smelly {thing2} and died. you paid 100 coins to be reborn.')
 		a = db['members']
 		if a[str(message.author.id)]['money']<100: a[str(message.author.id)]['money'] = 0
 		else:
@@ -82,18 +80,18 @@ async def beach(message, client):
 	db["members"] = m
 
 	if item[0] == "dragonegg":
-		await message.channel.send(f"You looked at the beach, and there, in a pile of sand, you saw it. A small piece of ginseng.\n{durabilityMsg}\n{reserveMsg}")
+		return (f"You looked at the beach, and there, in a pile of sand, you saw it. A small piece of ginseng.\n{durabilityMsg}\n{reserveMsg}")
 
 	elif item[0] == "nothing":
-		await message.channel.send(f"You found nothing on the beach\n{durabilityMsg}\n{reserveMsg}")
+		return (f"You found nothing on the beach\n{durabilityMsg}\n{reserveMsg}")
 
 	elif item[0] == 'death':
 		if 'undeadwool' in db['members'][message.author.id]['merch']: return
-		await message.channel.send('You were searching the beach when, all of a sudden, a huge horde of seagulls swooped down on you and pecked you to death. you paid 100 coins to be reborn.')
+		return ('You were searching the beach when, all of a sudden, a huge horde of seagulls swooped down on you and pecked you to death. you paid 100 coins to be reborn.')
 		m = db['members']
 		m[str(message.author.id)]['money'] -= 100
 		db['members'] = m
 
 	else:
 		responses = ["looked on the beach and found", "walked around a little and picked up", "discovered", "found", "looked in a sand castle and found"]
-		await message.channel.send(f"You {responses[randint(0, len(responses)-1)]} {item[1]}x {itemName}\n{durabilityMsg}\n{reserveMsg}")	
+		return (f"You {responses[randint(0, len(responses)-1)]} {item[1]}x {itemName}\n{durabilityMsg}\n{reserveMsg}")	

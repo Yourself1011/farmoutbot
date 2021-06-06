@@ -7,20 +7,20 @@ from math import floor
 async def collect(message, client):
 	args = message.content.split(' ')
 	if str(message.author.id) not in db['members']:
-		await message.channel.send(f' {message.author.mention}\'s to-do list:\n\n1: make an account\n2: buy a seed\n3: buy a watering can\n4: plant the seeds\n5: water the plants\n6: wait for them to grow\n7: collect them')
+		return(f' {message.author.mention}\'s to-do list:\n\n1: make an account\n2: buy a seed\n3: buy a watering can\n4: plant the seeds\n5: water the plants\n6: wait for them to grow\n7: collect them')
 		return
 	if db['members'][str(message.author.id)]['plantcooldowns'] == {}:
-		await message.channel.send(' you haven\'t planted anything u idiot')
+		return(' you haven\'t planted anything u idiot')
 		return
 	if len(args) == 2:
-		await message.channel.send(' what plant are you collecting lol')
+		return(' what plant are you collecting lol')
 		return
 	plant = softSearch(merch, args[2], ["name"])
 	if not bool(plant):
-		await message.channel.send(" That's not a plant!")
+		return(" That's not a plant!")
 		return
 	if plant not in db['members'][str(message.author.id)]['plantcooldowns']:
-		await message.channel.send(' you haven\'t planted that')
+		return(' you haven\'t planted that')
 		return
 
 	for i in seeds:
@@ -38,7 +38,7 @@ async def collect(message, client):
 		f = str(f)
 		newvar = growTime+db['members'][str(message.author.id)]['plantcooldowns'][plant]['cooldown']
 		e = round((newvar-now2)/1000)
-		await message.channel.send(f' your plant isn\'t ready yet, wait `{str(e)}` seconds dumbo')
+		return(f' your plant isn\'t ready yet, wait `{str(e)}` seconds dumbo')
 		return
 
 	a = db['members']
@@ -50,14 +50,14 @@ async def collect(message, client):
 		thing = random.choice(things)
 		thing2 = random.randint(1,3)
 		if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
-		await message.channel.send(f'{thing}. `{thing2}` of your plants died.')
+		return(f'{thing}. `{thing2}` of your plants died.')
 		a[str(message.author.id)]['plantcooldowns'][plant]['amount'] -= thing2
 		db['members'] = a
 		return
 
 	if "stages" in seeds[seed] and now - a[str(message.author.id)]['plantcooldowns'][plant]["start"] > seeds[seed]["stages"][2]:
 		del a[str(message.author.id)]['plantcooldowns'][plant]
-		return await message.channel.send(f"Oop your {plant} died of old age")
+		return (f"Oop your {plant} died of old age")
 		db["members"] = a
 
 	user = a[str(message.author.id)]
@@ -66,7 +66,7 @@ async def collect(message, client):
 		amountLost = floor(max(user["plantcooldowns"][plant]["amount"] * location["deathRate"], min(10, user["plantcooldowns"][plant]["amount"])))
 
 		user["plantcooldowns"][plant]["amount"] -= amountLost
-		await message.channel.send(f"Idiot your {plant}(s) couldn't live there and {amountLost} died.")
+		return(f"Idiot your {plant}(s) couldn't live there and {amountLost} died.")
 
 		db["members"] = a
 
@@ -93,4 +93,4 @@ async def collect(message, client):
 	name = merch[plant]['name']
 	tts = [f'You collected `{fart}` {name}(s) from `{amount} {seed}(s)`. ', f'nice, you got `{fart}` {name}(s) from `{amount} {seed}(s)`.', f'from your `{amount} {seed}(s)` planted, you got `{fart}` {name}(s).', f'collection successful, `{fart}` {name}(s) were collected from `{amount} {seed}(s)`.']
 	ts = random.choice(tts)
-	await message.reply(f'{ts}')
+	return(f'{ts}', True)
