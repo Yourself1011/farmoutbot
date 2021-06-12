@@ -13,16 +13,16 @@ async def settings(message, client):
             "desc": "Enable or disable dms when you can vote again",
             "options": boolean
         },
-		"tips": {
-			"name": "Tips",
-			"desc": "Enable or disable whether you get tips",
-			"options": boolean
-		},
-		"replypings": {
-			"name": "Reply pings",
-			"desc": "Enable or disable whether you get pings on replies",
-			"options": boolean
-		},
+        "tips": {
+          "name": "Tips",
+          "desc": "Enable or disable whether you get tips",
+          "options": boolean
+        },
+        "replypings": {
+          "name": "Reply pings",
+          "desc": "Enable or disable whether you get pings on replies",
+          "options": boolean
+        },
     }
 
     if len(args) == 2 or (len(args) >= 3 and args[2].isnumeric()):
