@@ -7,12 +7,10 @@ import asyncio
 async def buy(message, client):
 	args = message.content.split(' ')
 	if str(message.author.id) not in db['members']:
-		await message.channel.send(' babbon butt boo make an account or poo')
-		return
+		return (' babbon butt boo make an account or poo')
 
 	if len(args) == 2:
-		await message.channel.send(' what are you buying lol')
-		return
+		return (' what are you buying lol')
 	amount = 1
 
 	if len(args) == 4 and args[3].isnumeric():
@@ -35,14 +33,14 @@ async def buy(message, client):
 		for j in possibilities:
 			objs.append(i)
 	if not bool(allPos):
-		await message.channel.send(' that does not exist.')
+		return (' that does not exist.')
 		return
 	smallest = min(allPos, key=len)
 	thing = objs[allPos.index(smallest)]
 	item = thing[smallest]
 	key = smallest
 	if not str(item["cost"]).isnumeric():
-		await message.channel.send(" You can't buy that item!")
+		return (" You can't buy that item!")
 		return
 	if len(args) == 4 and args[3] in ['a', 'all', 'max']:
 		if thing == tools:
@@ -51,15 +49,13 @@ async def buy(message, client):
 			amount = db['members'][str(message.author.id)]['money']//item['cost']
 	elif len(args) == 4:
 		if args[3] == '0':
-			await message.channel.send('you bought 0 things. are you proud of yourself?'); return
+			return ('you bought 0 things. are you proud of yourself?')
 		amount = convertInt(args[3])
 		if not bool(amount):
-			await message.channel.send(" That's not a number")
-			return
+			return (" That's not a number")
 
 	if amount <= 0:
-		await message.channel.send(' what')
-		return
+		return ('I should take that away from you and charge you the normal price')
 
 	cost = item['cost']
 	rep = db['members'][str(message.author.id)]['reputation']
@@ -75,7 +71,7 @@ async def buy(message, client):
 		cost = int(round(cost*0.9))
 	regprice = item['cost']
 	if cost*amount > db['members'][str(message.author.id)]['money']:
-		await message.channel.send(f' you\'re too poor to buy `{amount} {key}(s)` at `{cost}` each.')
+		return (f' you\'re too poor to buy `{amount} {key}(s)` at `{cost}` each.')
 		return
 	if key in tools: 
 		amount = 1
@@ -111,17 +107,17 @@ async def buy(message, client):
 		db['members'] = a
 		thingstosay = [f'You bought `{amount} {key}(s)` for `{r} coins`. You now have `{nowmoney} coins` and `{rep} reputation`.', f'purchase successful, you paid `{r} coins` for `{amount} {key}(s)`.', f'yessir `{amount} {key}(s)` purchased', f'{message.author.name} bought `{amount} {key}(s)`', f'you paid `{r} coins` for `{amount} {key}(s)`.']
 		thingsaid = random.choice(thingstosay)
-		await message.reply(f'{thingsaid}')
+		return (f'{thingsaid}', True)
 		thingi = random.randint(1,20)
 		if thingi == 1:
-			thingj = random.randint(1,5)
-			await message.channel.send(f'{message.author.mention} you lucky ducky, you bought something that the market was trying to get rid of and your rep increased by `{thingj}`.')
+			thingj = random.randint(4,9)
+			return (f'{message.author.mention} you lucky ducky, you bought something that the market was trying to get rid of and your rep increased by `{thingj}`.')
 			a = db['members']
 			a[str(message.author.id)]['reputation'] += thingj
 			db['members'] = a
 		if thingi == 2:
-			thingj = random.randint(1,5)
-			await message.channel.send(f'{message.author.mention} bruh you bought something that the market didnt want to give, you lost `{thingj}` rep **and** `{int(round(thingj*2))} coins`.')
+			thingj = random.randint(10,20)
+			return (f'{message.author.mention} bruh you bought something that the market didnt want to give, you lost `{thingj}` rep **and** `{int(round(thingj*2))} coins`.')
 			a = db['members']
 			if int(round(thingj*2)) > a[str(message.author.id)]['money']: a[str(message.author.id)]['money'] = 0
 			else: a[str(message.author.id)]['money'] -= int(round(thingj*2))

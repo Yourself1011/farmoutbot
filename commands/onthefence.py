@@ -3,6 +3,7 @@ import random
 from replit import db
 
 async def onthefence(message, client):
+
 	if str(message.author.id) not in db['members']:
 		await message.channel.send('mm mm mm make an account first')
 		return
