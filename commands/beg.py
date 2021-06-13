@@ -28,7 +28,7 @@ async def beg(message, client):
 		rep = random.randint(20,50)
 		return (f'**market:** no.\n{message.author.mention} you lost `{rep} rep`')
 	if thing == 2:
-		rep = random.randint(5,10)
+		rep = random.randint(1,6)
 		coins = random.randint(5,10)
 		return (f'**market:** UGH fineeeee\n{message.author.mention} you gained `{coins} coins` but lost `{rep} rep`.')
 	if thing == 3:

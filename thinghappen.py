@@ -24,7 +24,6 @@ async def thinghappen(message, client):
 	diseases = ['big belly disease', 'too many bugs disease', 'dumb disease', 'listening to im blue for 10 hours disease', 'pls beg dank memer thingy disease', 'fat illness', 'tree illness', 'stinky old man sickness', 'too much illness', 'big fat fart big sickness', "python disease", "single quote disease"]
 	disease = random.choice(diseases)
 	thingr = random.randint(1,5)
-	print(thingr)
 	if thingr in [1, 2]: amountpaid = random.randint(1,5)
 	if thingr in [3, 4]: amountpaid = random.randint(15,35)
 	if thingr == 5: amountpaid = random.randint(50,100)

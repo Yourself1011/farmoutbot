@@ -369,12 +369,33 @@ commands = {
 		'aliases':['sighuh', 'sihg'],
 		'category': 'other'
 	},
-	'fixed': {
-		'name': 'fixed',
-		'usage': 'lol',
-		'description': 'yes',
-		'aliases': ['fd'],
-		'category': 'utility'
+	'onthefence': {
+		'name': 'onthefence',
+		'usage': '<otf (bet)>',
+		'description': 'On the fence is a gambling game. In it, you have a "score". The higher the score, the more likely you win coins. The lower the score, the less likely. If you lose, your score is more likely to go up. If you win, your score is more likely to go down. The trick is to bet more when you have a higher score, and bet less when you have a lower score. If your score is 0, you are "on the fence", and have a 50/50 chance of winning coins.',
+		'aliases': ['otf'],
+		'category': 'gamble'
+	},
+	'beetlerace': {
+		'name': 'beetlerace',
+		'usage': '<beetlerace (beetlenumber 1-5) (bet)',
+		'description': 'Bet on a beetle to win the beetle race. There are 5 total beetles. If your beetle gets 1st, you win 3 times the amount. If it gets 2nd, you win twice the amount. If it gets 3rd, nothing happens, and if it gets 4th or 5th, you lose all of your coins.',
+		'aliases': ['br'],
+		'category': 'gamble'
+	},
+	'jungle': {
+		'name': 'jungle',
+		'usage': '<jungle>',
+		'description': 'go gather some valuables in the jungle',
+		'aliases': ['jg'],
+		'category': 'gather'
+	},
+	'guide': {
+		'name': 'guide',
+		'usage': '<guide> <thingguided>',
+		'description': 'Get a more in-depth tutorial on the features of farmout',
+		'aliases': ['gd', 'tutorial'],
+		'category': 'misc'
 	}
 }
 

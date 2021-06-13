@@ -33,7 +33,6 @@ async def devmode(message, client):
 
 			today = date.today()
 			datemade = today.strftime("%B %d, %Y")
-			
 			members[str(message.author.id)] = newUser(datemade)
 			await message.channel.send("Devmode is now ON")
 		db["members"] = members

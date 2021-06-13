@@ -20,11 +20,10 @@ async def hourly(message, client):
 		await message.channel.send(f'market: it\'s called hourly for a reason, wait `{e}` (hours:minutes:seconds) before coming back')
 		return
 	
-
 	if db['members'][str(message.author.id)]['reputation'] < 250:
 		await message.channel.send('market: nah, your reputation is too low so i\'m not giving you anything')
 		chance = random.randint(1,5)
-		if chance > 3:
+		if chance <	 3:
 			a = db['members']
 			a[str(message.author.id)]['reputation']+=chance
 			db['members'] = a

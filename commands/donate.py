@@ -61,7 +61,7 @@ async def donate(message, client):
 
 	a = db['members']
 	a[str(message.author.id)]['money'] -= gave
-	repgained = int(round(gave/3))
+	repgained = int(round(gave/4))
 	a[str(message.author.id)]['reputation'] += repgained
 	if a[str(message.author.id)]['reputation'] > 1000:
 		repgained = 1000

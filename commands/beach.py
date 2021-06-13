@@ -34,7 +34,7 @@ async def beach(message, client):
 			'death': [20, 1, 1, 1],
 			'voldysnose': [10, 2, 1, 3],
 			'umbrella': [20, 5, 1, 1],
-			"gineseng": [3, 2, 1, 10],	
+			"ginseng": [3, 2, 1, 10],	
 			"nothing": [50, 1, 1, 1],
 		}
 	)
