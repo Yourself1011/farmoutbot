@@ -1006,8 +1006,6 @@ def newUser(datemade):
 		},
 		'plantcooldowns': {},
 		'plants': {},
-		'dailytimer': 0,
-		'hourlytimer': 0,
 		'money': 100,
 		'reputation': 500,
 		'amounts': {
@@ -1026,7 +1024,12 @@ def newUser(datemade):
 			"tradeAmts": [0, 0, 0],
 			"stock": [0, 0, 0]
 		},
-		"cooldowns": {},
+		"cooldowns": {
+			'daily': 0,
+			'hourly': 0,
+			'lastdaily': ' ¯\_(ツ)_/¯',
+			'dailystreak': 0
+		},
 		'donecontracts': [{
 			'1': [],
 			'2': [],
@@ -1043,4 +1046,5 @@ def newUser(datemade):
 			"replypings": True
 		}
 	} 
+
 	return newuser
