@@ -980,7 +980,7 @@ tradeexclusive = {}
 
 eatable = [i for i, j in merch.items() if "loottable" in j]
 
-eatable.extend(['applepie', 'mango', 'ginseng', 'mushroom', 'cake'])
+eatable.extend(['applepie', 'mango', 'ginseng', 'mushroom', 'cake', 'pridewatermelon'])
 
 tips = ['Admins, use `setchannel` to set a system messages channel for your server.', 'Do `donate` to get rep fast', 'You can use `profile` to see things like when your farm started, and how many commands you\'ve used.', '`trades` will you show you available trades.', 'come join our support server at `discord.gg/tvCmtkBAkc`', 'encounter a bug while playing? use `report` to report it directly to our support server.', 'do `suggest` to suggest anything from new animals to new tips!', '`showtrades` can show currently available trades.', 'You may be tempted to sell all your merchandise right away, but you should save some to do trades.', '`crops` is a handy command to show all the things currently planted and how long they\'ve been growing.', 'mar mar marino papido appeal', 'do `trade (trade number)` to do trades.', 'use the name of the animal for its command, ie. `sheep` and `cow`', '`help (command)` to get help about a specific command', 'trades update every 6 hours', 'we have a lottery!??!', 'farmout used to be really really really bad', 'the creator of farmout made some really weird things like heavenheck bot, which is on display in the support server, before he made farmout', '`contracts show` will show you some contracts that you can sign for items', 'eating your ginseng fruit can give you items']
 

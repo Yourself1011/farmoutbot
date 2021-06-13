@@ -86,10 +86,12 @@ async def jungle(message, client):
 		await message.channel.send(f"You wandered in the jungle, and there, behind a large bush, you saw it. The mystical undeadwool. Legend says that it was made eons ago, by the same people who made the sky and the sea.\n{durabilityMsg}\n{reserveMsg}")
 
 	elif item[0] == "nothing":
-		await message.channel.send(f"You found nothing in the jungle, except for a whole lot of sweaty tourists\n{durabilityMsg}\n{reserveMsg}")
+		things = ['except for a whole lot of sweaty tourists', 'so maybe you should go search the beach instead', 'because you got lost and fell in a hole', 'except for a large gang of chimps']
+		thing = random.choice(things)
+		await message.channel.send(f"You found nothing in the jungle, {thing}\n{durabilityMsg}\n{reserveMsg}")
 
 	elif item[0] == 'death':
-		if 'undeadwool' in db['members'][message.author.id]['merch']: return
+		if 'undeadwool' in db['members'][str(message.author.id)]['merch']: return
 		await message.channel.send('You were searching the jungle and came across a battle of babbons and baboons. When you started to watch their skillful dance in awe, one of the baboons noticed you. The battle instantly ceased. United against their common enemy, the babbons and baboons chased you out of their jungle.\n\nWhen you finally escaped, you got trampled by an elephant. You paid 100 coins to be reborn.')
 		a = db['members']
 		if a[str(message.author.id)]['money']<100: a[str(message.author.id)]['money'] = 0

@@ -37,10 +37,12 @@ async def daily(message, client):
 	one = round(db['members'][str(message.author.id)]['reputation']/50)
 	two = round(db['members'][str(message.author.id)]['reputation']/10)
 	moneygained = random.randint(one, two)
-	currentday = datetime.date.today().strftime("%d/%m/%Y")
-	print(currentday)
+	currentday = datetime.date.today().strftime('%Y-%m-%d')
+	yesterday = datetime.date.today() - datetime.timedelta(days=1)
+	yesterday.strftime('%m%d%y')
+	print(currentday, yesterday)
 	a = db['members']
-	if db['members'][str(message.author.id)]['cooldowns']['lastdaily'] == currentday: a[str(message.author.id)]['cooldowns']['streak'] += 1
+	if db['members'][str(message.author.id)]['cooldowns']['lastdaily'] == yesterday: a[str(message.author.id)]['cooldowns']['streak'] += 1
 	else: a[str(message.author.id)]['cooldowns']['streak'] = 0
 	a[str(message.author.id)]['cooldowns']['lastdaily'] = currentday
 	streak = a[str(message.author.id)]['cooldowns']['streak']

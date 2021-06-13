@@ -389,6 +389,13 @@ commands = {
 		'description': 'go gather some valuables in the jungle',
 		'aliases': ['jg'],
 		'category': 'gather'
+	},
+	'guide': {
+		'name': 'guide',
+		'usage': '<guide> <thingguided>',
+		'description': 'Get a more in-depth tutorial on the features of farmout',
+		'aliases': ['gd', 'tutorial'],
+		'category': 'misc'
 	}
 }
 

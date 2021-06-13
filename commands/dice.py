@@ -1,5 +1,6 @@
 from replit import db
 import random
+import discord
 from zstats import convertInt
 
 async def dice(message, client):
@@ -38,17 +39,32 @@ async def dice(message, client):
 	a = db['members']
 	a[str(message.author.id)]['amounts']['gambled'] += amount
 	db['members'] = a
+	thing = ''
 	if you > other:
-		amountwon = int(round(amount/2))
-		await message.channel.send(f'{message.author.mention} got `{you}` and they got `{other}`, you win `{amountwon}` coins.')
 		a = db['members']
-		a[str(message.author.id)]['money'] += amountwon
+		a[str(message.author.id)]['money'] += amount
+		amount = f'+{int(amount)}'
+		thing = 'won'
 		db['members'] = a
 	if other > you:
-		await message.channel.send(f'{message.author.mention}you got `{you}` and they got `{other}`, you lose `{amount}` coins.')
 		a = db['members']
 		a[str(message.author.id)]['money'] -= amount
+		amount = f'-{amount}'
+		thing = 'lost'
 		db['members'] = a
 	if other == you:
+		thing = 'tied'
+		amount = '+0'
 		await message.channel.send(f'{message.author.mention} you got `{you}` and they got `{other}`, nothing happened. :/')
 		return
+	e = discord.Embed(
+		title = '',
+		description = f'You {thing}, (coins {amount})',
+		colour = discord.Colour.red()
+	)
+	e.set_author(name=f'{message.author.name}\'s dice game', icon_url=message.author.avatar_url)
+
+	e.add_field(name = '- Your Score: ', value = f'{you}', inline = False)
+	e.add_field(name = '- Their Score: ', value = f'{other}', inline = False)
+	e.set_footer(text = 'please come again!')
+	await message.channel.send(embed = e)

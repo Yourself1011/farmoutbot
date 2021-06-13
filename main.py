@@ -23,7 +23,7 @@ from trade_update import startLoop, trade_update
 from thinghappen import thinghappen
 from drawlottery import drawlottery
 from time import time
-from vote import vote
+from vote import vote	
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path) 
