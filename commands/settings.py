@@ -2,6 +2,7 @@ import discord
 from replit import db
 from zstats import softSearch
 
+
 async def settings(message, client):
     args = message.content.split(" ")
 
@@ -11,19 +12,24 @@ async def settings(message, client):
         "votedm": {
             "name": "Vote Dms",
             "desc": "Enable or disable dms when you can vote again",
-            "options": boolean
+            "options": boolean,
         },
-		"tips": {
-			"name": "Tips",
-			"desc": "Enable or disable whether you get tips",
-			"options": boolean
-		}
+        "tips": {
+            "name": "Tips",
+            "desc": "Enable or disable whether you get tips",
+            "options": boolean,
+        },
+        "emojionlyinv": {
+            "name": "Emoji Only Inventory",
+            "desc": "Makes the inventory only show emojis for animals and merch",
+            "options": boolean,
+        },
     }
 
     if len(args) == 2 or (len(args) >= 3 and args[2].isnumeric()):
         page = args[2] - 1 if len(args) >= 3 else 0
         embed = discord.Embed(
-            title = "Settings",
+            title="Settings",
         )
         ids = list(settings.keys())[page * 5 : page * 5 + 5]
         values = list(settings.values())[page * 5 : page * 5 + 5]
@@ -32,11 +38,11 @@ async def settings(message, client):
             currentValue = db["members"][str(message.author.id)]["settings"][ids[i]]
 
             embed.add_field(
-                name = values[i]['name'],
-                value = f"`{ids[i]}`\nDescription: {values[i]['desc']}\nOptions: {', '.join(values[i]['options'])}\nCurrently: {currentValue}"
+                name=values[i]["name"],
+                value=f"`{ids[i]}`\nDescription: {values[i]['desc']}\nOptions: {', '.join(values[i]['options'])}\nCurrently: {currentValue}",
             )
 
-        return await message.channel.send(embed = embed)
+        return await message.channel.send(embed=embed)
 
     if len(args) >= 3:
         search = softSearch(settings.keys(), args[2])
@@ -46,14 +52,13 @@ async def settings(message, client):
 
         setting = settings[search]
         currentValue = db["members"][str(message.author.id)]["settings"][search]
-        
 
         if len(args) == 3:
             embed = discord.Embed(
-                title = setting["name"],
-                description = f"`{search}`\nDescription: {setting['desc']}\nOptions: {', '.join(setting['options'])}\nCurrently: {currentValue}"
+                title=setting["name"],
+                description=f"`{search}`\nDescription: {setting['desc']}\nOptions: {', '.join(setting['options'])}\nCurrently: {currentValue}",
             )
-            return await message.channel.send(embed = embed)
+            return await message.channel.send(embed=embed)
 
         elif len(args) > 3:
             option = args[3]
@@ -69,7 +74,9 @@ async def settings(message, client):
                     option = False
 
             if option == currentValue:
-                return await message.channel.send(f"{setting['name']} is already set to {option}")
+                return await message.channel.send(
+                    f"{setting['name']} is already set to {option}"
+                )
 
             a = db["members"]
 
@@ -77,4 +84,6 @@ async def settings(message, client):
 
             db["members"] = a
 
-            return await message.channel.send(f"{setting['name']} has been set to {option}!")
+            return await message.channel.send(
+                f"{setting['name']} has been set to {option}!"
+            )
