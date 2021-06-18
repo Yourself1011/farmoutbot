@@ -1,10 +1,11 @@
-from random import uniform, randint
+from random import uniform
+import random
 from numpy.random import choice
 from math import floor
 import collections.abc
 from copy import deepcopy
-import random
 from replit import db
+import asyncio
 
 def getMember(search, guildId, client):
 	if type(search) is list:
@@ -50,22 +51,6 @@ def convertInt(string):
 	
 	except:
 		return None
-
-# Chooses k unique random elements from a population sequence or set.
-
-# Returns a new list containing elements from the population while
-# leaving the original population unchanged.  The resulting list is
-# in selection order so that all sub-slices will also be valid random
-# samples.  This allows raffle winners (the sample) to be partitioned
-# into grand prize and second place winners (the subslices).
-
-# Members of the population need not be hashable or unique.  If the
-# population contains repeats, then each occurrence is a possible
-# selection in the sample.
-
-# To choose a sample in a range of integers, use range as an argument.
-# This is especially fast and space efficient for sampling from a
-# large population:   sample(range(10000000), 60)
 
 def gatheringCmd(msg, loottable, amount = [1, 1, 1]):
 	"""
@@ -116,6 +101,43 @@ def updateDict(d, u):
 		else:
 			d[k] = v
 	return d
+
+async def minigame(
+    message,
+    client,
+    chance = [50, 37.5, 12.5], 
+    phrases = ["Farmout over Dank Memer", "Double quotes rule!"],
+    words = ["babbon", "Farmout", "Statbot", "fart"], 
+    emojis = [":ear_of_rice:", ":monkey:"],
+    blacklist = []
+):
+    minigames = {"easy": ["type", "multipleChoice", "memorizeWords", "anagram"], "medium": ["hangman", "multipleChoice", "memorizePhrase", "react", "noVowels", "chimpTestMed", "type"], "hard": ["multipleChoice", "noConsonants", "memorizeSequence", "chimpTestHard"]}
+
+    difficulty = choice(["easy", "medium", "hard"], 1, p = chance)
+
+    minigame = random.choice([i for i in minigames[difficulty] if i not in blacklist])
+
+    if minigame == "type":
+        phrase = random.choice(phrases if difficulty == 'medium' else words)
+
+        await message.channel.send(f"**Type the {'phrase' if difficulty == 'medium' else 'word'}!**\nType:`{'​'.join(list(phrase))}`")
+
+        try:
+            reply = await client.wait_for("message", timeout = len(phrase.split(" ")), check = lambda reply: reply.author == message.author and reply.channel == message.channel)
+
+        except asyncio.TimeoutError:
+            return "timeout"
+
+        if reply.content == "​".join(list(phrase)):
+            return "cheat_copy"
+
+        elif reply.content == phrase:
+            return "success"
+
+        else:
+            return "fail"
+
+        
 
 def getShop(shops, location):
 	for i, j in zip([animals, tools, seeds, merch], ["animals", "tools", "seeds", "merch"]):
