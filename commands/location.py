@@ -2,186 +2,234 @@ from replit import db
 from zstats import locations, merch, animals, seeds, tools, softSearch
 import discord
 
-async def location(message, client):	
-	if str(message.author.id) not in db['members']: return await message.channel.send('make an account')
 
-	args = message.content.split(" ")
+async def location(message, client):
+    if str(message.author.id) not in db["members"]:
+        return await message.channel.send("make an account")
 
-	args = [i.lower() for i in args]
+    args = message.content.split(" ")
 
-	user = db["members"][str(message.author.id)]
+    args = [i.lower() for i in args]
 
-	if len(args) == 2:
-		return await message.channel.send("Please use a subcommand!\n\n`my` - shows your current locations\n`view` - look at all the locations. Include a location name to look at a specific location\n`buy` - purchase a location\n`transfer` - transfers you to a location. If you want to transfer animals to a different location, do it like this: ```\ni location transfer 5 cow, 1 camel desert\n```")
+    user = db["members"][str(message.author.id)]
 
-	netWorth = 0
+    if len(args) == 2:
+        return await message.channel.send(
+            "Please use a subcommand!\n\n`my` - shows your current locations\n`view` - look at all the locations. Include a location name to look at a specific location\n`buy` - purchase a location\n`transfer` - transfers you to a location. If you want to transfer animals to a different location, do it like this: ```\ni location transfer 5 cow, 1 camel desert\n```"
+        )
 
-	for k, v in user["merch"].items():
-		netWorth += merch[k]["sellcost"] * v if type(merch[k]["sellcost"]) is int else 0
+    netWorth = 0
 
-	for k, v in user["animals"].items():
-		netWorth += animals[k]["sellcost"] * v["amount"] if type(animals[k]["sellcost"]) is int else 0
+    for k, v in user["merch"].items():
+        netWorth += merch[k]["sellcost"] * v if type(merch[k]["sellcost"]) is int else 0
 
-	for k in user["tools"].keys():
-		netWorth += tools[k]["sellcost"] if type(tools[k]["sellcost"]) is int else 0
+    for k, v in user["animals"].items():
+        netWorth += (
+            animals[k]["sellcost"] * v["amount"]
+            if type(animals[k]["sellcost"]) is int
+            else 0
+        )
 
-	for k, v in user["seeds"].items():
-		netWorth += seeds[k]["sellcost"] * v["amount"] if type(seeds[k]["sellcost"]) is int else 0
+    for k in user["tools"].keys():
+        netWorth += tools[k]["sellcost"] if type(tools[k]["sellcost"]) is int else 0
 
-	if args[2] == "my":
-		embed = discord.Embed(
-			title = "Your locations:",
-			description = f"**» {locations[user['location']]['name']}**\n\n" + "\n".join([locations[i]["name"] for i in user["locations"].keys()])
-		)
-		
-		return await message.channel.send(embed = embed)
+    for k, v in user["seeds"].items():
+        netWorth += (
+            seeds[k]["sellcost"] * v["amount"]
+            if type(seeds[k]["sellcost"]) is int
+            else 0
+        )
 
-	elif args[2] == "view":
-		dictCopy = dict(locations)
+    if args[2] == "my":
+        embed = discord.Embed(
+            title="Your locations:",
+            description=f"**» {locations[user['location']]['name']}**\n\n"
+            + "\n".join([locations[i]["name"] for i in user["locations"].keys()]),
+        )
 
-		ints = {k: v for k, v in dictCopy.items() if type(v["cost"]) is int}
+        return await message.channel.send(embed=embed)
 
-		strs = {k: v for k, v in dictCopy.items() if type(v["cost"]) is str}
+    elif args[2] == "view":
+        dictCopy = dict(locations)
 
-		intsSorted = sorted(ints.keys(), key=lambda x: int(ints[x]["cost"]))
+        ints = {k: v for k, v in dictCopy.items() if type(v["cost"]) is int}
 
-		strsSorted = sorted(strs.keys(), key=lambda x: str(strs[x]["cost"]))
+        strs = {k: v for k, v in dictCopy.items() if type(v["cost"]) is str}
 
-		r = intsSorted + strsSorted
+        intsSorted = sorted(ints.keys(), key=lambda x: int(ints[x]["cost"]))
 
+        strsSorted = sorted(strs.keys(), key=lambda x: str(strs[x]["cost"]))
 
-		if len(args) == 4 and args[3].isnumeric():
+        r = intsSorted + strsSorted
 
-			page = max(min(int(args[3]), len(r)), 1) - 1
+        if len(args) == 4 and args[3].isnumeric():
 
-			location = locations[r[page]]
+            page = max(min(int(args[3]), len(r)), 1) - 1
 
-			embed = discord.Embed(
-				title = location["name"],
-				description = location["desc"]
-			)
-			embed.add_field(name = "Price", value = f"Regular: {location['cost']}\nBuy and liquidate: {max(location['cost'] - netWorth if type(location['cost']) is int else location['cost'], 0)}")
+            location = locations[r[page]]
 
-			embed.set_footer(text = f"Page {page + 1}/{len(r)}")
+            embed = discord.Embed(title=location["name"], description=location["desc"])
+            embed.add_field(
+                name="Price",
+                value=f"Regular: {location['cost']}\nBuy and liquidate: {max(location['cost'] - netWorth if type(location['cost']) is int else location['cost'], 0)}",
+            )
 
-			return await message.channel.send(embed = embed)
+            embed.set_footer(text=f"Page {page + 1}/{len(r)}")
 
-		else:
-			embed = discord.Embed(
-				title = "locations",
-				description = "\n".join([f"`{i + 1}`: {l['name']} - {l['cost']}" for i, l in enumerate(locations.values())])
-			)
-			return await message.channel.send(embed = embed)
+            return await message.channel.send(embed=embed)
 
-	elif args[2] == "buy":
-		liquidate = True if len(args) >= 5 and (args[4] == "liquidate" or args[4] == "l") else False
+        else:
+            embed = discord.Embed(
+                title="locations",
+                description="\n".join(
+                    [
+                        f"`{i + 1}`: {l['name']} - {l['cost']}"
+                        for i, l in enumerate(locations.values())
+                    ]
+                ),
+            )
+            return await message.channel.send(embed=embed)
 
-		if len(args) <= 3:
-			return await message.channel.send("What are you buying lol")
+    elif args[2] == "buy":
+        liquidate = (
+            True
+            if len(args) >= 5 and (args[4] == "liquidate" or args[4] == "l")
+            else False
+        )
 
-		locationKey = softSearch(locations.keys(), args[3])
+        if len(args) <= 3:
+            return await message.channel.send("What are you buying lol")
 
-		if not locationKey: 
-			return await message.channel.send("I couldn't find any location with that")
+        locationKey = softSearch(locations.keys(), args[3])
 
-		location = locations[locationKey]
+        if not locationKey:
+            return await message.channel.send("I couldn't find any location with that")
 
-		if type(location["cost"]) is str:
-			return await message.channel.send("You can't buy this location")
+        location = locations[locationKey]
 
-		if locationKey in user["locations"] or locationKey == user["location"]:
-			return await message.channel.send("You already have this location smh")
+        if type(location["cost"]) is str:
+            return await message.channel.send("You can't buy this location")
 
-		if not liquidate and user["money"] < location["cost"]:
-			return await message.channel.send("You don't have enough money for that (include `liquidate` at the end of the command if you want to liquidate and buy (meaning you lose everything except for animals in other locations))")
+        if locationKey in user["locations"] or locationKey == user["location"]:
+            return await message.channel.send("You already have this location smh")
 
-		if liquidate and user["money"] - netWorth < location["cost"]:
-			return await message.channel.send("You don't have enough money for that even if you liquidated everything")
+        if not liquidate and user["money"] < location["cost"]:
+            return await message.channel.send(
+                "You don't have enough money for that (include `liquidate` at the end of the command if you want to liquidate and buy (meaning you lose everything except for animals in other locations))"
+            )
 
-		m = db["members"]
+        if liquidate and user["money"] - netWorth < location["cost"]:
+            return await message.channel.send(
+                "You don't have enough money for that even if you liquidated everything"
+            )
 
-		user = m[str(message.author.id)]
-		if not liquidate:
-			user["locations"][user["location"]] = user["animals"]
+        m = db["members"]
 
-		else:
-			user["tools"] = {}
-			user["seeds"] = {}
-			user["merch"] = {}
+        user = m[str(message.author.id)]
+        if not liquidate:
+            user["locations"][user["location"]] = user["animals"]
 
-		user["animals"] = {}
+        else:
+            user["tools"] = {}
+            user["seeds"] = {}
+            user["merch"] = {}
 
-		user["money"] -= location["cost"] if not liquidate else location["cost"] - netWorth
+        user["animals"] = {}
 
-		user["location"] = locationKey
+        user["money"] -= (
+            location["cost"] if not liquidate else location["cost"] - netWorth
+        )
 
-		db["members"] = m
-		return await message.channel.send(f"{location['name']} successfully purchased")
+        user["location"] = locationKey
 
-	elif args[2] == "transfer":
-		locationKey = softSearch(locations.keys(), args[-1])
+        db["members"] = m
+        return await message.channel.send(f"{location['name']} successfully purchased")
 
-		if not locationKey:
-			return await message.channel.send("I couldn't find that location")
+    elif args[2] == "transfer":
+        locationKey = softSearch(locations.keys(), args[-1])
 
-		if locationKey == user["location"]:
-			return await message.channel.send("You're already in that location!")
+        if not locationKey:
+            return await message.channel.send("I couldn't find that location")
 
-		if locationKey not in user["locations"]:
-			return await message.channel.send("buy that location first")
+        if locationKey == user["location"]:
+            return await message.channel.send("You're already in that location!")
 
-		if len(args) == 4:
+        if locationKey not in user["locations"]:
+            return await message.channel.send("buy that location first")
 
-			m = db["members"]
-			user = m[str(message.author.id)]
+        if len(args) == 4:
 
-			user["locations"][user["location"]] = user["animals"]
+            m = db["members"]
+            user = m[str(message.author.id)]
 
-			user["animals"] = user["locations"][locationKey]
+            user["locations"][user["location"]] = user["animals"]
 
-			del user["locations"][locationKey]
+            user["animals"] = user["locations"][locationKey]
 
-			user["location"] = locationKey
+            del user["locations"][locationKey]
 
-			db["members"] = m
+            user["location"] = locationKey
 
-			return await message.channel.send(f"You're now in the {locationKey}")
+            db["members"] = m
 
-		else:
-			animalsMoved = " ".join(args[3:-1]).split(", ")
+            return await message.channel.send(f"You're now in the {locationKey}")
 
-			check = [i for i in animalsMoved if len(i) == 2 and i[0].isnumeric() and softSearch(animals.keys(), i[1], ["name"])]
+        else:
+            animalsMoved = " ".join(args[3:-1]).split(", ")
 
-			if not bool(check):
-				return await message.channel.send("It looks like your animals were formatted incorrectly. Please use a format like this: `i location transfer 1 cow, 5 chicken, 3 camel desert`")
+            check = [
+                i
+                for i in animalsMoved
+                if len(i) == 2
+                and i[0].isnumeric()
+                and softSearch(animals.keys(), i[1], ["name"])
+            ]
 
-			animalsFormatted = [[int(i.split(" ")[0]), softSearch(animals.keys(), i.split(" ")[1], ["name"])] for i in animalsMoved]
+            if not bool(check):
+                return await message.channel.send(
+                    "It looks like your animals were formatted incorrectly. Please use a format like this: `i location transfer 1 cow, 5 chicken, 3 camel desert`"
+                )
 
-			m = db["members"]
+            animalsFormatted = [
+                [
+                    int(i.split(" ")[0]),
+                    softSearch(animals.keys(), i.split(" ")[1], ["name"]),
+                ]
+                for i in animalsMoved
+            ]
 
-			user = m[str(message.author.id)]
+            m = db["members"]
 
-			for animal in animalsFormatted:
-				if animal[1] not in user["animals"] or animal[0] < user["animals"][animal[1]]["amount"]:
-					return await message.channel.send(f"You don't have that many {animals[animal[1]]['name']} (s)! No animals were moved.")
+            user = m[str(message.author.id)]
 
-				user["animals"][animal[1]]["amount"] -= animal[0]
+            for animal in animalsFormatted:
+                if (
+                    animal[1] not in user["animals"]
+                    or animal[0] < user["animals"][animal[1]]["amount"]
+                ):
+                    return await message.channel.send(
+                        f"You don't have that many {animals[animal[1]]['name']} (s)! No animals were moved."
+                    )
 
-				if not bool(user["animals"][animal[1]]["amount"]):
-					del user["animals"][animal[1]]
+                user["animals"][animal[1]]["amount"] -= animal[0]
 
-				if animal[1] in user["locations"][locationKey]:
-					user["locations"][locationKey][animal[1]]["amount"] += animal[0]
+                if not bool(user["animals"][animal[1]]["amount"]):
+                    del user["animals"][animal[1]]
 
-				else:
-					user["locations"][locationKey][animal[1]] = {
-						"lastused": 0,
-						"amount": animal[0]
-					}
-				
-			db["members"] = m
+                if animal[1] in user["locations"][locationKey]:
+                    user["locations"][locationKey][animal[1]]["amount"] += animal[0]
 
-			return await message.channel.send("Successfully moved animals")
-	else:
+                else:
+                    user["locations"][locationKey][animal[1]] = {
+                        "lastused": 0,
+                        "amount": animal[0],
+                    }
 
-		return await message.channel.send("Please use a valid subcommand!\n\n`my` - shows your current locations\n`view` - look at all the locations. Include a location name to look at a specific location\n`buy` - purchase a location\n`transfer` - transfers you to a location. If you want to transfer animals to a different location, do it like this: ```\ni location transfer 5 cow, 1 camel desert\n```")
+            db["members"] = m
+
+            return await message.channel.send("Successfully moved animals")
+    else:
+
+        return await message.channel.send(
+            "Please use a valid subcommand!\n\n`my` - shows your current locations\n`view` - look at all the locations. Include a location name to look at a specific location\n`buy` - purchase a location\n`transfer` - transfers you to a location. If you want to transfer animals to a different location, do it like this: ```\ni location transfer 5 cow, 1 camel desert\n```"
+        )

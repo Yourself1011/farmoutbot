@@ -1,22 +1,51 @@
 from replit import db
 import discord
 
-async def top(message, client):
-	members = [[i.id, f"{i.name}#{i.discriminator}"] for i in message.guild.members if str(i.id) in db["members"]]
-	balances = [[i[0], i[1], db["members"][str(i[0])]["money"]] for i in members]
 
-	sort = sorted(balances, key=lambda x: x[2], reverse=True)
+async def top(message: discord.Message, client):
+    dbMembers = db["members"]
 
-	page = 1 if len(message.content.split(" ")) == 2 or not message.content.split(" ")[2].isnumeric() else int(message.content.split(" ")[2])
+    def userInDb(user: discord.Member) -> bool:
+        return str(user.id) in dbMembers
 
-	display = sort[(page - 1) * 10:(page) * 10]
+    members = map(
+        lambda i: (i.id, f"{i.name}#{i.discriminator}"),
+        filter(userInDb, message.guild.members),
+    )
 
-	thing = "\n".join([f"{sort.index(i) + 1}. <@{i[0]}> ({i[1]}) - {i[2]}" for i in display])
+    balances = [(i[0], i[1], dbMembers[str(i[0])]["money"]) for i in members]
 
-	embed = discord.Embed(
-		title = f"Richest users in {message.guild.name}",
-		description = f"You are #{[i[0] for i in sort].index(message.author.id) + 1 if str(message.author.id) in db['members'] else '-1 since you do not have an account'}\n\n{thing}",
-		colour = discord.Colour.red()
-	)
+    balances.sort(key=lambda x: x[2], reverse=True)
 
-	await message.channel.send(embed=embed)
+    page = (
+        1
+        if len(message.content.split(" ")) == 2
+        or not message.content.split(" ")[2].isnumeric()
+        else int(message.content.split(" ")[2])
+    )
+
+    display = balances[(page - 1) * 10 : (page) * 10]
+
+    thing = "\n".join(
+        map(lambda i: f"{balances.index(i) + 1}. <@{i[0]}> ({i[1]}) - {i[2]}", display)
+    )
+
+    placement = (
+        next(
+            filter(
+                lambda info: message.author.id == info[1],
+                map(lambda info: (info[0], info[1][0]), enumerate(balances)),
+            )
+        )[0]
+        + 1
+        if str(message.author.id) in dbMembers
+        else "-1 since you do not have an account"
+    )
+
+    embed = discord.Embed(
+        title=f"Richest users in {message.guild.name}",
+        description=f"You are #{placement}\n\n{thing}",
+        colour=discord.Colour.red(),
+    )
+
+    await message.channel.send(embed=embed)

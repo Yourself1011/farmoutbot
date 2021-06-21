@@ -4,6 +4,7 @@ import time
 import random
 import asyncio
 
+
 async def buy(message, client):
 	args = message.content.split(' ')
 	if str(message.author.id) not in db['members']:
@@ -13,18 +14,20 @@ async def buy(message, client):
 		return (' what are you buying lol')
 	amount = 1
 
-	if len(args) == 4 and args[3].isnumeric():
-		amount = int(args[3])
-	
-	# thingbought = args[2].lower()
-	thing = None
-	allPos = []
-	objs = []
+    # thingbought = args[2].lower()
+    thing = None
+    allPos = []
+    objs = []
 
-	obj = {"animals": {}, "tools": {}, "seeds": {}, "merch": {}}
-	getShop(obj, db["members"][str(message.author.id)]["location"])
-	animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
-
+    obj = {"animals": {}, "tools": {}, "seeds": {}, "merch": {}}
+    getShop(obj, db["members"][str(message.author.id)]["location"])
+    animals, tools, seeds, merch = (
+        obj["animals"],
+        obj["tools"],
+        obj["seeds"],
+        obj["merch"],
+    )
+    
 	for i in [seeds, merch, tools, animals]:
 		possibilities = [j for j in list(i.keys()) if args[2] in j and j != "name"]
 		if not bool(possibilities):
@@ -50,7 +53,7 @@ async def buy(message, client):
 	elif len(args) == 4:
 		if args[3] == '0':
 			return ('you bought 0 things. are you proud of yourself?')
-		amount = convertInt(args[3])
+z`		amount = convertInt(args[3])
 		if not bool(amount):
 			return (" That's not a number")
 
@@ -124,4 +127,4 @@ async def buy(message, client):
 			a[str(message.author.id)]['reputation'] -= thingj
 			db['members'] = a
 
-	await buye()
+    await buye()

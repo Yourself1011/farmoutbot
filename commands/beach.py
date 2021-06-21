@@ -5,7 +5,9 @@ from random import randint
 import random
 from zstats import gatheringCmd, merch, tools, seeds, animals
 
+
 async def beach(message, client):
+
 	user = str(message.author.id)
 	if user not in db['members']: return ('make an account to search the beach');
 	user = db["members"][str(message.author.id)]
@@ -94,4 +96,4 @@ async def beach(message, client):
 
 	else:
 		responses = ["looked on the beach and found", "walked around a little and picked up", "discovered", "found", "looked in a sand castle and found"]
-		return (f"You {responses[randint(0, len(responses)-1)]} {item[1]}x {itemName}\n{durabilityMsg}\n{reserveMsg}")	
+		return (f"You {responses[randint(0, len(responses)-1)]} {item[1]}x {itemName}\n{durabilityMsg}\n{reserveMsg}")

@@ -3,7 +3,7 @@
 import os
 from os.path import join, dirname
 from importlib import import_module
- 
+
 import discord
 from dotenv import load_dotenv
 from replit import db
@@ -23,44 +23,69 @@ from trade_update import startLoop, trade_update
 from thinghappen import thinghappen
 from drawlottery import drawlottery
 from time import time
-from vote import vote	
+from vote import vote
 
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path) 
-BOT_TOKEN = os.environ.get('BOT_TOKEN')
+dotenv_path = join(dirname(__file__), ".env")
+load_dotenv(dotenv_path)
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
-client = discord.Client(intents = discord.Intents.all())
+client = discord.Client(intents=discord.Intents.all())
 
-for file in os.scandir('./commands/'):
-	filename = file.name[:-3]
-	if file.name.endswith('.py') and filename not in ['main', 'acommands', 'zstats', 'zuseanimal', 'keep_alive', 'trade_update']:
-		commands[filename]['execute'] = getattr(import_module(f"commands.{filename}"), filename)
+for file in os.scandir("./commands/"):
+    filename = file.name[:-3]
+    if file.name.endswith(".py") and filename not in [
+        "main",
+        "acommands",
+        "zstats",
+        "zuseanimal",
+        "keep_alive",
+        "trade_update",
+    ]:
+        commands[filename]["execute"] = getattr(
+            import_module(f"commands.{filename}"), filename
+        )
+
 
 @client.event
 async def on_ready():
-	DiscordComponents(client)
-	kljkalsdhfasjdkf = ['stupid', 'dumb', 'fat', 'annoying', 'crybaby', 'weirdo', 'nerd', 'moron', 'stinky', 'idiot', 'diaperbutt']
-	slkfjhasldkjfkan = random.choice(kljkalsdhfasjdkf)
-	await client.change_presence(status=discord.Status.idle, activity=discord.Game(name = slkfjhasldkjfkan))
+    DiscordComponents(client)
+    kljkalsdhfasjdkf = [
+        "stupid",
+        "dumb",
+        "fat",
+        "annoying",
+        "crybaby",
+        "weirdo",
+        "nerd",
+        "moron",
+        "stinky",
+        "idiot",
+        "diaperbutt",
+    ]
+    slkfjhasldkjfkan = random.choice(kljkalsdhfasjdkf)
+    await client.change_presence(
+        status=discord.Status.idle, activity=discord.Game(name=slkfjhasldkjfkan)
+    )
 
+    print("babbon babbon bot babbon burp")
+
+    await startLoop(client)
 	things = ["bong bong bong this is my song the bot is on", "babbon babbon bot babbon burp", "unga unga bunga boo, the bot is on, now time for poo"]
 
 	print(things[random.randint(0, len(things) - 1)])
 
-	await startLoop(client)
 
 @client.event
 async def on_guild_join(guild):
-	a = db['server']
-	a[str(guild.id)] = {
-		'prefix': 'i',
-		'channel': None
-	}
-	db['server'] = a
-	print(f'woah woah woah new serverrrrr: {guild.name}')
+    a = db["server"]
+    a[str(guild.id)] = {"prefix": "i", "channel": None}
+    db["server"] = a
+    print(f"woah woah woah new serverrrrr: {guild.name}")
+
 
 @client.event
 async def on_message(message):
+
 	if message.author.id == 835153690155024454:
 		args = message.content.replace("|", "").split(" ")
 		user = await client.fetch_user(args[2])
@@ -184,9 +209,9 @@ async def on_message(message):
 	
 keep_alive()
 try:
-	client.run(BOT_TOKEN)	
+    client.run(BOT_TOKEN)
 except discord.errors.HTTPException as err:
-	print(err)	
+    print(err)
 
 """
 Super important, do not	remove  			 

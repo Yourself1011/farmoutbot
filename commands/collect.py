@@ -4,7 +4,9 @@ import time
 import random
 from math import floor
 
+
 async def collect(message, client):
+
 	args = message.content.split(' ')
 	if str(message.author.id) not in db['members']:
 		return(f' {message.author.mention}\'s to-do list:\n\n1: make an account\n2: buy a seed\n3: buy a watering can\n4: plant the seeds\n5: water the plants\n6: wait for them to grow\n7: collect them')
