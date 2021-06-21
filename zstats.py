@@ -1191,16 +1191,61 @@ market = [
     "trying to lose weight",
 ]
 
-births = ["baby", "breed", "yes", "shoo!", "fart", "babbon", "push"]
-emojis = [
-    ":money_with_wings:",
-    ":dollar:",
-    ":euro:",
-    ":yen:",
-    ":pound:",
-    ":coin:",
-    ":moneybag:",
-    ":credit_card:",
-    ":gem:",
-]
-# thing
+births = ['baby', 'breed', 'yes', 'shoo!', 'fart', 'babbon', "push"]
+emojis = [':money_with_wings:', ':dollar:', ':euro:', ':yen:', ':pound:', ':coin:', ':moneybag:', ':credit_card:', ':gem:']
+def newUser(datemade):
+	newuser = {
+		'animals': {},
+		'tools': {
+			'wateringcan': tools['wateringcan']['durability']
+		},
+		'merch': {},
+		'seeds': {
+			'grassseeds': {
+				'amount': 5
+			}
+		},
+		'plantcooldowns': {},
+		'plants': {},
+		'money': 100,
+		'reputation': 500,
+		'amounts': {
+			'shared': 0,
+			'gambled': 0,
+			'bought': 0,
+			'sold': 0,
+			'used': 0,
+		},
+		'prestige': 0,
+		'multi': 1.0,
+		'commandsused': 0,
+		'datemade': datemade,
+		"trades": {
+			"lastTradeId": 0,
+			"tradeAmts": [0, 0, 0],
+			"stock": [0, 0, 0]
+		},
+		"cooldowns": {
+			'daily': 0,
+			'hourly': 0,
+			'lastdaily': ' ¯\_(ツ)_/¯',
+			'dailystreak': 0
+		},
+		'donecontracts': [{
+			'1': [],
+			'2': [],
+			'3': [],
+			'4': []
+		}],
+		'currentcontract': [1, 1],
+		'prestige': 0,
+		"location": "default",
+		"locations": {},
+		"settings": {
+			"votedm": True,
+			"tips": True,
+			"replypings": True
+		}
+	} 
+
+	return newuser

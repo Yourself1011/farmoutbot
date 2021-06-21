@@ -24,6 +24,16 @@ async def settings(message, client):
             "desc": "Makes the inventory only show emojis for animals and merch",
             "options": boolean,
         },
+        "tips": {
+          "name": "Tips",
+          "desc": "Enable or disable whether you get tips",
+          "options": boolean
+        },
+        "replypings": {
+          "name": "Reply pings",
+          "desc": "Enable or disable whether you get pings on replies",
+          "options": boolean
+        },
     }
 
     if len(args) == 2 or (len(args) >= 3 and args[2].isnumeric()):
@@ -38,8 +48,8 @@ async def settings(message, client):
             currentValue = db["members"][str(message.author.id)]["settings"][ids[i]]
 
             embed.add_field(
-                name=values[i]["name"],
-                value=f"`{ids[i]}`\nDescription: {values[i]['desc']}\nOptions: {', '.join(values[i]['options'])}\nCurrently: {currentValue}",
+                name = values[i]['name'],
+                value = f"`{ids[i]}`\n- Description: {values[i]['desc']}\n- Options: {', '.join(values[i]['options'])}\n- Currently: {currentValue}"
             )
 
         return await message.channel.send(embed=embed)
