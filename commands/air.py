@@ -1,2 +1,2 @@
-async def air(message,client):
-	await message.reply('here, have some air. :dash: :dash: :dash:')
+async def air(message, client):
+    return ("here, have some air. :dash: :dash: :dash:", True)
