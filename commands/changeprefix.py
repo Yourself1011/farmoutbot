@@ -1,5 +1,6 @@
 from replit import db
 
+
 async def changeprefix(message, client):
 	args = message.content.split(' ')
 	if len(args) == 2:

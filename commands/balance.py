@@ -2,19 +2,20 @@ from replit import db
 import random
 from zstats import getMember
 
+
 async def balance(message, client):
-	args = message.content.split(' ')
-	if len(args) == 2 and str(message.author.id) not in db['members']:
-		await message.channel.send('Make an account first to get money idiot')
-		return
-	if len(args) == 3 and not args[2].startswith('<@') and args[2].endswith('>'):
-		await message.channel.send('Mention someone to see their account')
-		return
-	if len(args) == 2:
-		user = str(message.author.id)
-	if len(args) >= 3:
-		searched = getMember(args[2:], message.guild.id, client)
-		user = str(searched.id) if searched else False
+    args = message.content.split(" ")
+    if len(args) == 2 and str(message.author.id) not in db["members"]:
+        await message.channel.send("Make an account first to get money idiot")
+        return
+    if len(args) == 3 and not args[2].startswith("<@") and args[2].endswith(">"):
+        await message.channel.send("Mention someone to see their account")
+        return
+    if len(args) == 2:
+        user = str(message.author.id)
+    if len(args) >= 3:
+        searched = getMember(args[2:], message.guild.id, client)
+        user = str(searched.id) if searched else False
 
 	if not bool(user):
 		return ("I couldn't find anybody")

@@ -4,6 +4,7 @@ from datetime import date
 from zstats import tools, seeds, newUser
 
 async def start(message, client):
+
 	if str(message.author.id) in db['members']:
 		await message.channel.send('You already made an account dum dum')
 	else:

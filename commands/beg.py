@@ -2,7 +2,9 @@ from replit import db
 import random
 import time
 
+
 async def beg(message, client):
+
 	if str(message.author.id) not in db['members']:
 		return ('your farm doesn\'t exist yet, do `start` first')
 	if db['members'][str(message.author.id)]['reputation'] <= 250:

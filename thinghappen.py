@@ -2,8 +2,8 @@ import random
 from replit import db
 import asyncio
 
-async def thinghappen(message, client):
 
+async def thinghappen(message, client):
 	if str(message.author.id) not in db['members']: yield
 	if db['members'][str(message.author.id)]['animals'] == {}:
 		yield
@@ -34,8 +34,9 @@ async def thinghappen(message, client):
 	channel = message.channel
 	reply = None
 
-	def check(m):
-		return m.content.lower() == 'pay' and m.author.id == message.author.id
+    def check(m):
+        return m.content.lower() == "pay" and m.author.id == message.author.id
+
 
 	try:	
 		reply = await client.wait_for('message', timeout=10.0, check=check)

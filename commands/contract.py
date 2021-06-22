@@ -2,7 +2,9 @@ from replit import db
 from contracts import contracts
 import discord
 
+
 async def contract(message, client):
+
 	prefix = db['server'][str(message.guild.id)]['prefix']
 	args = message.content.split(' ')
 	if len(args) == 2:
