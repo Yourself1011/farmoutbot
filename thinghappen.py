@@ -4,8 +4,6 @@ import asyncio
 
 
 async def thinghappen(message, client):
-
-
 	if str(message.author.id) not in db['members']: yield
 	if db['members'][str(message.author.id)]['animals'] == {}:
 		yield

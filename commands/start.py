@@ -3,7 +3,6 @@ import time
 from datetime import date
 from zstats import tools, seeds, newUser
 
-
 async def start(message, client):
 
 	if str(message.author.id) in db['members']:

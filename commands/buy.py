@@ -53,7 +53,8 @@ async def buy(message, client):
 	elif len(args) == 4:
 		if args[3] == '0':
 			return ('you bought 0 things. are you proud of yourself?')
-z`		amount = convertInt(args[3])
+    amount = convertInt(args[3])
+    
 		if not bool(amount):
 			return (" That's not a number")
 
