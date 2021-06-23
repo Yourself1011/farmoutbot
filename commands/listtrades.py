@@ -1,4 +1,6 @@
+
 # TEMPERARY THING IGNORE FOR NOW	NO IT"S NOT TEMPORARY ANYMORE
+
 
 from replit import db
 import discord

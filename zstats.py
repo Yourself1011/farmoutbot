@@ -238,6 +238,7 @@ animals = {
         "sellcost": 400,
         "tool": "babboner",
         "result": "kidney",
+
         "cooldown": 50000,
         "thing": "babbon",
         "tradevalue": 250,
@@ -252,6 +253,7 @@ animals = {
         "thing": "get",
         "tradevalue": 200,
     },
+
 }
 
 tools = {
@@ -424,6 +426,7 @@ tools = {
         "animal": "jungle",
         "tradevalue": 15,
     },
+
     "feathergetter": {
         "name": "feathergetter",
         "cost": 30,
@@ -432,6 +435,7 @@ tools = {
         "animal": "peacock",
         "tradevalue": 14,
     },
+
 }
 
 seeds = {
@@ -736,6 +740,7 @@ merch = {
         "tradevalue": 18,
         "description": "babbon your babbons for kidneys, usually sell for a lot but these are defective",
     },
+
     "peacockfeather": {
         "name": "peacockfeather :feather:",
         "cost": 19,
@@ -743,6 +748,7 @@ merch = {
         "tradevalue": 15,
         "description": "the feather of a peacock, commonly used to make pens",
     },
+
     # Plant merch
     "grass": {
         "name": "grass :seedling:",
@@ -1037,16 +1043,20 @@ locations = {
     },
     "desert": {
         "name": "desert :desert:",
+
         "desc": "A hot tundra without much, home to camels and cacti and sand",
         "baseMulti": 1.05,
+
         "shop": {
             "camel": {"cost": 775, "give": False},
             "cameldung": {"cost": 75, "give": False, "get": False},
             "cactusseeds": {"cost": 20, "sellcost": 19},
             "cactus": {"cost": 27, "sellcost": 24},
         },
+
         "cost": 500000,
         "multis": {"camel": 1.5, "sunflower": 1.1, "snake": 1.5, "cactus": 2, 'sheep': 0.9, 'cow': 0.9},
+
         "defaultLife": False,
         "lifeOverrides": {
             "camel": True,
@@ -1054,6 +1064,7 @@ locations = {
             "snake": True,
             "cactus": True,
         },
+
         "deathRate": 0.75,
     },
     "jungle": {
@@ -1089,6 +1100,7 @@ locations = {
 				'defaultLife': True,
 				'lifeOverrides': {},
 				'deathrate': 0.8
+
     },
     "devlocation": {
         "name": "devlocation :test_tube:",
@@ -1103,6 +1115,7 @@ locations = {
     },
 }
 # "": { # Location name, self-explanatory
+
 # 	"name": "", # displayed name
 # 	"desc": "", #description
 # 	"baseMulti": 1, # the multi for everything that isn't in the multis key
@@ -1112,6 +1125,7 @@ locations = {
 # 	"defaultLife": True, # whether or not this location will keep animals/plants alive by default
 # 	"lifeOverrides": {}, # life overrides
 # 	"deathRate": 0 # amount that will die if stated in lifeOverrides or if defaultLife is False. deadAmount = userAmount * deathRate
+
 # },
 
 tradeexclusive = {}
@@ -1127,7 +1141,9 @@ tips = [
     "`trades` will you show you available trades.",
     "come join our support server at `discord.gg/tvCmtkBAkc`",
     "encounter a bug while playing? use `report` to report it directly to our support server.",
-    "do `suggest` to suggest anything rom new animals to new tips!",
+
+    "do `suggest` to suggest anything from new animals to new tips!",
+
     "`showtrades` can show currently available trades.",
     "You may be tempted to sell all your merchandise right away, but you should save some to do trades.",
     "`crops` is a handy command to show all the things currently planted and how long they've been growing.",

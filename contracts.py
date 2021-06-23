@@ -74,7 +74,9 @@ contracts = {
         },
         "3": {
             "title": "Endangered",
+
             "description": "The city, along with a big business, wants to pressure you into selling your farm to them so that they can build	skyrises and buildings there. They are saying that your farm doesn't provide enough resources to be useful, or as useful as the buildings that they are planning to build. You must produce 10000 milk, enough to feed the entire city for 2 weeks, in order to prove that your farm is worth keeping. You'll get 500 eggs in return.",
+
             "need": ["10000 milk", 10000, "milk"],
             "reward": ["500 eggs", 500, "egg"],
         },

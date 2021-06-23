@@ -168,7 +168,6 @@ class Game:
         await self.play(int(amt))
 
     async def play(self, amt):
-
         dbuser = db["members"][str(self.message.author.id)]
 
         m = db["members"]
@@ -227,7 +226,6 @@ class Game:
                 description=f"**Bot, total: {botTotal}**\n{', '.join(list(map(self.cardFormat, bot)))}, `?`",
                 colour=15721648,
             )
-
             for i in range(len(user)):
                 e.add_field(
                     name=f"{'» ' if i == userSplit else ''}Hand {i + 1}, total: {userTotal[i]}",
@@ -262,7 +260,6 @@ class Game:
                 await msg.respond(type=6)
 
                 buttonMsg.components = []
-
                 card = [
                     "I'm spending too long trying to think of something funny to say here",
                     69,
