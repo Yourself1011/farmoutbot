@@ -25,24 +25,24 @@ async def settings(message, client):
             "options": boolean,
         },
         "tips": {
-          "name": "Tips",
-          "desc": "Enable or disable whether you get tips",
-          "options": boolean
+            "name": "Tips",
+            "desc": "Enable or disable whether you get tips",
+            "options": boolean,
         },
         "replypings": {
-          "name": "Reply pings",
-          "desc": "Enable or disable whether you get pings on replies",
-          "options": boolean
+            "name": "Reply pings",
+            "desc": "Enable or disable whether you get pings on replies",
+            "options": boolean,
         },
         "tips": {
-          "name": "Tips",
-          "desc": "Enable or disable whether you get tips",
-          "options": boolean
+            "name": "Tips",
+            "desc": "Enable or disable whether you get tips",
+            "options": boolean,
         },
         "replypings": {
-          "name": "Reply pings",
-          "desc": "Enable or disable whether you get pings on replies",
-          "options": boolean
+            "name": "Reply pings",
+            "desc": "Enable or disable whether you get pings on replies",
+            "options": boolean,
         },
     }
 
@@ -58,8 +58,8 @@ async def settings(message, client):
             currentValue = db["members"][str(message.author.id)]["settings"][ids[i]]
 
             embed.add_field(
-                name = values[i]['name'],
-                value = f"`{ids[i]}`\n- Description: {values[i]['desc']}\n- Options: {', '.join(values[i]['options'])}\n- Currently: {currentValue}"
+                name=values[i]["name"],
+                value=f"`{ids[i]}`\n- Description: {values[i]['desc']}\n- Options: {', '.join(values[i]['options'])}\n- Currently: {currentValue}",
             )
 
         return await message.channel.send(embed=embed)

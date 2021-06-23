@@ -1,4 +1,4 @@
-# TEMPERARY THING IGNORE FOR NOW	TEMPORARY*
+# TEMPERARY THING IGNORE FOR NOW    TEMPORARY*
 
 from replit import db
 import pprint
