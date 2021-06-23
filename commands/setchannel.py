@@ -37,7 +37,7 @@ async def setchannel(message, client):
                 Button(style=ButtonStyle.green, label="Yes"),
                 Button(style=ButtonStyle.red, label="No"),
             ],
-        )	
+        )
 
         res = await client.wait_for("button_click")
         if res.author == message.author:

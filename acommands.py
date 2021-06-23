@@ -409,15 +409,14 @@ commands = {
         "usage": "stats",
         "description": "Shows bot stats",
         "aliases": [],
-        "category": "other"
+        "category": "other",
     },
-
 }
 
 # "": {
-# 	"name": "",
-# 	"usage": "",
-# 	"description": "",
-# 	"aliases": [],
-# 	"category": ""
+#     "name": "",
+#     "usage": "",
+#     "description": "",
+#     "aliases": [],
+#     "category": ""
 # },
