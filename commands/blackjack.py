@@ -1,11 +1,11 @@
 from replit import db
 from random import randint, choices
 import discord
-from asyncio import TimeoutError
+from asyncio import TimeoutError, wait, FIRST_COMPLETED
 from time import time
 from math import floor
 from zstats import convertInt
-from discord_components import DiscordComponents, Button, Buttonstype, InteractionType
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 
 cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 amounts = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
@@ -31,6 +31,7 @@ class Game:
             "Q": 24,
             "K": 24,
         }
+        self.bet = None
 
     def cardFormat(self, x):
         return f"`{x[0]} {x[1]}`"
@@ -79,27 +80,56 @@ class Game:
         return total
 
     async def ask(self):
-        await self.message.channel.send(
-            "How much do you bet? Type leave to, well, leave"
+        buttons = [Button(style = ButtonStyle.blue, label = self.bet)] if bool(self.bet) else []
+        buttons.extend([
+            Button(style = ButtonStyle.green, label = "All"),
+            Button(style = ButtonStyle.grey, label = "Half"),
+            Button(style = ButtonStyle.red, label = "Leave")
+        ])
+        buttonMsg = await self.message.channel.send(
+            "How much do you bet? Type leave to, well, leave",
+            components = [buttons]
         )
-        try:
-            msg = await self.client.wait_for(
+        done, pending = await wait([
+            self.client.wait_for(
                 "message",
                 check=lambda x: (
                     bool(convertInt(x.content))
-                    or x.content.lower() == "leave"
-                    or x.content.lower() in ["a", "all", "max"]
                 )
                 and x.author.id == self.message.author.id
                 and x.channel.id == self.message.channel.id,
                 timeout=60.0,
-            )
+            ),
+            self.client.wait_for(
+                "button_click",
+                check = lambda x:
+                x.author.id == self.message.author.id
+                and x.channel.id == self.message.channel.id,
+                timeout = 60.0
+            ),
+        ], return_when = FIRST_COMPLETED
+        )
+        try:
+            msg = done.pop().result()
 
         except TimeoutError:
             await self.message.channel.send("bruh respond with a valid bet")
             return
 
-        if msg.content.lower() == "leave":
+        for future in done:
+            future.exception()
+
+        for future in pending:
+            future.cancel()
+
+        await buttonMsg.edit(components = [])
+
+        if hasattr(msg, "component"):
+            await msg.respond(type = 6)
+
+        msg = msg.content.lower() if hasattr(msg, "content") else msg.component.label.lower()
+
+        if msg == "leave":
             return await self.message.channel.send("aight looks like no more bj")
 
         dbuser = db["members"][str(self.message.author.id)]
@@ -113,10 +143,13 @@ class Game:
                 )
                 return
 
-        amt = msg.content
+        amt = msg
         if amt.lower() in ["a", "all", "max"]:
             amt = dbuser["money"]
+        elif amt.lower() in ["h", "half"]:
+            amt = round(dbuser["money"] / 2)
         else:
+            self.bet = amt
             amt = convertInt(amt)
 
             if not bool(amt):
@@ -131,9 +164,11 @@ class Game:
         elif amt < 50:
             await self.message.channel.send("Bet an amount over 50.")
             return
+
         await self.play(int(amt))
 
     async def play(self, amt):
+
         dbuser = db["members"][str(self.message.author.id)]
 
         m = db["members"]
@@ -168,34 +203,30 @@ class Game:
                     userSplit += 1
                 else:
                     break
-            options = ["H", "S"]
+            options = ["Hit", "Stand"]
 
             if (
                 user[userSplit][0][0] == user[userSplit][1][0]
                 and len(user[userSplit]) == 2
             ):
-                options.append("SP")
+                options.append("Split")
             if (
                 botTotal == 11
                 and amt * 1.5 <= dbuser["money"]
                 and insurance == 0
                 and len(user[0]) == 2
             ):
-                options.append("I")
+                options.append("Insurance")
             if amt * 2 <= dbuser["money"]:
-                options.append("D")
+                options.append("Double down")
             if len(user) == 1 and len(user[0]) == 2:
-                options.append("N")
+                options.append("Surrender")
 
             e = discord.Embed(
                 title=f"{self.message.author.name}'s blackjack game",
                 description=f"**Bot, total: {botTotal}**\n{', '.join(list(map(self.cardFormat, bot)))}, `?`",
                 colour=15721648,
             )
-
-            footer = f"Type {'SP to split, ' if 'SP' in options else ''}{'I for insurance, ' if 'I' in options else ''}{'D to double down, ' if 'D' in options else ''}{'N to surren̲der, ' if 'N' in options else ''}H to hit, or S to stand"
-
-            e.set_footer(text=footer)
 
             for i in range(len(user)):
                 e.add_field(
@@ -204,37 +235,49 @@ class Game:
                     inline=False,
                 )
 
-            await self.message.channel.send(embed=e)
+            buttonMsg = await self.message.channel.send(
+                embed=e,
+                components=[
+                    [Button(style=ButtonStyle.green, label=i) for i in options]
+                ],
+            )
 
             try:
                 msg = await self.client.wait_for(
-                    "message",
+                    "button_click",
                     check=lambda x: x.author.id == self.message.author.id
                     and x.channel.id == self.message.channel.id
-                    and x.content.lower() in [i.lower() for i in options],
+                    and x.component.label.lower() in [i.lower() for i in options]
+                    and x.message.id == buttonMsg.id,
                     timeout=60.0,
                 )
+
             except TimeoutError:
                 await self.message.channel.send(
                     "SMH my head 60 seconds is more than enough time to make up your mind"
                 )
                 return
             else:
+                await buttonMsg.edit(components=[])
+                await msg.respond(type=6)
+
+                buttonMsg.components = []
+
                 card = [
                     "I'm spending too long trying to think of something funny to say here",
                     69,
                     False,
                 ]
-                if msg.content.lower() == "h":
+                if msg.component.label == "Hit":
                     card = self.getCard()
                     user[userSplit].append(card)
 
                     userTotal[userSplit] = self.getTotal(user[userSplit])
 
-                elif msg.content.lower() == "s":
+                elif msg.component.label == "Stand":
                     userSplit += 1
 
-                elif msg.content.lower() == "d":
+                elif msg.component.label == "Double down":
                     card = self.getCard()
                     user[userSplit].append(card)
 
@@ -244,10 +287,10 @@ class Game:
 
                     userSplit += 1
 
-                elif msg.content.lower() == "i":
+                elif msg.component.label == "Insurance":
                     insurance = amt * 0.5
 
-                elif msg.content.lower() == "sp":
+                elif msg.component.label == "Split":
                     userCopy = user[userSplit]
                     card = self.getCard()
                     user[userSplit] = [userCopy[0], card]
@@ -261,7 +304,7 @@ class Game:
                     userTotal[userSplit] = self.getTotal(user[userSplit])
                     userTotal.append(self.getTotal(user[userSplit + 1]))
 
-                elif msg.content.lower() == "n":
+                elif msg.component.label == "Surrender":
                     end = False
                     surrender = True
                     amt = round(amt / 2)

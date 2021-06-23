@@ -159,16 +159,14 @@ async def useanimal(message, animal, client, thing):
         )
         return
     if echance == 2:
-        whatthingchance = random.randint(1, 3)
-        print(whatthingchance)
-        if whatthingchance == 1 or whatthingchance == 3:
+        whatthingchance = random.randint(1, 4)
+        if whatthingchance in [1, 2, 3]:
             randomra = random.randint(1, 2)
-            print(randomra)
             if "undeadwool" in db["members"][str(message.author.id)]["merch"]:
                 return
             if amount > 11:
                 death = random.choice(list(deaths.keys()))
-                deadamount = random.randint(1, round(amount / 5))
+                deadamount = random.randint(1, round(amount / 4))
                 if randomra == 1:
                     thingtotype = deaths[death]
                     thingsaid = f"Oh no!{deadamount} of your {animal}s are trying to die {death}! quick, type `{thingtotype}` in the chat now!"
@@ -202,7 +200,11 @@ async def useanimal(message, animal, client, thing):
                         db["members"] = a
                         return
                     else:
-                        await channel.send("phew you saved ur animals in time")
+                        newamount = int(round(deadamount*0.2))
+                        await channel.send(f"you managed to save most of the animals, but {newamount} died anyway oof")
+                        a = db['members'][str(message.author.id)]
+                        a['animals'][animal]['amount'] -= newamount
+                        db['members'][str(message.author.id)] = a
                         return
                 elif randomra == 2:
                     emojis = ["🐑", "🐔", "🐄"]

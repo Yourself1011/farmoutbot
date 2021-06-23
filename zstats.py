@@ -238,9 +238,19 @@ animals = {
         "sellcost": 400,
         "tool": "babboner",
         "result": "kidney",
-        "cooldown": 30000,
+        "cooldown": 50000,
         "thing": "babbon",
         "tradevalue": 250,
+    },
+    "peacock": {
+        "name": "peacock :peacock:",
+        "cost": "trade only",
+        "sellcost": 300,
+        "tool": "feathergetter",
+        "result": "peacockfeather",
+        "cooldown": 45000,
+        "thing": "get",
+        "tradevalue": 200,
     },
 }
 
@@ -413,6 +423,14 @@ tools = {
         "sellcost": 40,
         "animal": "jungle",
         "tradevalue": 15,
+    },
+    "feathergetter": {
+        "name": "feathergetter",
+        "cost": 30,
+        "durability": 23,
+        "sellcost": 15,
+        "animal": "peacock",
+        "tradevalue": 14,
     },
 }
 
@@ -718,6 +736,13 @@ merch = {
         "tradevalue": 18,
         "description": "babbon your babbons for kidneys, usually sell for a lot but these are defective",
     },
+    "peacockfeather": {
+        "name": "peacockfeather :feather:",
+        "cost": 19,
+        "sellcost": 16,
+        "tradevalue": 15,
+        "description": "the feather of a peacock, commonly used to make pens",
+    },
     # Plant merch
     "grass": {
         "name": "grass :seedling:",
@@ -1012,16 +1037,16 @@ locations = {
     },
     "desert": {
         "name": "desert :desert:",
-        "desc": "A hot tundra without much",
-        "baseMulti": 0.75,
+        "desc": "A hot tundra without much, home to camels and cacti and sand",
+        "baseMulti": 1.05,
         "shop": {
             "camel": {"cost": 775, "give": False},
             "cameldung": {"cost": 75, "give": False, "get": False},
             "cactusseeds": {"cost": 20, "sellcost": 19},
             "cactus": {"cost": 27, "sellcost": 24},
         },
-        "cost": 10000000,
-        "multis": {"camel": 1.5, "sunflower": 0.9, "snake": 1.5, "cactus": 2},
+        "cost": 500000,
+        "multis": {"camel": 1.5, "sunflower": 1.1, "snake": 1.5, "cactus": 2, 'sheep': 0.9, 'cow': 0.9},
         "defaultLife": False,
         "lifeOverrides": {
             "camel": True,
@@ -1029,20 +1054,41 @@ locations = {
             "snake": True,
             "cactus": True,
         },
-        "deathRate": 0.5,
+        "deathRate": 0.75,
     },
     "jungle": {
         "name": "jungle :coconut:",
-        "desc": "A thick forest",
-        "baseMulti": 1.25,
-        "shop": {},
-        "cost": 1500000,
+        "desc": "A thick, rainy forest",
+        "baseMulti": 1.2,
+        "shop": {
+					'peacock': {'cost': 350}
+				},
+        "cost": 850000,
         "multis": {
             "mango": 1.75,
+						'peacock': 1.25
         },
         "defaultLife": True,
         "lifeOverrides": {"cactus": False, "camel": False},
-        "deathRate": 0.75,
+        "deathRate": 0.85,
+    },
+    'arctic': {
+        'name': 'arctic :snowflake: ',
+        'desc': 'A cold, dumb, cold, snow, cold place where polar bears live',
+        'baseMulti': 1.3,
+				'shop' :{
+					''
+				},
+				'cost': 1500000,
+				'multis': {
+					'sheep': 1.1,
+					'chicken': 0.9,
+					'sunflower': 0.9,
+					'mango': 0.9
+				},
+				'defaultLife': True,
+				'lifeOverrides': {},
+				'deathrate': 0.8
     },
     "devlocation": {
         "name": "devlocation :test_tube:",
@@ -1081,7 +1127,7 @@ tips = [
     "`trades` will you show you available trades.",
     "come join our support server at `discord.gg/tvCmtkBAkc`",
     "encounter a bug while playing? use `report` to report it directly to our support server.",
-    "do `suggest` to suggest anything from new animals to new tips!",
+    "do `suggest` to suggest anything rom new animals to new tips!",
     "`showtrades` can show currently available trades.",
     "You may be tempted to sell all your merchandise right away, but you should save some to do trades.",
     "`crops` is a handy command to show all the things currently planted and how long they've been growing.",
