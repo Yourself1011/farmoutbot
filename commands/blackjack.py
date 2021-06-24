@@ -168,6 +168,7 @@ class Game:
         await self.play(int(amt))
 
     async def play(self, amt):
+
         dbuser = db["members"][str(self.message.author.id)]
 
         m = db["members"]
@@ -221,6 +222,15 @@ class Game:
             if len(user) == 1 and len(user[0]) == 2:
                 options.append("Surrender")
 
+            colours = {
+                "Hit": 3,
+                "Stand": 1,
+                "Split": 2,
+                "Insurance": 2,
+                "Double down": 4,
+                "Surrender": 4
+            }
+
             e = discord.Embed(
                 title=f"{self.message.author.name}'s blackjack game",
                 description=f"**Bot, total: {botTotal}**\n{', '.join(list(map(self.cardFormat, bot)))}, `?`",
@@ -236,7 +246,7 @@ class Game:
             buttonMsg = await self.message.channel.send(
                 embed=e,
                 components=[
-                    [Button(style=ButtonStyle.green, label=i) for i in options]
+                    [Button(style=colours[i], label=i) for i in options]
                 ],
             )
 

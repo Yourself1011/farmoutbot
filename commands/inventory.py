@@ -53,8 +53,9 @@ async def inventory(message, client):
                 inline=False,
             )
         prefix = db["server"][str(message.guild.id)]["prefix"]
+        user = client.fetch_user(user)
         e.set_author(
-            name=f"{message.author.name}'s animals", icon_url=message.author.avatar_url
+            name=f"{user.name}'s animals", icon_url=user.avatar_url
         )
         e.set_footer(
             text=f"Use <{prefix} (plant)> to use your animals when they are ready."

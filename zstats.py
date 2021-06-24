@@ -253,6 +253,16 @@ animals = {
         "thing": "get",
         "tradevalue": 200,
     },
+		'walrus': {
+			'name': 'walrus :seal: ',
+			'cost': 'trade only',
+			'sellcost': 600,
+			'tool': 'toothbrush',
+			'result': 'walrustusk',
+			'cooldown': 50000,
+			'thing': 'brush',
+			'tradevalue': 350
+		}
 
 }
 
@@ -435,6 +445,22 @@ tools = {
         "animal": "peacock",
         "tradevalue": 14,
     },
+		'wintercoat' :{
+			'name': 'wintercoat',
+			'cost': 45,
+			'durability': 40,
+			'sellcost': 25,
+			'animal': 'arctic',
+			'tradevalue': 29
+		},
+		'toothbrush': {
+			'name': 'toothbrush',
+			'cost': 10,
+			'sellcost': 5,
+			'durability': 12,
+			'animal': 'walrus',
+			'tradevalue': 5
+		}
 
 }
 
@@ -748,6 +774,13 @@ merch = {
         "tradevalue": 15,
         "description": "the feather of a peacock, commonly used to make pens",
     },
+		'walrustusk': {
+			'name': 'walrustusk :seal: :tooth:',
+			'cost': 50,
+			'sellcost': 35,
+			'tradevalue': 30,
+			'description': 'the tooth of a walrus. very nice'
+		},
 
     # Plant merch
     "grass": {
@@ -1085,22 +1118,22 @@ locations = {
     },
     'arctic': {
         'name': 'arctic :snowflake: ',
-        'desc': 'A cold, dumb, cold, snow, cold place where polar bears live',
-        'baseMulti': 1.3,
+        'desc': 'A cold, dumb, cold, snow, cold place where walruses and stuff live',
+        'baseMulti': 1.25,
 				'shop' :{
-					''
+					'walrus': {'cost': 700}
 				},
 				'cost': 1500000,
 				'multis': {
 					'sheep': 1.1,
 					'chicken': 0.9,
 					'sunflower': 0.9,
-					'mango': 0.9
+					'mango': 0.9,
+					'walrus': 1.25
 				},
 				'defaultLife': True,
 				'lifeOverrides': {},
 				'deathrate': 0.8
-
     },
     "devlocation": {
         "name": "devlocation :test_tube:",
