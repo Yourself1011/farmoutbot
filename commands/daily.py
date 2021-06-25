@@ -45,7 +45,7 @@ async def daily(message, client):
 
     a = db["members"]
 
-    if db["members"][str(message.author.id)]["cooldowns"]["daily"] < now - (
+    if db["members"][str(message.author.id)]["cooldowns"]["daily"] > now - (
         86400000 * 2
     ):
         a[str(message.author.id)]["cooldowns"]["streak"] += 1

@@ -53,8 +53,9 @@ async def inventory(message, client):
                 inline=False,
             )
         prefix = db["server"][str(message.guild.id)]["prefix"]
+        user = client.fetch_user(user)
         e.set_author(
-            name=f"{message.author.name}'s animals", icon_url=message.author.avatar_url
+            name=f"{user.name}'s animals", icon_url=user.avatar_url
         )
         e.set_footer(
             text=f"Use <{prefix} (plant)> to use your animals when they are ready."
@@ -76,7 +77,9 @@ async def inventory(message, client):
             return
         name = await client.fetch_user(user)
         e = discord.Embed(title=f"", colour=discord.Colour.red())
-        e.set_author(name=f"{name    }'s inventory stats:", icon_url=name.avatar_url)
+
+        e.set_author(name=f"{name	}'s inventory stats:", icon_url=name.avatar_url)
+
         animaltotalunique = len(list(db["members"][user]["animals"].values()))
         animaltotal = 0
         for i in db["members"][user]["animals"]:

@@ -411,12 +411,19 @@ commands = {
         "aliases": [],
         "category": "other",
     },
+		'arctic': {
+			'name' :'arctic',
+			'usage': '<arctic>',
+			'description': 'search the arctic for cool stuff',
+			'aliases': [],
+			'category': 'gather'
+		}
 }
 
-# "": {
-#     "name": "",
-#     "usage": "",
-#     "description": "",
-#     "aliases": [],
-#     "category": ""
-# },
+    # "": {
+    # 	"name": "",
+    # 	"usage": "",
+    # 	"description": "",
+    # 	"aliases": [],
+    # 	"category": ""
+    # },

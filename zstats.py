@@ -1,10 +1,12 @@
-from random import uniform, randint
+from random import uniform
 from numpy.random import choice
-from math import floor
+from math import floor, ceil
 import collections.abc
 from copy import deepcopy
-import random
-from replit import db
+import discord
+from discord_components import Button
+from asyncio import TimeoutError
+
 
 
 def getMember(search, guildId, client):
@@ -156,6 +158,56 @@ def getShop(shops, location):
 # getShop(obj, db["members"][str(message.author.id)]["location"])
 # animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
 
+async def pages(message, client, title, colour, items, displayAmount, startPage = 1):
+    """
+    Button pagination
+    Parameters:
+    ----------
+    message: discord.Message - the message where the command was run
+    client: discord.Client - the discord client
+    title: str - the title of the embed
+    colour: colour - the colour of the embed
+    items: dictionary - a dictionary containing a name and a value for each item
+    displayAmount: int - the amount of items displayed per page
+    startPage: int - the page to start on (starts at 1)
+    """
+    
+    page = startPage - 1
+    maxPages = ceil(len(items) / displayAmount)
+
+    embed = discord.Embed(
+        title = title,
+        colour = colour
+    )
+    displayItems = items[page * displayAmount:page * displayAmount + displayAmount]
+
+    for i in displayItems:
+        embed.add_field(
+            name = i["name"],
+            value = i["value"]
+        )
+    
+    embed.set_footer(text = f"Page {page}/{maxPages}")
+
+    msg = await message.channel.send(
+        embed = embed,
+        components = [[
+            Button(emoji = ":track_previous:", style = 1),
+            Button(emoji = ":arrow_backward:", style = 3),
+            Button(emoji = ":x:", style = 4),
+            Button(emoji = ":arrow_forward:", style = 3),
+            Button(emoji = ":track_next:", style = 1),
+        ]]
+    )
+
+    try:
+        res = await client.wait_for(
+            "button_click", 
+            timeout = 100.0,
+            check = lambda x: x.author.id == message.author.id and msg.id == x.messge.id
+        )
+    except TimeoutError:
+        await msg.edit(components = [])
 
 animals = {
     "name": "animals",
@@ -238,10 +290,32 @@ animals = {
         "sellcost": 400,
         "tool": "babboner",
         "result": "kidney",
-        "cooldown": 30000,
+
+        "cooldown": 50000,
         "thing": "babbon",
         "tradevalue": 250,
     },
+    "peacock": {
+        "name": "peacock :peacock:",
+        "cost": "trade only",
+        "sellcost": 300,
+        "tool": "feathergetter",
+        "result": "peacockfeather",
+        "cooldown": 45000,
+        "thing": "get",
+        "tradevalue": 200,
+    },
+		'walrus': {
+			'name': 'walrus :seal: ',
+			'cost': 'trade only',
+			'sellcost': 600,
+			'tool': 'toothbrush',
+			'result': 'walrustusk',
+			'cooldown': 50000,
+			'thing': 'brush',
+			'tradevalue': 350
+		}
+
 }
 
 tools = {
@@ -414,6 +488,32 @@ tools = {
         "animal": "jungle",
         "tradevalue": 15,
     },
+
+    "feathergetter": {
+        "name": "feathergetter",
+        "cost": 30,
+        "durability": 23,
+        "sellcost": 15,
+        "animal": "peacock",
+        "tradevalue": 14,
+    },
+		'wintercoat' :{
+			'name': 'wintercoat',
+			'cost': 45,
+			'durability': 40,
+			'sellcost': 25,
+			'animal': 'arctic',
+			'tradevalue': 29
+		},
+		'toothbrush': {
+			'name': 'toothbrush',
+			'cost': 10,
+			'sellcost': 5,
+			'durability': 12,
+			'animal': 'walrus',
+			'tradevalue': 5
+		}
+
 }
 
 seeds = {
@@ -718,6 +818,22 @@ merch = {
         "tradevalue": 18,
         "description": "babbon your babbons for kidneys, usually sell for a lot but these are defective",
     },
+
+    "peacockfeather": {
+        "name": "peacockfeather :feather:",
+        "cost": 19,
+        "sellcost": 16,
+        "tradevalue": 15,
+        "description": "the feather of a peacock, commonly used to make pens",
+    },
+		'walrustusk': {
+			'name': 'walrustusk :seal: :tooth:',
+			'cost': 50,
+			'sellcost': 35,
+			'tradevalue': 30,
+			'description': 'the tooth of a walrus. very nice'
+		},
+
     # Plant merch
     "grass": {
         "name": "grass :seedling:",
@@ -828,7 +944,7 @@ merch = {
     },
     "tulip": {
         "name": "tulip :tulip:",
-        "cost": 25,  # "Only available during spring",
+        "cost": 'Only available during spring',  #25
         "description": "tulip, looks nice\nsellable",
         "sellcost": 20,
         "tradevalue": 16,
@@ -837,7 +953,7 @@ merch = {
     },
     "sunflower": {
         "name": "sunflower :sunflower:",
-        "cost": "Only available during summer",  # 50
+        "cost": 50,  # Only available during summer
         "description": "a flower of the sun",
         "sellcost": 45,
         "tradevalue": 4,
@@ -1012,16 +1128,20 @@ locations = {
     },
     "desert": {
         "name": "desert :desert:",
-        "desc": "A hot tundra without much",
-        "baseMulti": 0.75,
+
+        "desc": "A hot tundra without much, home to camels and cacti and sand",
+        "baseMulti": 1.05,
+
         "shop": {
             "camel": {"cost": 775, "give": False},
             "cameldung": {"cost": 75, "give": False, "get": False},
             "cactusseeds": {"cost": 20, "sellcost": 19},
             "cactus": {"cost": 27, "sellcost": 24},
         },
-        "cost": 10000000,
-        "multis": {"camel": 1.5, "sunflower": 0.9, "snake": 1.5, "cactus": 2},
+
+        "cost": 500000,
+        "multis": {"camel": 1.5, "sunflower": 1.1, "snake": 1.5, "cactus": 2, 'sheep': 0.9, 'cow': 0.9},
+
         "defaultLife": False,
         "lifeOverrides": {
             "camel": True,
@@ -1029,20 +1149,43 @@ locations = {
             "snake": True,
             "cactus": True,
         },
-        "deathRate": 0.5,
+
+        "deathRate": 0.75,
     },
     "jungle": {
         "name": "jungle :coconut:",
-        "desc": "A thick forest",
-        "baseMulti": 1.25,
-        "shop": {},
-        "cost": 1500000,
+        "desc": "A thick, rainy forest",
+        "baseMulti": 1.2,
+        "shop": {
+					'peacock': {'cost': 350}
+				},
+        "cost": 850000,
         "multis": {
             "mango": 1.75,
+						'peacock': 1.25
         },
         "defaultLife": True,
         "lifeOverrides": {"cactus": False, "camel": False},
-        "deathRate": 0.75,
+        "deathRate": 0.85,
+    },
+    'arctic': {
+        'name': 'arctic :snowflake: ',
+        'desc': 'A cold, dumb, cold, snow, cold place where walruses and stuff live',
+        'baseMulti': 1.25,
+				'shop' :{
+					'walrus': {'cost': 700}
+				},
+				'cost': 1500000,
+				'multis': {
+					'sheep': 1.1,
+					'chicken': 0.9,
+					'sunflower': 0.9,
+					'mango': 0.9,
+					'walrus': 1.25
+				},
+				'defaultLife': True,
+				'lifeOverrides': {},
+				'deathrate': 0.8
     },
     "devlocation": {
         "name": "devlocation :test_tube:",
@@ -1057,15 +1200,17 @@ locations = {
     },
 }
 # "": { # Location name, self-explanatory
-#     "name": "", # displayed name
-#     "desc": "", #description
-#     "baseMulti": 1, # the multi for everything that isn't in the multis key
-#     "shop": {}, # differences in the shop
-#     "cost": 0, # cost to buy
-#     "multis": {}, # multiplier overrides
-#     "defaultLife": True, # whether or not this location will keep animals/plants alive by default
-#     "lifeOverrides": {}, # life overrides
-#     "deathRate": 0 # amount that will die if stated in lifeOverrides or if defaultLife is False. deadAmount = userAmount * deathRate
+
+# 	"name": "", # displayed name
+# 	"desc": "", #description
+# 	"baseMulti": 1, # the multi for everything that isn't in the multis key
+# 	"shop": {}, # differences in the shop
+# 	"cost": 0, # cost to buy
+# 	"multis": {}, # multiplier overrides
+# 	"defaultLife": True, # whether or not this location will keep animals/plants alive by default
+# 	"lifeOverrides": {}, # life overrides
+# 	"deathRate": 0 # amount that will die if stated in lifeOverrides or if defaultLife is False. deadAmount = userAmount * deathRate
+
 # },
 
 tradeexclusive = {}
@@ -1081,7 +1226,9 @@ tips = [
     "`trades` will you show you available trades.",
     "come join our support server at `discord.gg/tvCmtkBAkc`",
     "encounter a bug while playing? use `report` to report it directly to our support server.",
+
     "do `suggest` to suggest anything from new animals to new tips!",
+
     "`showtrades` can show currently available trades.",
     "You may be tempted to sell all your merchandise right away, but you should save some to do trades.",
     "`crops` is a handy command to show all the things currently planted and how long they've been growing.",

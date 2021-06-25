@@ -174,8 +174,10 @@ async def on_message(message):
                         ),
                     )
                     await message.author.send(embed=embed)
+
             outRaw = await commands[command["name"]]["execute"](message, client)
             name = commands[command["name"]]["name"]
+
             print(f"{message.author.name} did {name} command in {message.guild.name}")
             if str(message.author.id) in db["members"]:
                 a = db["members"]
@@ -188,7 +190,13 @@ async def on_message(message):
                 else False
             )
 
-            out = outRaw[0] if type(outRaw) == list or type(outRaw) == tuple else ""
+            out = (
+                outRaw[0]
+                if type(outRaw) == list or type(outRaw) == tuple
+                else outRaw
+                if type(outRaw) == str
+                else ""
+            )
 
             embed = outRaw if type(outRaw) == discord.Embed else None
 
@@ -255,50 +263,50 @@ except discord.errors.HTTPException as err:
     print(err)
 
 """
-Super important, do not    remove               
+Super important, do not	remove  			 
+    
+                    
     
                         
     
-                           
+                    
+    
+                    
+    
+            
     
                         
     
-                         
-    
-               
-    
-                           
-    
-                              
-    
-                           
-    
-                           
-    
-                     
-    
-               
-    
-                           
+                            
     
                         
     
-                           
+                        
+    
+                    
+    
+            
     
                         
     
-               
+                    
     
-                           
+                        
     
-                              
+                    
     
-                           
+            
     
-               
+                        
     
-                           
+                            
     
-                     
+                        
     
-  """
+            
+    
+                        
+    
+                    
+    
+"""

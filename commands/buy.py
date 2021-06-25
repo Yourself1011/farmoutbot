@@ -117,17 +117,17 @@ async def buy(message, client):
             f"you paid `{r} coins` for `{amount} {key}(s)`.",
         ]
         thingsaid = random.choice(thingstosay)
-        return (f"{thingsaid}", True)
+        out = thingsaid
         thingi = random.randint(1, 20)
         if thingi == 1:
             thingj = random.randint(4, 9)
-            return f"{message.author.mention} you lucky ducky, you bought something that the market was trying to get rid of and your rep increased by `{thingj}`."
+            out += f"\n{message.author.mention} you lucky ducky, you bought something that the market was trying to get rid of and your rep increased by `{thingj}`."
             a = db["members"]
             a[str(message.author.id)]["reputation"] += thingj
             db["members"] = a
         if thingi == 2:
             thingj = random.randint(10, 20)
-            return f"{message.author.mention} bruh you bought something that the market didnt want to give, you lost `{thingj}` rep **and** `{int(round(thingj*2))} coins`."
+            out += f"\n{message.author.mention} bruh you bought something that the market didnt want to give, you lost `{thingj}` rep **and** `{int(round(thingj*2))} coins`."
             a = db["members"]
             if int(round(thingj * 2)) > a[str(message.author.id)]["money"]:
                 a[str(message.author.id)]["money"] = 0
@@ -136,4 +136,6 @@ async def buy(message, client):
             a[str(message.author.id)]["reputation"] -= thingj
             db["members"] = a
 
-    await buye()
+        return (out, True)
+
+    return await buye()
