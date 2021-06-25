@@ -376,6 +376,13 @@ commands = {
         "aliases": ["otf"],
         "category": "gamble",
     },
+    "beetlerace": {
+        "name": "beetlerace",
+        "usage": "<beetlerace (beetlenumber 1-5) (bet)",
+        "description": "Bet on a beetle to win the beetle race. There are 5 total beetles. If your beetle gets 1st, you win 3 times the amount. If it gets 2nd, you win twice the amount. If it gets 3rd, nothing happens, and if it gets 4th or 5th, you lose all of your coins.",
+        "aliases": ["br"],
+        "category": "gamble",
+    },
     "jungle": {
         "name": "jungle",
         "usage": "<jungle>",

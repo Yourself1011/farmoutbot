@@ -360,6 +360,10 @@ discord = [
 discord-components = [
     {file = "discord_components-0.5.4-py3-none-any.whl", hash = "sha256:1746d2bfb80c5782f4ffd68930d7415f317b6970b78dae7c731f3ea07d4fb80b"},
 ]
+discord-components = [
+    {file = "discord_components-0.5.3-py3-none-any.whl", hash = "sha256:3c8ef54b0de6519e593b260f03e8032586a2226d69721a9004fb2ebacd41fb73"},
+    {file = "discord_components-0.5.3.tar.gz", hash = "sha256:96171cb1956988bdd50d89ca9ec0135ecb3340b5f5255251141e7d28c14860ec"},
+]
 "discord.py" = [
     {file = "discord.py-1.7.3-py3-none-any.whl", hash = "sha256:c6f64db136de0e18e090f6752ea68bdd4ab0a61b82dfe7acecefa22d6477bb0c"},
     {file = "discord.py-1.7.3.tar.gz", hash = "sha256:462cd0fe307aef8b29cbfa8dd613e548ae4b2cb581d46da9ac0d46fb6ea19408"},

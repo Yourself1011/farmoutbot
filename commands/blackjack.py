@@ -259,7 +259,6 @@ class Game:
                     and x.message.id == buttonMsg.id,
                     timeout=60.0,
                 )
-
             except TimeoutError:
                 await self.message.channel.send(
                     "SMH my head 60 seconds is more than enough time to make up your mind"
