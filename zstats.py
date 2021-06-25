@@ -1,10 +1,11 @@
-from random import uniform, randint
+from random import uniform
 from numpy.random import choice
-from math import floor
+from math import floor, ceil
 import collections.abc
 from copy import deepcopy
-import random
-from replit import db
+import discord
+from discord_components import Button
+from asyncio import TimeoutError
 
 
 def getMember(search, guildId, client):
@@ -156,6 +157,56 @@ def getShop(shops, location):
 # getShop(obj, db["members"][str(message.author.id)]["location"])
 # animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
 
+async def pages(message, client, title, colour, items, displayAmount, startPage = 1):
+    """
+    Button pagination
+    Parameters:
+    ----------
+    message: discord.Message - the message where the command was run
+    client: discord.Client - the discord client
+    title: str - the title of the embed
+    colour: colour - the colour of the embed
+    items: dictionary - a dictionary containing a name and a value for each item
+    displayAmount: int - the amount of items displayed per page
+    startPage: int - the page to start on (starts at 1)
+    """
+    
+    page = startPage - 1
+    maxPages = ceil(len(items) / displayAmount)
+
+    embed = discord.Embed(
+        title = title,
+        colour = colour
+    )
+    displayItems = items[page * displayAmount:page * displayAmount + displayAmount]
+
+    for i in displayItems:
+        embed.add_field(
+            name = i["name"],
+            value = i["value"]
+        )
+    
+    embed.set_footer(text = f"Page {page}/{maxPages}")
+
+    msg = await message.channel.send(
+        embed = embed,
+        components = [[
+            Button(emoji = ":track_previous:", style = 1),
+            Button(emoji = ":arrow_backward:", style = 3),
+            Button(emoji = ":x:", style = 4),
+            Button(emoji = ":arrow_forward:", style = 3),
+            Button(emoji = ":track_next:", style = 1),
+        ]]
+    )
+
+    try:
+        res = await client.wait_for(
+            "button_click", 
+            timeout = 100.0,
+            check = lambda x: x.author.id == message.author.id and msg.id == x.messge.id
+        )
+    except TimeoutError:
+        await msg.edit(components = [])
 
 animals = {
     "name": "animals",
@@ -892,7 +943,7 @@ merch = {
     },
     "tulip": {
         "name": "tulip :tulip:",
-        "cost": 25,  # "Only available during spring",
+        "cost": 'Only available during spring',  #25
         "description": "tulip, looks nice\nsellable",
         "sellcost": 20,
         "tradevalue": 16,
@@ -901,7 +952,7 @@ merch = {
     },
     "sunflower": {
         "name": "sunflower :sunflower:",
-        "cost": "Only available during summer",  # 50
+        "cost": 50,  # Only available during summer
         "description": "a flower of the sun",
         "sellcost": 45,
         "tradevalue": 4,
