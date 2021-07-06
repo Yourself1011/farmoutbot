@@ -2,6 +2,7 @@
 import discord
 from time import time
 from math import floor
+from replit import db
 
 start = time()
 
@@ -27,5 +28,8 @@ async def stats(message, client):
 
 **Users**
 {len(client.users)}
+
+**Players**
+{len(db["members"])}
         """
     )

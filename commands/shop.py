@@ -1,9 +1,7 @@
 import discord
 from replit import db
-from zstats import softSearch, getShop
-import random
+from zstats import softSearch, getShop, pages
 from math import ceil
-
 
 async def shop(message, client):
     args = message.content.split(" ")
@@ -168,21 +166,14 @@ async def shop(message, client):
 
         r = intsSorted + strsSorted
 
-        while i < a2:
-            try:
-                if r[i] != "name":
-                    cost = animals[r[i]]["cost"]
-                    sellcost = animals[r[i]]["sellcost"]
-                    tool = animals[r[i]]["tool"]
-                    tradevalue = animals[r[i]]["tradevalue"]
-                    result = animals[r[i]]["result"]
-                    e.add_field(
-                        name=animals[r[i]]["name"],
-                        value=f"Cost: `{cost}`\nSell amount: `{sellcost}`\nNeeded tool: `{tool}`\nTrade value: `{tradevalue}`\nResult: `{result}`\n",
-                    )
-                i += 1
-            except:
-                break
+        await pages(
+            message, 
+            client, 
+            [{"name": animals[j]["name"], "value": f"Cost: `{animals[j]['cost']}`\nSell amount: `{animals[j]['sellcost']}`\nNeeded tool: `{animals[j]['tool']}`\nTrade value: `{animals[j]['tradevalue']}`\nResult: `{animals[j]['result']}`\n"} for j in r],
+            9,
+            startPage = i/9 + 1,
+            baseEmbed = e
+        )
     elif shop == "tools":
         dictCopy = dict(tools)
         del dictCopy["name"]
@@ -196,24 +187,15 @@ async def shop(message, client):
         strsSorted = sorted(strs.keys(), key=lambda x: str(strs[x]["cost"]))
 
         r = intsSorted + strsSorted
-        while i < a2:
-            try:
-                if r[i] != "name":
-                    cost = tools[r[i]]["cost"]
-                    sellcost = tools[r[i]]["sellcost"]
-                    tool = (
-                        ", ".join(tools[r[i]]["animal"])
-                        if type(tools[r[i]]["animal"]) is list
-                        else tools[r[i]]["animal"]
-                    )
-                    tradevalue = tools[r[i]]["tradevalue"]
-                    e.add_field(
-                        name=tools[r[i]]["name"],
-                        value=f"Cost: `{cost}`\nSell amount: `{sellcost}`\nTo be used on/in: `{tool}`\nTrade value: `{tradevalue}`",
-                    )
-                i += 1
-            except:
-                break
+
+        await pages(
+            message, 
+            client, 
+            [{"name": tools[j]["name"], "value": f"Cost: `{tools[j]['cost']}`\nSell amount: `{tools[j]['sellcost']}`\nUse on: `{', '.join(tools[j]['animal']) if type(tools[j]['animal']) is list else tools[j]['animal']}`\nTrade value: `{tools[j]['tradevalue']}`\nResult: `{tools[j]['result']}`\n"} for j in r],
+            9,
+            startPage = i/9 + 1,
+            baseEmbed = e
+        )
     elif shop == "merch":
         dictCopy = dict(merch)
         del dictCopy["name"]
@@ -227,19 +209,16 @@ async def shop(message, client):
         strsSorted = sorted(strs.keys(), key=lambda x: str(strs[x]["cost"]))
 
         r = intsSorted + strsSorted
-        while i < a2:
-            try:
-                if r[i] != "name":
-                    cost = merch[r[i]]["cost"]
-                    sellcost = merch[r[i]]["sellcost"]
-                    tradevalue = merch[r[i]]["tradevalue"]
-                    e.add_field(
-                        name=merch[r[i]]["name"],
-                        value=f"Cost: `{cost}`\nSell amount: `{sellcost}`\nTrade value: `{tradevalue}`",
-                    )
-                i += 1
-            except:
-                break
+
+        await pages(
+            message, 
+            client, 
+            [{"name": merch[j]["name"], "value": f"Cost: `{merch[j]['cost']}`\nSell amount: `{merch[j]['sellcost']}`\nTrade value: `{merch[j]['tradevalue']}`"} for j in r],
+            9,
+            startPage = i/9 + 1,
+            baseEmbed = e
+        )
+
     elif shop == "seeds":
         dictCopy = dict(seeds)
         del dictCopy["name"]
@@ -253,26 +232,23 @@ async def shop(message, client):
         strsSorted = sorted(strs.keys(), key=lambda x: str(strs[x]["cost"]))
 
         r = intsSorted + strsSorted
-        while i < a2:
-            try:
-                if r[i] != "name":
-                    cost = seeds[r[i]]["cost"]
-                    sellcost = seeds[r[i]]["sellcost"]
 
-                    growtime = (
-                        f"Grow time: `{seeds[r[i]]['stages'][0]/1000}`\nCooldown: `{seeds[r[i]]['stages'][1]/1000}`\nLifespan: `{seeds[r[i]]['stages'][2]/1000}`"
-                        if "stages" in seeds[r[i]]
-                        else f"Grow time: {seeds[r[i]]['growtime']/1000}"
-                    )
+        growtime = { 
+            seeds[j]["name"]: (
+                f"Grow time: `{seeds[j]['stages'][0]/1000}`\nCooldown: `{seeds[j]['stages'][1]/1000}`\nLifespan: `{seeds[j]['stages'][2]/1000}`"
+                if "stages" in seeds[j]
+                else f"Grow time: {seeds[j]['growtime']/1000}"
+            ) for j in r
+        }
 
-                    tradevalue = seeds[r[i]]["tradevalue"]
-                    e.add_field(
-                        name=seeds[r[i]]["name"],
-                        value=f"Cost: `{cost}`\nSell amount: `{sellcost}`\n{growtime}\nTrade value: `{tradevalue}`",
-                    )
-                i += 1
-            except:
-                break
+        await pages(
+            message, 
+            client, 
+            [{"name": seeds[j]["name"], "value": f"Cost: `{seeds[j]['cost']}`\nSell amount: `{seeds[j]['sellcost']}`\n{growtime[seeds[j]['name']]}\nTrade value: `{seeds[j]['tradevalue']}`"} for j in r],
+            9,
+            startPage = i/9 + 1,
+            baseEmbed = e
+        )
     thing = int(amount) + 1
     thing = str(thing)
     if thing == "1":
@@ -281,4 +257,3 @@ async def shop(message, client):
         text=f"Use <{prefix} shop {args[2].lower()} {thing}> to see the next page of {args[2].lower()}. Page {int(thing) - 1}/{maxPage}"
     )
     e.set_author(name=f"{args[2].lower()} shop:", icon_url=message.author.avatar_url)
-    await message.channel.send(embed=e)

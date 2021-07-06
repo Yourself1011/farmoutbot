@@ -45,7 +45,7 @@ async def jungle(message, client):
             "death": [40, 1, 1, 1],
             "mango": [40, 3, 1, 3],
             "coconut": [25, 4, 1, 3],
-            "pridewatermelon": [30, 5, 1, 1],
+            "sunflower": [30, 5, 1, 1],
             "undeadwool": [1, 1, 1, 1],
             "nothing": [50, 1, 1, 1],
         },
@@ -91,7 +91,7 @@ async def jungle(message, client):
 
     db["members"] = m
 
-    if item[0] == "dragonegg":
+    if item[0] == "undeadwool":
         await message.channel.send(
             f"You wandered in the jungle, and there, behind a large bush, you saw it. The mystical undeadwool. Legend says that it was made eons ago, by the same people who made the sky and the sea.\n{durabilityMsg}\n{reserveMsg}"
         )

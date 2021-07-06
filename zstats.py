@@ -158,56 +158,92 @@ def getShop(shops, location):
 # getShop(obj, db["members"][str(message.author.id)]["location"])
 # animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
 
-async def pages(message, client, title, colour, items, displayAmount, startPage = 1):
+async def pages(message, client, items, displayAmount, startPage = 1, baseEmbed = discord.Embed(), newField = True):
     """
     Button pagination
+
     Parameters:
     ----------
     message: discord.Message - the message where the command was run
     client: discord.Client - the discord client
-    title: str - the title of the embed
-    colour: colour - the colour of the embed
-    items: dictionary - a dictionary containing a name and a value for each item
+    items: dictionary - a array containing a dictionary with a name and a value for each item, or an array of values if newField is false
     displayAmount: int - the amount of items displayed per page
     startPage: int - the page to start on (starts at 1)
+    baseEmbed: discord.Embed() - defaults to an empty embed, the base embed to use
+    newField: bool - whether each item gets placed in a new field or not
     """
     
-    page = startPage - 1
+    page = int(startPage) - 1
     maxPages = ceil(len(items) / displayAmount)
+    msg = None
+    loop = True
 
-    embed = discord.Embed(
-        title = title,
-        colour = colour
-    )
-    displayItems = items[page * displayAmount:page * displayAmount + displayAmount]
+    while loop:
+        embed = baseEmbed.copy()
+        displayItems = items[page * displayAmount:page * displayAmount + displayAmount]
 
-    for i in displayItems:
-        embed.add_field(
-            name = i["name"],
-            value = i["value"]
-        )
-    
-    embed.set_footer(text = f"Page {page}/{maxPages}")
+        if newField:
+            for i in displayItems:
+                embed.add_field(
+                    name = i["name"],
+                    value = i["value"]
+                )
+        else:
+            embed.description = embed.description + "\n".join(displayItems)
+        
+        embed.set_footer(text = f"Page {page + 1}/{maxPages}")
 
-    msg = await message.channel.send(
-        embed = embed,
-        components = [[
-            Button(emoji = ":track_previous:", style = 1),
-            Button(emoji = ":arrow_backward:", style = 3),
-            Button(emoji = ":x:", style = 4),
-            Button(emoji = ":arrow_forward:", style = 3),
-            Button(emoji = ":track_next:", style = 1),
-        ]]
-    )
+        if not bool(msg):
+            msg = await message.channel.send(
+                embed = embed,
+                components = [[
+                    Button(emoji = "⏮️", style = 1, disabled = True if page == 0 else False),
+                    Button(emoji = "◀️", style = 3, disabled = True if page == 0 else False),
+                    Button(emoji = "❌", style = 4),
+                    Button(emoji = "▶️", style = 3, disabled = True if page == maxPages - 1 else False),
+                    Button(emoji = "⏭️", style = 1, disabled = True if page == maxPages - 1 else False),
+                ]]
+            )
+        
+        else:
+            await msg.edit(
+                embed = embed,
+                components = [[
+                    Button(emoji = "⏮️", style = 1, disabled = True if page == 0 else False),
+                    Button(emoji = "◀️", style = 3, disabled = True if page == 0 else False),
+                    Button(emoji = "❌", style = 4),
+                    Button(emoji = "▶️", style = 3, disabled = True if page == maxPages - 1 else False),
+                    Button(emoji = "⏭️", style = 1, disabled = True if page == maxPages - 1 else False),
+                ]]
+            )
 
-    try:
-        res = await client.wait_for(
-            "button_click", 
-            timeout = 100.0,
-            check = lambda x: x.author.id == message.author.id and msg.id == x.messge.id
-        )
-    except TimeoutError:
-        await msg.edit(components = [])
+        try:
+            res = await client.wait_for(
+                "button_click", 
+                timeout = 100.0,
+                check = lambda x: x.author.id == message.author.id and msg.id == x.message.id
+            )
+        except TimeoutError:
+            await msg.edit(components = [])
+            loop = False
+        else:
+            if res.component.emoji.name == "⏮️":
+                page = 0
+
+            elif res.component.emoji.name == "◀️":
+                page = max(0, page - 1)
+
+            elif res.component.emoji.name == "❌":
+                await msg.edit(components = [])
+                loop = False
+
+            elif res.component.emoji.name == "▶️":
+                page = min(maxPages - 1, page + 1)
+
+            elif res.component.emoji.name == "⏭️":
+                page = maxPages - 1
+            
+            await res.respond(type = 6)
 
 animals = {
     "name": "animals",
@@ -622,13 +658,13 @@ seeds = {
     },
     "pridewatermelonseeds": {
         "name": "pridewatermelonseeds",
-        "cost": 100,
+        "cost": 'Only available in pride month, even though you should always be pround', #100
         "sellcost": 90,
         "result": "pridewatermelon",
         "tradevalue": 10,
         "growtime": 60000,
         "get": False,
-        "give": True,
+        "give": False,
     },
 }
 
@@ -892,11 +928,13 @@ merch = {
         "tradevalue": 20,
     },
     "pridewatermelon": {
-        "name": "pridewatermelon :watermelon: :rainbow_flag:",
-        "description": "happy pride month! only available in june, found in the jungle",
-        "cost": 80,
-        "sellcost": 75,
+				"name": "pridewatermelon :watermelon: :rainbow_flag:",
+				"description": "happy pride month! only available in june, found in the jungle",
+				"cost": 'only available in pride month', #180
+				"sellcost": 150,
         "tradevalue": 65,
+				'get': False,
+				'give': False
     },
     # Gather only merch
     "mushroom": {

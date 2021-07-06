@@ -1,6 +1,6 @@
 from replit import db
 import discord
-
+from zstats import pages
 
 async def top(message: discord.Message, client):
     dbMembers = db["members"]
@@ -21,13 +21,7 @@ async def top(message: discord.Message, client):
         1
         if len(message.content.split(" ")) == 2
         or not message.content.split(" ")[2].isnumeric()
-        else int(message.content.split(" ")[2])
-    )
-
-    display = balances[(page - 1) * 10 : (page) * 10]
-
-    thing = "\n".join(
-        map(lambda i: f"{balances.index(i) + 1}. <@{i[0]}> ({i[1]}) - {i[2]}", display)
+        else max(1, min(len(balances, int(message.content.split(" ")[2]))))
     )
 
     placement = (
@@ -44,8 +38,8 @@ async def top(message: discord.Message, client):
 
     embed = discord.Embed(
         title=f"Richest users in {message.guild.name}",
-        description=f"You are #{placement}\n\n{thing}",
+        description=f"You are #{placement}\n\n",
         colour=discord.Colour.red(),
     )
 
-    await message.channel.send(embed=embed)
+    await pages(message, client, list(map(lambda x: f"<@{x[0]}> ({x[1]}) - {x[2]}", balances)), 10, startPage = page, baseEmbed = embed, newField = False)

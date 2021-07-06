@@ -159,11 +159,11 @@ async def useanimal(message, animal, client, thing):
         )
         return
     if echance == 2:
-
         whatthingchance = random.randint(1, 4)
+        print(whatthingchance)
         if whatthingchance in [1, 2, 3]:
             randomra = random.randint(1, 2)
-
+            print(randomra)
             if "undeadwool" in db["members"][str(message.author.id)]["merch"]:
                 return
             if amount > 11:
