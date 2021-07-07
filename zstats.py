@@ -87,9 +87,10 @@ def gatheringCmd(msg, loottable, amount=[1, 1, 1]):
     repeat = floor(amount[0] + (amount[1] - amount[0]) * (uniform(0, 1) ** amount[2]))
     out = []
 
-    sum = len(loottable.keys())
+    length = len(loottable.keys())
+    total = sum([i[0] for i in loottable.values()])
 
-    if repeat > sum:
+    if repeat > length:
         for i, j in loottable.items():
             out.append(
                 [
@@ -97,8 +98,8 @@ def gatheringCmd(msg, loottable, amount=[1, 1, 1]):
                     floor(
                         # Average amount of times to get this item, plus or minus a little
                         (
-                            (j[0] / sum)
-                            + ((j[0] / sum) * uniform(0, 0.10) * choice([-1, 1], 1))
+                            (j[0] / total)
+                            + ((j[0] / total) * uniform(0, 0.10) * choice([-1, 1], 1))
                         )
                         * repeat
                         *
@@ -108,12 +109,14 @@ def gatheringCmd(msg, loottable, amount=[1, 1, 1]):
                 ]
             )
         return out
-
+    print(total)
+    print([i[0] / total for i in loottable.values()])
+    
     # Gets all the items
     sample = choice(
         list(loottable.keys()),
         repeat,
-        p=[i[0] / sum for i in loottable.values()],
+        p=[i[0] / total for i in loottable.values()],
         replace=False,
     )
 
@@ -245,56 +248,58 @@ async def pages(message, client, items, displayAmount, startPage = 1, baseEmbed 
             
             await res.respond(type = 6)
 
+#sellcost is exactly half of cost
+#tv is 25, 50, or 100 less than sellcost
 animals = {
     "name": "animals",
     "sheep": {
         "name": "sheep :sheep:",
         "cost": 250,
-        "sellcost": 225,
+        "sellcost": 175,
         "tool": "shears",
         "result": "wool",
-        "cooldown": 60000,
+        "cooldown": 70000,
         "thing": "shear",
         "tradevalue": 150,
     },
     "cow": {
         "name": "cow :cow:",
         "cost": 775,
-        "sellcost": 500,
+        "sellcost": 387,
         "tool": "bucket",
         "result": "milk",
-        "cooldown": 50000,
+        "cooldown": 60000,
         "thing": "milk",
-        "tradevalue": 375,
+        "tradevalue": 330,
     },
     "chicken": {
         "name": "chicken :chicken:",
         "cost": 75,
-        "sellcost": 50,
+        "sellcost": 38,
         "tool": "nest",
         "result": "egg",
-        "cooldown": 30000,
-        "tradevalue": 100,
+        "cooldown": 50000,
+        "tradevalue": 35,
         "thing": "collect",
     },
     "goat": {
         "name": "goat :goat:",
         "cost": 275,
-        "sellcost": 125,
+        "sellcost": 138,
         "tool": "bowl",
         "result": "goatsmilk",
-        "cooldown": 45000,
-        "tradevalue": 200,
+        "cooldown": 50000,
+        "tradevalue": 100,
         "thing": "milk",
     },
     "horse": {
         "name": "horse :horse:",
         "cost": 1250,
-        "sellcost": 650,
+        "sellcost": 625,
         "tool": "saddle",
         "result": "horsehair",
-        "cooldown": 30000,
-        "tradevalue": 400,
+        "cooldown": 60000,
+        "tradevalue": 600,
         "thing": "haired",
     },
     # Exotic animals
