@@ -201,9 +201,9 @@ async def pages(message, client, items, displayAmount, startPage = 1, baseEmbed 
                 embed = embed,
                 components = [[
                     Button(emoji = "⏮️", style = 1, disabled = True if page == 0 else False),
-                    Button(emoji = "◀️", style = 3, disabled = True if page == 0 else False),
-                    Button(emoji = "❌", style = 4),
-                    Button(emoji = "▶️", style = 3, disabled = True if page == maxPages - 1 else False),
+                    Button(emoji = "◀️", style = 1, disabled = True if page == 0 else False),
+                    Button(emoji = "✖️", style = 4),
+                    Button(emoji = "▶️", style = 1, disabled = True if page == maxPages - 1 else False),
                     Button(emoji = "⏭️", style = 1, disabled = True if page == maxPages - 1 else False),
                 ]]
             )
@@ -213,9 +213,9 @@ async def pages(message, client, items, displayAmount, startPage = 1, baseEmbed 
                 embed = embed,
                 components = [[
                     Button(emoji = "⏮️", style = 1, disabled = True if page == 0 else False),
-                    Button(emoji = "◀️", style = 3, disabled = True if page == 0 else False),
-                    Button(emoji = "❌", style = 4),
-                    Button(emoji = "▶️", style = 3, disabled = True if page == maxPages - 1 else False),
+                    Button(emoji = "◀️", style = 1, disabled = True if page == 0 else False),
+                    Button(emoji = "✖️", style = 4),
+                    Button(emoji = "▶️", style = 1, disabled = True if page == maxPages - 1 else False),
                     Button(emoji = "⏭️", style = 1, disabled = True if page == maxPages - 1 else False),
                 ]]
             )
@@ -236,7 +236,8 @@ async def pages(message, client, items, displayAmount, startPage = 1, baseEmbed 
             elif res.component.emoji.name == "◀️":
                 page = max(0, page - 1)
 
-            elif res.component.emoji.name == "❌":
+            elif res.component.emoji.name == "✖️":
+                print('adit')
                 await msg.edit(components = [])
                 loop = False
 
@@ -359,159 +360,161 @@ animals = {
 
 }
 
+#durability is cost
+#sellcost is 1/2 cost
 tools = {
     "name": "tools",
     "shears": {
         "name": "shears",
-        "cost": 10,
-        "durability": 10,
-        "sellcost": 9,
+        "cost": 50,
+        "durability": 50,
+        "sellcost": 25,
         "animal": "sheep",
-        "tradevalue": 5,
+        "tradevalue": 25,
     },
     "sandals": {
         "name": "sandals",
         "cost": 15,
-        "sellcost": 13,
-        "durability": 14,
+        "sellcost": 8,
+        "durability": 15,
         "animal": "beach",
-        "tradevalue": 10,
+        "tradevalue": 8,
     },
     "steelshears": {
         "name": "steelshears",
-        "cost": 30,
-        "sellcost": 25,
-        "durability": 50,
+        "cost": 150,
+        "sellcost": 75,
+        "durability": 150,
         "animal": "sheep",
-        "tradevalue": 15,
+        "tradevalue": 70,
     },
     "shaver": {
         "name": "shaver",
-        "cost": 80,
-        "sellcost": 50,
-        "durability": 100,
+        "cost": 400,
+        "sellcost": 200,
+        "durability": 400,
         "animal": "sheep",
-        "tradevalue": 45,
+        "tradevalue": 175,
     },
     "wateringcan": {
         "name": "wateringcan",
-        "cost": 25,
-        "durability": 35,
-        "sellcost": 9,
+        "cost": 125,
+        "durability": 125,
+        "sellcost": 62,
         "animal": "seed",
-        "tradevalue": 5,
+        "tradevalue": 60,
     },
     "babboner": {
         "name": "babboner",
-        "cost": 25,
-        "durability": 30,
-        "sellcost": 10,
+        "cost": 125,
+        "durability": 125,
+        "sellcost": 62,
         "animal": "babbon",
-        "tradevalue": 4,
+        "tradevalue": 60,
     },
     "bettercan": {
         "name": "bettercan",
-        "cost": 50,
-        "durability": 100,
-        "sellcost": 45,
+        "cost": 250,
+        "durability": 250,
+        "sellcost": 125,
         "animal": "seed",
-        "tradevalue": 20,
+        "tradevalue": 120,
     },
     "hose": {
         "name": "hose",
-        "cost": 200,
-        "durability": 375,
-        "sellcost": 175,
+        "cost": 1000,
+        "durability": 1000,
+        "sellcost": 500,
         "animal": "seed",
-        "tradevalue": 50,
+        "tradevalue": 450,
     },
     "sprinkler": {
         "name": "sprinkler",
-        "cost": 500,
-        "durability": 689,
-        "sellcost": 450,
+        "cost": 2500,
+        "durability": 2500,
+        "sellcost": 1250,
         "animal": "seed",
-        "tradevalue": 85,
+        "tradevalue": 1000,
     },
     "bucket": {
         "name": "bucket",
-        "cost": 50,
-        "durability": 50,
-        "sellcost": 45,
+        "cost": 250,
+        "durability": 250,
+        "sellcost": 125,
         "animal": "cow",
-        "tradevalue": 15,
+        "tradevalue": 120,
     },
     "saddle": {
         "name": "saddle",
-        "cost": 30,
-        "durability": 30,
-        "sellcost": 20,
+        "cost": 150,
+        "durability": 150,
+        "sellcost": 75,
         "animal": "horse",
-        "tradevalue": 13,
+        "tradevalue": 70,
     },
     "steelbucket": {
         "name": "steelbucket",
-        "cost": 150,
-        "durability": 150,
+        "cost": 650,
+        "durability": 650,
         "sellcost": 135,
         "animal": "cow",
-        "tradevalue": 40,
+        "tradevalue": 130,
     },
     "bowl": {
         "name": "bowl",
-        "cost": 30,
-        "durability": 50,
-        "sellcost": 27,
+        "cost": 150,
+        "durability": 150,
+        "sellcost": 75,
         "animal": "goat",
-        "tradevalue": 10,
+        "tradevalue": 70,
     },
     "toilet": {
         "name": "toilet",
-        "cost": 50,
-        "durability": 50,
-        "sellcost": 40,
+        "cost": 250,
+        "durability": 250,
+        "sellcost": 125,
         "animal": "camel",
-        "tradevalue": 17,
+        "tradevalue": 115,
     },
     "megacoop": {
         "name": "megacoop",
-        "cost": 100,
-        "durability": 150,
-        "sellcost": 75,
+        "cost": 500,
+        "durability": 500,
+        "sellcost": 250,
         "animal": "chicken",
-        "tradevalue": 40,
+        "tradevalue": 200,
     },
     "bigbowl": {
         "name": "bigbowl",
-        "cost": 50,
-        "durability": 75,
-        "sellcost": 45,
+        "cost": 250,
+        "durability": 250,
+        "sellcost": 125,
         "animal": "goat",
-        "tradevalue": 21,
+        "tradevalue": 125,
     },
     "venomextractor": {
         "name": "venomextractor",
-        "cost": 30,
-        "durability": 40,
-        "sellcost": 25,
+        "cost": 150,
+        "durability": 150,
+        "sellcost": 75,
         "animal": "snake",
-        "tradevalue": 10,
+        "tradevalue": 75,
     },
     "nest": {
         "name": "nest",
-        "cost": 10,
-        "durability": 15,
-        "sellcost": 9,
+        "cost": 50,
+        "durability": 50,
+        "sellcost": 25,
         "animal": "chicken",
-        "tradevalue": 5,
+        "tradevalue": 25,
     },
     "chickenhouse": {
         "name": "chickenhouse",
-        "cost": 30,
-        "durability": 48,
-        "sellcost": 27,
+        "cost": 150,
+        "durability": 150,
+        "sellcost": 75,
         "animal": "chicken",
-        "tradevalue": 9,
+        "tradevalue": 70,
     },
     "hikingboots": {
         "name": "hikingboots",
@@ -532,11 +535,11 @@ tools = {
 
     "feathergetter": {
         "name": "feathergetter",
-        "cost": 30,
-        "durability": 23,
-        "sellcost": 15,
+        "cost": 150,
+        "durability": 150,
+        "sellcost": 75,
         "animal": "peacock",
-        "tradevalue": 14,
+        "tradevalue": 70,
     },
 		'wintercoat' :{
 			'name': 'wintercoat',
@@ -548,11 +551,11 @@ tools = {
 		},
 		'toothbrush': {
 			'name': 'toothbrush',
-			'cost': 10,
-			'sellcost': 5,
-			'durability': 12,
+			'cost': 50,
+			'sellcost': 25,
+			'durability': 50,
 			'animal': 'walrus',
-			'tradevalue': 5
+			'tradevalue': 25
 		}
 
 }
@@ -732,6 +735,13 @@ merch = {
         "sellcost": 3,
         "tradevalue": 5,
     },
+		'shirt': {
+			'name': 'shirt :shirt: ',
+			'description': 'not wearable (yet)',
+			'cost': 15,
+			'sellcost': 13,
+			'tradevalue': 15
+		},
     "voldysnose": {
         "name": "voldysnose :nose:",
         "description": "collectible, tradeable",
@@ -1266,7 +1276,6 @@ tips = [
     "Admins, use `setchannel` to set a system messages channel for your server.",
     "Do `donate` to get rep fast",
     "You can use `profile` to see things like when your farm started, and how many commands you've used.",
-    "`trades` will you show you available trades.",
     "come join our support server at `discord.gg/tvCmtkBAkc`",
     "encounter a bug while playing? use `report` to report it directly to our support server.",
 
@@ -1432,3 +1441,103 @@ def newUser(datemade):
     }
 
     return newuser
+
+builtintrades = {
+	'1': {
+		'give': [
+			[
+				{
+        "name": "wool :cloud:",
+        "description": "its from sheep, keep it away from dirt cuz it can get dirty easily",
+        "cost": "Not buyable",
+        "sellcost": 15,
+        "tradevalue": 14,
+        "get": True,
+    		},
+				1,
+				'wool'
+			]
+		],
+		'get': [
+			[
+				{
+				'name': 'shirt :shirt: ',
+				'description': 'not wearable (yet)',
+				'cost': 15,
+				'sellcost': 13,
+				'tradevalue': 15
+				},
+				1,
+				'shirt'
+			]
+		]
+	},
+	'2': {
+		'give': [
+			[
+				{
+        "name": "milk :milk:",
+        "description": "milk, you can sell it or trade it",
+        "cost": "Not buyable",
+        "sellcost": 21,
+        "tradevalue": 20,
+        "get": True,
+				},
+				5,
+				'milk'
+			]
+		],
+		'get': [
+			[
+				{
+        "name": "cheese :cheese:",
+        "cost": 11,
+        "description": "cheese, collectible",
+        "sellcost": 9,
+        "tradevalue": 8,
+				},
+				8,
+				'cheese'
+			]
+		]
+	},
+	'3': {
+		'give': [
+			[
+				{
+					"name": "computer :computer:",
+					"cost": 1000,
+					"description": "it can compute, but only when it wants to\ncollectible, trade it with people",
+					"sellcost": "Not sellable",
+					"tradevalue": 875,
+				},
+				1,
+				'computer',
+			],
+			[
+				{
+					"name": "keyboard :keyboard:",
+					"cost": 20,
+					"description": "can't actually type\ntradeable",
+					"sellcost": 18,
+					"tradevalue": 17,
+				},
+				1,
+				'keyboard'
+			],
+		],
+		'get': [
+			[
+				{
+					"name": "gamingpc :video_game:",
+					"description": "game on it or smth but you can't actually\nnot sellable",
+					"cost": 5000,
+					"sellcost": "Not sellable",
+					"tradevalue": 4500,
+				},
+				1,
+				'gamingpc'
+			]
+		]
+	}
+}

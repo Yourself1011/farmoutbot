@@ -53,7 +53,7 @@ async def inventory(message, client):
                 inline=False,
             )
         prefix = db["server"][str(message.guild.id)]["prefix"]
-        user = client.fetch_user(user)
+        user = await client.fetch_user(user)
         e.set_author(
             name=f"{user.name}'s animals", icon_url=user.avatar_url
         )

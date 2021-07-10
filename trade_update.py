@@ -1,7 +1,7 @@
 import discord
 from replit import db
 import random
-from zstats import animals, tools, merch
+from zstats import animals, tools, merch, builtintrades
 import math  # just use mental math kekw
 from time import time
 import asyncio
@@ -33,155 +33,166 @@ def mapFunc(x):
 
 
 async def trade_update(client):
-    print("updated trades")
-    for j in range(0, 5):
-        if j == 0:
-            tradeval = random.randint(10, 50)
-        if j == 1:
-            tradeval = random.randint(50, 150)
-        if j == 2:
-            tradeval = random.randint(200, 500)
-        if j == 3:
-            tradeval = random.randint(1000, 2000)
-        if j == 4:
-            tradeval = random.randint(5000, 8500)
+	print("updated trades")
+	for j in range(0, 5):
+			if j == 0:
+					tradeval = random.randint(10, 50)
+			if j == 1:
+					tradeval = random.randint(50, 150)
+			if j == 2:
+					tradeval = random.randint(200, 500)
+			if j == 3:
+					tradeval = random.randint(1000, 2000)
+			if j == 4:
+					tradeval = random.randint(5000, 8500)
 
-        objList = [animals, merch, tools]
+			objList = [animals, merch, tools]
 
-        sideOneVal = 0
-        sideOne = []
-        while True:
+			sideOneVal = 0
+			sideOne = []
 
-            obj = objList[random.randint(0, 1)]
+			if j in [1, 2, 3]:
+				thing = random.randint(1,3)
 
-            thingInt = random.randint(1, len(obj) - 1)
-            thing = obj[list(obj)[thingInt]]
-            while "give" in thing:
-                if not thing["give"]:
-                    break
-                thingInt = random.randint(1, len(obj) - 1)
-                thing = obj[list(obj)[thingInt]]
+			if j in [1, 2, 3] and thing == 1:
+				a = db['trades']
+				a[j]['give'] = builtintrades[j]['give']
+				a[j]['get'] = builtintrades[j]['get']
+				db['trades'] = a
 
-            maxAmount = math.floor((tradeval - sideOneVal) / thing["tradevalue"])
-            fourCheck = math.ceil(tradeval / limits[j] / thing["tradevalue"])
+			if j not in [1, 2, 3] or thing in [2,3]:
+				while True:
 
-            if maxAmount == 0:
-                continue
+						obj = objList[random.randint(0, 1)]
 
-            if fourCheck > maxAmount:
-                fourCheck = maxAmount
+						thingInt = random.randint(1, len(obj) - 1)
+						thing = obj[list(obj)[thingInt]]
+						while "give" in thing:
+								if not thing["give"]:
+										break
+								thingInt = random.randint(1, len(obj) - 1)
+								thing = obj[list(obj)[thingInt]]
 
-            amount = random.randint(fourCheck, maxAmount)
+						maxAmount = math.floor((tradeval - sideOneVal) / thing["tradevalue"])
+						fourCheck = math.ceil(tradeval / limits[j] / thing["tradevalue"])
 
-            repeat = [i for i in sideOne if i[0] in [thing]]
+						if maxAmount == 0:
+								continue
 
-            if bool(repeat):
-                sideOne[sideOne.index(repeat[0])][1] += amount
+						if fourCheck > maxAmount:
+								fourCheck = maxAmount
 
-                sideOneVal += thing["tradevalue"] * amount
+						amount = random.randint(fourCheck, maxAmount)
 
-            else:
+						repeat = [i for i in sideOne if i[0] in [thing]]
 
-                sideOne.append([thing, amount, list(obj.keys())[thingInt]])
+						if bool(repeat):
+								sideOne[sideOne.index(repeat[0])][1] += amount
 
-                sideOneVal += thing["tradevalue"] * amount
+								sideOneVal += thing["tradevalue"] * amount
 
-            if sideOneVal < tradeval + diff[j] and sideOneVal > tradeval - diff[j]:
-                break
+						else:
 
-        sideTwoVal = 0
-        sideTwo = []
-        while True:
+								sideOne.append([thing, amount, list(obj.keys())[thingInt]])
 
-            obj = objList[random.randint(0, 2)]
+								sideOneVal += thing["tradevalue"] * amount
 
-            thingInt = random.randint(1, len(obj) - 1)
-            thing = obj[list(obj)[thingInt]]
-            while "get" in thing:
-                if not thing["get"]:
-                    break
-                thingInt = random.randint(1, len(obj) - 1)
-                thing = obj[list(obj)[thingInt]]
+						if sideOneVal < tradeval + diff[j] and sideOneVal > tradeval - diff[j]:
+								break
 
-            maxAmount = math.floor(
-                (tradeval + getTv[j] - sideTwoVal) / thing["tradevalue"]
-            )
-            fourCheck = math.ceil(
-                tradeval + getTv[j] / (limits[j] + j) / thing["tradevalue"]
-            )
+				sideTwoVal = 0
+				sideTwo = []
+				while True:
 
-            if maxAmount == 0:
-                continue
+						obj = objList[random.randint(0, 2)]
 
-            if fourCheck > maxAmount:
-                fourCheck = maxAmount
+						thingInt = random.randint(1, len(obj) - 1)
+						thing = obj[list(obj)[thingInt]]
+						while "get" in thing:
+								if not thing["get"]:
+										break
+								thingInt = random.randint(1, len(obj) - 1)
+								thing = obj[list(obj)[thingInt]]
 
-            amount = random.randint(fourCheck, maxAmount)
+						maxAmount = math.floor(
+								(tradeval + getTv[j] - sideTwoVal) / thing["tradevalue"]
+						)
+						fourCheck = math.ceil(
+								tradeval + getTv[j] / (limits[j] + j) / thing["tradevalue"]
+						)
 
-            if obj["name"] == "tools":
-                amount = 1
+						if maxAmount == 0:
+								continue
 
-            repeat = [i for i in sideTwo if i[0] in [thing]]
+						if fourCheck > maxAmount:
+								fourCheck = maxAmount
 
-            if bool(repeat) and obj["name"] == "tools":
-                continue
-            if bool(repeat):
-                sideTwo[sideTwo.index(repeat[0])][1] += amount
+						amount = random.randint(fourCheck, maxAmount)
 
-                sideTwoVal += thing["tradevalue"] * amount
+						if obj["name"] == "tools":
+								amount = 1
 
-            else:
+						repeat = [i for i in sideTwo if i[0] in [thing]]
 
-                sideTwo.append([thing, amount, list(obj.keys())[thingInt]])
+						if bool(repeat) and obj["name"] == "tools":
+								continue
+						if bool(repeat):
+								sideTwo[sideTwo.index(repeat[0])][1] += amount
 
-                sideTwoVal += thing["tradevalue"] * amount
+								sideTwoVal += thing["tradevalue"] * amount
 
-            if (
-                sideTwoVal < tradeval + getTv[j] + diff[j]
-                and sideTwoVal > tradeval + getTv[j] - diff[j]
-            ):
-                break
+						else:
 
-        trades = db["trades"]
-        trades[j]["give"] = sideOne
-        trades[j]["get"] = sideTwo
-        db["trades"] = trades
+								sideTwo.append([thing, amount, list(obj.keys())[thingInt]])
 
-    e = {
-        "title": "Trade Offers: ",
-        "description": "Trades update every 6 hours.",
-        "color": 16711680,
-        "fields": [],
-    }
-    db["tradeId"] += 1
+								sideTwoVal += thing["tradevalue"] * amount
 
-    for i in range(len(db["trades"])):
-        give = db["trades"][i]["give"]
-        get = db["trades"][i]["get"]
+						if (
+								sideTwoVal < tradeval + getTv[j] + diff[j]
+								and sideTwoVal > tradeval + getTv[j] - diff[j]
+						):
+								break
 
-        e["fields"].append(
-            {
-                "name": f"{i}: ",
-                "value": f'Give: {", ".join(list(map(mapFunc, give)))}\nGet: {", ".join(list(map(mapFunc, get)))}',
-                "inline": False,
-            }
-        )
+			trades = db["trades"]
+			trades[j]["give"] = sideOne
+			trades[j]["get"] = sideTwo
+			db["trades"] = trades
 
-    e["footer"] = {
-        "text": "Use <trade (tradenumber)> to request a trade. If your reputation is too low, they may not let you."
-    }
+	e = {
+			"title": "Trade Offers: ",
+			"description": "Trades update every 6 hours.",
+			"color": 16711680,
+			"fields": [],
+	}
+	db["tradeId"] += 1
 
-    data = {"username": "New trades!", "embeds": [e]}
+	for i in range(len(db["trades"])):
+			give = db["trades"][i]["give"]
+			get = db["trades"][i]["get"]
 
-    for i in db["server"]:
-        if db["server"][i]["channel"] != None and "webhookUrl" in db["server"][i]:
-            result = post(db["server"][i]["webhookUrl"], json=data)
-            try:
-                result.raise_for_status()
-            except exceptions.HTTPError as err:
-                print(err)
+			e["fields"].append(
+					{
+							"name": f"{i}: ",
+							"value": f'Give: {", ".join(list(map(mapFunc, give)))}\nGet: {", ".join(list(map(mapFunc, get)))}',
+							"inline": False,
+					}
+			)
 
-    if len(db["lottery"]) < 1:
-        return
-    else:
-        await drawlottery(client)
+	e["footer"] = {
+			"text": "Use <trade (tradenumber)> to request a trade. If your reputation is too low, they may not let you."
+	}
+
+	data = {"username": "New trades!", "embeds": [e]}
+
+	for i in db["server"]:
+			if db["server"][i]["channel"] != None and "webhookUrl" in db["server"][i]:
+					result = post(db["server"][i]["webhookUrl"], json=data)
+					try:
+							result.raise_for_status()
+					except exceptions.HTTPError as err:
+							print(err)
+
+	if len(db["lottery"]) < 1:
+			return
+	else:
+			await drawlottery(client)

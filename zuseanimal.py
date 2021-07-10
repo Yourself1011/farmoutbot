@@ -5,6 +5,7 @@ import random
 import asyncio
 from math import floor
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+import discord
 
 
 async def useanimal(message, animal, client, thing):
@@ -103,13 +104,12 @@ async def useanimal(message, animal, client, thing):
         if animal in location["multis"]
         else location["baseMulti"]
     )
-    randomrea = random.randint(1, 5)
-    if randomrea == 1:
-        amount = int(round(amount * 0.8))
-    if randomrea == 2:
-        amount = int(round(amount * 0.9))
-    if amount == 0:
-        amount = 1
+    if amount > 50:
+      randomrea = random.randint(1, 5)
+      if randomrea == 1:
+      		amount = int(round(amount * 0.7))
+      if randomrea == 2:
+      		amount = int(round(amount * 0.8))
     if merch not in a[str(message.author.id)]["merch"]:
         a[str(message.author.id)]["merch"][merch] = amount
     else:
@@ -118,7 +118,6 @@ async def useanimal(message, animal, client, thing):
     thing = animals[animal]["thing"]
     db["members"] = a
     cooldown = animals[animal]["cooldown"] / 1000
-    amountr = db["members"][str(message.author.id)]["animals"][animal]["amount"]
 
     a = db["members"]
     user = a[str(message.author.id)]
@@ -152,18 +151,29 @@ async def useanimal(message, animal, client, thing):
 
     thingsaid = ""
     echance = random.randint(1, 2)
+    if toolbreak == '':
+          regdur = tools[tool]['durability']
+          currentdur = db['members'][str(message.author.id)]['tools'][tool]
+          toolbreak = f'{tool}: {currentdur}/{regdur} durability'
+    emoji = animals[animal]['name'].split(' ')[1]
+    e = discord.Embed(
+        	title = '',
+        	colour = discord.Colour.green()
+        )
+    e.set_author(
+				name=f"{message.author.name}",         icon_url=message.author.avatar_url
+		)
+    animalamount = db['members'][str(message.author.id)]['animals'][animal]['amount']
+    e.add_field(name = f'{emoji} - {animalamount} {animal}(s) {thing}ed', value = f'- {animal} cooldown +{int(cooldown)}s\n- {toolbreak}\n- {merch} +{amount}')
+    e.set_footer(text = f'Wait {int(cooldown)} seconds before {thing}ing your {animal} again')
     print(echance)
     if echance == 1:
-        await message.reply(
-            f"{toolbreak}\nYou {thing}ed `{amountr}` `{animal}(s)`, gaining `{amount}` `{merch}`(s). Wait `{cooldown}` seconds before {thing}ing your {animal} again"
-        )
-        return
+        await message.reply(embed = e)
+        return	
     if echance == 2:
         whatthingchance = random.randint(1, 4)
-        print(whatthingchance)
         if whatthingchance in [1, 2, 3]:
             randomra = random.randint(1, 2)
-            print(randomra)
             if "undeadwool" in db["members"][str(message.author.id)]["merch"]:
                 return
             if amount > 11:
@@ -175,9 +185,7 @@ async def useanimal(message, animal, client, thing):
                     thingtotype = deaths[death]
                     thingsaid = f"Oh no!{deadamount} of your {animal}s are trying to die {death}! quick, type `{thingtotype}` in the chat now!"
 
-                    await message.reply(
-                        f"{toolbreak}\n\nYou {thing}ed `{amountr}` `{animal}(s)`, gaining `{amount}` `{merch}`(s). Wait `{cooldown}` seconds before {thing}ing your {animal} again\n\n{thingsaid}"
-                    )
+                    await message.reply(thingsaid, embed = e)
 
                     channel = message.channel
 
@@ -217,9 +225,7 @@ async def useanimal(message, animal, client, thing):
                     emoji = random.choice(emojis)
                     thingsaid = f"ahh your {deadamount} {animal}(s) are dying {death}, quick react with {emoji}"
 
-                    await message.reply(
-                        f"{toolbreak}\nYou {thing}ed `{amountr}` `{animal}(s)`, gaining `{amount}` `{merch}`(s). Wait `{cooldown}` seconds before {thing}ing your {animal} again\n\n{thingsaid}"
-                    )
+                    await message.reply(thingsaid, embed = e)
 
                     def check(reaction, user):
                         return user == message.author and str(reaction.emoji) == emoji
@@ -242,7 +248,7 @@ async def useanimal(message, animal, client, thing):
                         await message.channel.send("phew you saved your animals")
 
         now = int(round(time.time() * 1000))
-        if whatthingchance == 2:
+        if whatthingchance == 4:
             if "lastbred" in db["members"][str(message.author.id)]["animals"][animal]:
                 if (
                     db["members"][str(message.author.id)]["animals"][animal]["lastbred"]
@@ -251,20 +257,15 @@ async def useanimal(message, animal, client, thing):
                 ):
                     return
             if amount < 8:
-                await message.reply(
-                    f"{toolbreak}\nYou {thing}ed `{amountr}` `{animal}(s)`, gaining `{amount}` `{merch}`(s). Wait `{cooldown}` seconds before {thing}ing your {animal} again"
-                )
+                await message.reply(embed = e)
                 return
 
             randomrar = random.randint(1, 2)
-            print(randomrar)
             if randomrar == 1:
                 thingtotype = random.choice(births)
                 thingsaid = f"{message.author.mention} ar ur animals are trying to breed, better type `{thingtotype}` or else they won't"
 
-                await message.reply(
-                    f"{toolbreak}\nYou {thing}ed `{amountr}` `{animal}(s)`, gaining `{amount}` `{merch}`(s). Wait `{cooldown}` seconds before {thing}ing your {animal} again\n\n{thingsaid}"
-                )
+                await message.reply(thingsaid, embed = e)
 
                 channel = message.channel
 
@@ -301,9 +302,7 @@ async def useanimal(message, animal, client, thing):
                 animale = random.choice(animales)
                 thingsaid = f"{message.author.mention} woah your {animal}s are breeding but they won't unless you say what animal this is\nuse the buttons to choose\n{animale}"
 
-                await message.reply(
-                    f"{toolbreak}\nYou {thing}ed `{amountr}` `{animal}(s)`, gaining `{amount}` `{merch}`(s). Wait `{cooldown}` seconds before {thing}ing your {animal} again\n\n{thingsaid}",
-                    components=[
+                await message.reply(thingsaid, embed = e,                    components=[
                         Button(style=ButtonStyle.grey, label="Sheep"),
                         Button(style=ButtonStyle.grey, label="Chicken"),
                         Button(style=ButtonStyle.grey, label="Cow"),

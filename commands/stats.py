@@ -13,8 +13,8 @@ async def stats(message, client):
     hour, min = divmod(min, 60)
     day, hour = divmod(hour, 24)
 
-    return discord.Embed(
-        title = "Bot stats",
+    e =  discord.Embed(
+        title = "",
         colour = discord.Colour.gold(),
         description = f"""
 **Ping**
@@ -23,13 +23,15 @@ async def stats(message, client):
 **Uptime**
 {day} days, {hour} hours, {min} minutes, {sec} seconds
 
-**Guilds**
-{len(client.guilds)}
+**Servers**
+{len(client.guilds)}	
 
 **Users**
 {len(client.users)}
 
 **Players**
 {len(db["members"])}
-        """
+        """,
     )
+    e.set_author(name = 'Stats', avatar_url = client.avatar_url)
+    return e
