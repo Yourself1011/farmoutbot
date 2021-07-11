@@ -10,5 +10,7 @@ async def report(message, client):
     args = " ".join(args)
     channel = client.get_channel(806178919409254450)
     name = await client.fetch_user(message.author.id)
+    me = await client.fetch_user(690577156006477875)
+    await me.send(f'oy {name} reported a bug from {message.guild.name}:\n{args}')
     await channel.send(f"{name} has reported a bug: \n**[Farmout]** {args}")
     await message.add_reaction("✅")

@@ -1443,7 +1443,8 @@ def newUser(datemade):
     return newuser
 
 builtintrades = {
-	'1': {
+	'1': [
+		{
 		'give': [
 			[
 				{
@@ -1472,6 +1473,48 @@ builtintrades = {
 			]
 		]
 	},
+	{
+		'give': [
+			[
+				{
+					"name": "apple :apple:",
+					"description": "apples from the apple tree, sell it",
+					"cost": 19,
+					"sellcost": 17,
+					"tradevalue": 16,
+					"get": True,
+				},
+				3,
+				'apple'
+			],
+			[
+				{
+					"name": "apple :apple:",
+					"description": "apples from the apple tree, sell it",
+					"cost": 19,
+					"sellcost": 17,
+					"tradevalue": 16,
+					"get": True,
+				},
+				1,
+				'flatbread'
+			]
+		],
+		'get': [
+			[
+				{
+					"name": "applepie :apple: :pie:",
+					"description": "eatable, might taste good idk",
+					"cost": 25,
+					"sellcost": 19,
+					"tradevalue": 19,
+				},
+				1,
+				'applepie'
+			]
+		]
+	}
+	],
 	'2': {
 		'give': [
 			[

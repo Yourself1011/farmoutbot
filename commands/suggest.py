@@ -16,6 +16,8 @@ async def suggest(message, client):
     name = await client.fetch_user(message.author.id)
     colours = [discord.Colour.red(), discord.Colour.orange(), discord.Colour.gold()]
     color = random.choice(colours)
+    me = await client.fetch_user(690577156006477875)
+    await me.send(f'{name} has a suggestion in {message.guild.name}:\n{args}')
     e = discord.Embed(title=f"", colour=color, description=args)
     e.set_author(name=f"{name}'s suggestion:", icon_url=message.author.avatar_url)
     msg = await channel.send(embed=e)

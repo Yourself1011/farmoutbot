@@ -24,21 +24,6 @@ async def settings(message, client):
             "desc": "Makes the inventory only show emojis for animals and merch",
             "options": boolean,
         },
-        "tips": {
-            "name": "Tips",
-            "desc": "Enable or disable whether you get tips",
-            "options": boolean,
-        },
-        "replypings": {
-            "name": "Reply pings",
-            "desc": "Enable or disable whether you get pings on replies",
-            "options": boolean,
-        },
-        "tips": {
-            "name": "Tips",
-            "desc": "Enable or disable whether you get tips",
-            "options": boolean,
-        },
         "replypings": {
             "name": "Reply pings",
             "desc": "Enable or disable whether you get pings on replies",

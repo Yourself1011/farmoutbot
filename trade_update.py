@@ -56,8 +56,9 @@ async def trade_update(client):
 
 			if j in [1, 2, 3] and thing == 1:
 				a = db['trades']
-				a[j]['give'] = builtintrades[j]['give']
-				a[j]['get'] = builtintrades[j]['get']
+				trade = random.choice(builtintrades[j])
+				a[j]['give'] = trade['give']
+				a[j]['get'] = trade['get']
 				db['trades'] = a
 
 			if j not in [1, 2, 3] or thing in [2,3]:
