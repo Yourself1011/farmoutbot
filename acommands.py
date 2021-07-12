@@ -417,7 +417,14 @@ commands = {
 			'description': 'search the arctic for cool stuff',
 			'aliases': [],
 			'category': 'gather'
-		}
+		},
+     "setping": {
+     	"name": "",
+     	"usage": "",
+     	"description": "",
+     	"aliases": [],
+     	"category": ""
+     },
 }
 
     # "": {

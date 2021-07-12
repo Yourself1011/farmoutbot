@@ -4,6 +4,7 @@ import discord
 
 
 async def contract(message, client):
+		return
 
     prefix = db["server"][str(message.guild.id)]["prefix"]
     args = message.content.split(" ")

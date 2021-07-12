@@ -40,6 +40,7 @@ for file in os.scandir("./commands/"):
         "zuseanimal",
         "keep_alive",
         "trade_update",
+				'contract'
     ]:
         commands[filename]["execute"] = getattr(
             import_module(f"commands.{filename}"), filename

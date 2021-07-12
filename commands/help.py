@@ -1,13 +1,13 @@
 import discord
 from replit import db
 from acommands import commands
-
+from zstats import choosecolour
 
 async def help(message, client):
     prefix = db["server"][str(message.guild.id)]["prefix"]
     args = message.content.split(" ")
     if len(args) == 2:
-        e = discord.Embed(title="", colour=discord.Colour.orange())
+        e = discord.Embed(title="", colour=choosecolour())
         prefix = db["server"][str(message.guild.id)]["prefix"]
 
         misc = []

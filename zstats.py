@@ -6,8 +6,12 @@ from copy import deepcopy
 import discord
 from discord_components import Button
 from asyncio import TimeoutError
+import random
 
-
+def choosecolour():
+	colours = [discord.Colour.red(), discord.Colour.orange(), discord.Colour.gold()]
+	colour = random.choice(colours)
+	return colour
 
 def getMember(search, guildId, client):
     if type(search) is list:
@@ -287,7 +291,7 @@ animals = {
         "name": "goat :goat:",
         "cost": 275,
         "sellcost": 138,
-        "tool": "bowl",
+        "tool": "bucket",
         "result": "goatsmilk",
         "cooldown": 50000,
         "tradevalue": 100,
@@ -460,14 +464,6 @@ tools = {
         "animal": "cow",
         "tradevalue": 130,
     },
-    "bowl": {
-        "name": "bowl",
-        "cost": 150,
-        "durability": 150,
-        "sellcost": 75,
-        "animal": "goat",
-        "tradevalue": 70,
-    },
     "toilet": {
         "name": "toilet",
         "cost": 250,
@@ -483,14 +479,6 @@ tools = {
         "sellcost": 250,
         "animal": "chicken",
         "tradevalue": 200,
-    },
-    "bigbowl": {
-        "name": "bigbowl",
-        "cost": 250,
-        "durability": 250,
-        "sellcost": 125,
-        "animal": "goat",
-        "tradevalue": 125,
     },
     "venomextractor": {
         "name": "venomextractor",
@@ -1272,6 +1260,63 @@ eatable = [i for i, j in merch.items() if "loottable" in j]
 
 eatable.extend(["applepie", "mango", "ginseng", "mushroom", "cake", "pridewatermelon"])
 
+bal = [
+	"better grind for more before you can compare with me idiot",
+	"POOR",
+	"you stinky little sewage rat",
+	"u big dumdum",
+	"you dumb diaperwearer",
+	"you big fat fart",
+	"you boogerfarter",
+	"you babbonhater",
+	"you baconwearer",
+	'you baboonseer',
+	'you birdwatcher',
+	'you toileter',
+	'you pant farter'
+	"fat",
+	'cacar',
+	'ehee',
+	'BONG BONG BONG THIS IS MY SONG',
+	'DANG it MAN, i didnt even ANTICIPATE that move',
+	'friday night in the sunlight bing bang bong',
+	'saturday morning in the moonlight ning nang nong',
+	"NERD",
+	"oversimplification",
+	"nerds are nerds, go eat some useless stone-filled birds",
+	"ryanbutt",
+	"still less than me, gotta grind for more first dumum",
+	"omg ur so fat go exercise ewww",
+	"bung bung bung bung bung bung bung bung bung",
+	"cOW",
+	"( ͡° ͜ʖ ͡°)",
+	"yogogiddap",
+	"!@#$%#%&*(&)*",
+	"`-`",
+	"~_~",
+	"[][][][][]",
+	"dee dee doo doo der dee doo",
+	"fafart",
+	"kekw",
+	"mall tycoon roblox player",
+	":notes: elevator music plays :notes:",
+	"https://www.youtube.com/watch?v=AXrHbrMrun0",
+	"you gambler mambler",
+	"mar mar marino papido appeal",
+	"<< MONEY MONEY GO ROB",
+	"babbons",
+	"(cents)",
+	"buttsmeller",
+	"cow seeer",
+	"ungbridge",
+	"ocker",
+	"step on a crack",
+	"cameldung",
+	"Yourself was here",
+	"https://www.youtube.com/watch?v=o_LskiXQ73c",
+	'ima call u hua'
+]
+
 tips = [
     "Admins, use `setchannel` to set a system messages channel for your server.",
     "Do `donate` to get rep fast",
@@ -1391,6 +1436,7 @@ market = [
 ]
 
 births = ["baby", "breed", "yes", "shoo!", "fart", "babbon", "push"]
+
 emojis = [
     ":money_with_wings:",
     ":dollar:",
@@ -1402,7 +1448,6 @@ emojis = [
     ":credit_card:",
     ":gem:",
 ]
-
 
 def newUser(datemade):
     newuser = {

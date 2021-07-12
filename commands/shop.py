@@ -114,13 +114,12 @@ async def shop(message, client):
             tv = item["tradevalue"]
             e = discord.Embed(
                 title=f"{name}:",
-                description=f"Cost: `{cost}`\nSell amount: `{sellcost}`"
+                description=f"Cost: `{cost}`\nSell amount: `{sellcost}`\nTrade Value: `{tv}`"
                 + (
                     ""
                     if "description" not in item
                     else f"\nDescription: {item['description']}"
-                )
-                + f"\nTrade Value: `{tv}`",
+                ),
                 colour=discord.Colour.red(),
             )
             await message.channel.send(embed=e)
@@ -132,6 +131,7 @@ async def shop(message, client):
         description=f"Use `{prefix} buy (thing)` to buy something",
         colour=discord.Colour.gold(),
     )
+    e.set_author(name=f"{args[2].lower()} shop:", icon_url=message.author.avatar_url)
     shop = args[2]
     if len(args) == 3:
         i = 0
@@ -249,11 +249,3 @@ async def shop(message, client):
             startPage = i/9 + 1,
             baseEmbed = e
         )
-    thing = int(amount) + 1
-    thing = str(thing)
-    if thing == "1":
-        thing = "2"
-    e.set_footer(
-        text=f"Use <{prefix} shop {args[2].lower()} {thing}> to see the next page of {args[2].lower()}. Page {int(thing) - 1}/{maxPage}"
-    )
-    e.set_author(name=f"{args[2].lower()} shop:", icon_url=message.author.avatar_url)
