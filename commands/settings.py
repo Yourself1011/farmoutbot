@@ -5,6 +5,8 @@ from zstats import softSearch
 
 async def settings(message, client):
     args = message.content.split(" ")
+    if str(message.author.id) not in db['members']:
+      return 'do `i start` first, make a farm to have settings'
 
     boolean = ["true", "false", "yes", "no", "y", "n", "enable", "disable", "on", "off"]
 
