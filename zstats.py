@@ -1318,6 +1318,7 @@ bal = [
 ]
 
 tips = [
+		'confused? do the `guide` command to get help about specific aspects of the bot', 
     "Admins, use `setchannel` to set a system messages channel for your server.",
     "Do `donate` to get rep fast",
     "You can use `profile` to see things like when your farm started, and how many commands you've used.",

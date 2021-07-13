@@ -66,7 +66,7 @@ async def help(message, client):
         e.add_field(name="- :dash:  Other Commands: ", value=other, inline=False)
         prefix = db["server"][str(message.guild.id)]["prefix"]
         e.set_footer(
-            text=f"Use <{prefix} help (command)> to get help about a specific command\nUse <{prefix} help (category)> to get help about a category"
+            text=f"Use <{prefix} help (command)> to get help about a specific command\nUse <{prefix} help (category)> to get help about a category\mUse <{prefix} guide> to get help about playing the bot or setting up the bot"
         )
         e.set_author(name="Commands:", icon_url=message.author.avatar_url)
         await message.channel.send(embed=e)

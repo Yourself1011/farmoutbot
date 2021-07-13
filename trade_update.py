@@ -33,6 +33,7 @@ def mapFunc(x):
 
 
 async def trade_update(client):
+	return
 	print("updated trades")
 	for j in range(0, 5):
 			if j == 0:
