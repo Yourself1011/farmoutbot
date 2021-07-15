@@ -32,4 +32,4 @@ async def balance(message, client):
     
     thing = random.choice(bal)
     name = await client.fetch_user(user)
-    return (f"{name} has `{money}` coins, {thing}", True)
+    return (f"{name} has `{int(money)}` coins, {thing}", True)

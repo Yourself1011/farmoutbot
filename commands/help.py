@@ -5,6 +5,9 @@ from zstats import choosecolour
 
 async def help(message, client):
     prefix = db["server"][str(message.guild.id)]["prefix"]
+    rmsg = ''
+    if str(message.author.id) not in db['members']:
+      rmsg= 'new to farmout? here\'s a couple things you can do:\n\n- `i start` to start your farming journey and get some tips\n- `i guide` gives help about some aspects of the bot'
     args = message.content.split(" ")
     if len(args) == 2:
         e = discord.Embed(title="", colour=choosecolour())
@@ -66,12 +69,12 @@ async def help(message, client):
         e.add_field(name="- :dash:  Other Commands: ", value=other, inline=False)
         prefix = db["server"][str(message.guild.id)]["prefix"]
         e.set_footer(
-            text=f"Use <{prefix} help (command)> to get help about a specific command\nUse <{prefix} help (category)> to get help about a category\mUse <{prefix} guide> to get help about playing the bot or setting up the bot"
+            text=f"Use <{prefix} help (command)> to get help about a specific command\nUse <{prefix} help (category)> to get help about a category\nUse <{prefix} guide> to get help about playing the bot or setting up the bot"
         )
         e.set_author(name="Commands:", icon_url=message.author.avatar_url)
-        await message.channel.send(embed=e)
+        await message.channel.send(rmsg, embed=e)
 
-    if len(args) > 2:
+    if len(args) > 2: 
         categories = [
             "misc",
             "game",
@@ -84,37 +87,32 @@ async def help(message, client):
         ]
         if args[2].lower() in categories:
             if args[2].lower() in ["misc", "miscellaneous"]:
-                await message.reply(
-                    "Miscellaneous commands are the main commands that don't relate to the currency/game aspect of the bot. Here, you may find commands like help, ping, and vote."
-                )
+                return "Miscellaneous commands are the main commands that don't relate to the currency/game aspect of the bot. Here, you may find commands like help, ping, and vote."
+                
             elif args[2].lower() in ["game", "gaming"]:
-                await message.reply(
-                    "Gaming commands are commands that relate to currency. These are commands that help you get money. Share and gift are for trading items and coins with other people. Here, you'll find commands like daily, lottery, and location."
-                )
+                return "Gaming commands are commands that relate to currency. These are commands that help you get money. Share and gift are for trading items and coins with other people. Here, you'll find commands like daily, lottery, and location."
+                
             elif args[2].lower() in ["profilecmd", "pfc"]:
-                await message.reply(
-                    "Profile commands help you see info about your farm. For example, you can see your belongings with inventory, your coins with balance, and your statistics with profile."
-                )
+                return "Profile commands help you see info about your farm. For example, you can see your belongings with inventory, your coins with balance, and your statistics with profile."
+                
             elif args[2].lower() in ["farming", "farm"]:
-                await message.reply(
-                    "Farming commands relate to the farming aspect of farmout. You plant seeds and trees, collect them, and sell them at the market."
-                )
+                return "Farming commands relate to the farming aspect of farmout. You plant seeds and trees, collect them, and sell them at the market."
+                
             elif args[2].lower() in ["utility", "util"]:
-                await message.reply(
-                    "Utility commands are commands that relate to bot settings, like changing the prefix, reporting bugs, and dming you when you vote."
-                )
+                return "Utility commands are commands that relate to bot settings, like changing the prefix, reporting bugs, and dming you when you vote."
+                
             elif args[2].lower() in ["gamblecmd", "gmb"]:
-                await message.reply(
-                    "Gamble commands are commands that you use to gamble your coins."
-                )
+                return "Gamble commands are commands that you use to gamble your coins."
+                
             elif args[2].lower() in ["market", "mr"]:
-                await message.reply(
-                    "Market commands are commands that you use to interact with the market, like shop, buy, sell, and trade. Buy and sell are for buying and selling items. Trade is for trading your items with the market. "
-                )
+                return "Market commands are commands that you use to interact with the market, like shop, buy, sell, and trade. Buy and sell are for buying and selling items. Trade is for trading your items with the market. "
+
+            elif args[2].lower() == 'gather':
+              return 'Gather commands are commands that you can use to get items or coins. Be careful though, because there might be same dangerous things in some areas.'
+                
             elif args[2].lower() in ["other"]:
-                await message.reply(
-                    "Other commands are commands that don't really relate to farmout, but we have them anyway."
-                )
+                return "Other commands are commands that don't really relate to farmout, but we have them anyway."
+                
 
         allcommands = {}
 

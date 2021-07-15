@@ -136,7 +136,7 @@ commands = {
         "name": "invite",
         "usage": "<invite>",
         "description": "Invites the bot to your server",
-        "aliases": ["it"],
+        "aliases": ["it", 'server', 'link'],
         "category": "misc",
     },
     "slots": {

@@ -40,7 +40,7 @@ for file in os.scandir("./commands/"):
         "zuseanimal",
         "keep_alive",
         "trade_update",
-				'contract'
+                'contract'
     ]:
         commands[filename]["execute"] = getattr(
             import_module(f"commands.{filename}"), filename
@@ -129,19 +129,19 @@ async def on_message(message):
     msg = message.content
     msg = msg.split(" ")
     msg = msg[1]
+    msg = msg.lower()
 
-    if msg.lower() in animals and msg.lower() != "name":
-        thing = animals[msg.lower()]["thing"]
-        await useanimal(message, msg.lower(), client, thing)
+    if msg in animals and msg != "name":
+        await useanimal(message, msg, client, animals[msg]["thing"])
         return
-
+        
     command = None
     for i in commands:
-        if msg.lower() == commands[i]["name"]:
+        if msg == commands[i]["name"]:
             command = commands[i]
             break
         for j in commands[i]["aliases"]:
-            if msg.lower() == j:
+            if msg == j:
                 command = commands[i]
                 break
 
@@ -264,7 +264,7 @@ except discord.errors.HTTPException as err:
     print(err)
 
 """
-Super important, do not	remove  			 
+Super important, do not    remove               
     
                     
     

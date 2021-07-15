@@ -33,5 +33,5 @@ async def stats(message, client):
 {len(db["members"])}
         """,
     )
-    e.set_author(name = 'Stats', icon_url = client.avatar_url)
+    e.set_author(name = 'Stats', icon_url = client.user.avatar_url)
     return e
