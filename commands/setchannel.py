@@ -12,9 +12,13 @@ async def setchannel(message, client):
         if len(args) == 2:
             await message.channel.send("gotta specify a channel dummy")
             return
-        if not args[2].startswith("<#") and args[2].endswith(">"):
-            await message.channel.send("mention a channel for this to work")
+        if not args[2].startswith("<#") and args[2].endswith(">") and not args[2].lower() == 'none':
+            await message.channel.send("mention a channel for this to work, or say none")
             return
+        if args[2].lower() == 'none':
+          a = db['server']
+          a[str(message.guild.id)]['server'] = None
+          return 'ok there isnt a system messages channel anymore'
         with open("farmoutIcon.png", "rb") as image:
             f = image.read()
             b = bytearray(f)
@@ -31,7 +35,7 @@ async def setchannel(message, client):
             )
             return
 
-        await message.reply(
+        msg = await message.reply(
             f"are you sure you want to change the system messages channel to <#{channel}>?",
             components=[
                 Button(style=ButtonStyle.green, label="Yes"),
@@ -43,6 +47,7 @@ async def setchannel(message, client):
         if res.author == message.author:
             if res.component.label == "No":
                 await message.reply("alr looks like we're not changing today")
+                msg.components = []
                 return
             else:
                 a = db["server"]
@@ -54,4 +59,5 @@ async def setchannel(message, client):
                 await message.reply(
                     f"The system messages channel for `{server}` is now <#{channel}>."
                 )
+                msg.components = []
         return
