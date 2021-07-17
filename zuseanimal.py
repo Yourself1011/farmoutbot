@@ -16,19 +16,6 @@ async def useanimal(message, animal, client, thing):
         await message.channel.send(" You don't have that :angry:")
         return
 
-    tool = None
-    for i in tools:
-        if i != "name":
-            if (
-                tools[i]["animal"] == animal and tools[i]["name"] in db["members"][str(message.author.id)]["tools"]
-            ):
-                tool = tools[i]["name"]
-
-    if tool == None:
-        r = animals[animal]["tool"]
-        await message.channel.send(f" buy a(n) `{r}` first")
-        return
-
     now2 = int(round(time.time() * 1000))
 
     f = db["members"][str(message.author.id)]["animals"][animal]["lastused"] - now2
@@ -44,7 +31,7 @@ async def useanimal(message, animal, client, thing):
 
     f = animals[animal]["cooldown"] / 1000
 
-    if f - e <= 10:
+    if f - e <= 10 and db['members'][str(message.author.id)]['money'] > 250:
 
         paid = random.randint(1, 3)
 
@@ -78,23 +65,32 @@ async def useanimal(message, animal, client, thing):
 
         e = round((newvar - now2) / 1000)
         await message.reply(
-            f" Your {animal}(s) are not ready, wait `" + str(e) + "` seconds."
+            f" Your {animal}(s) are not ready, wait `" + str(e) + "` seconds.", True
         )
+        return
+
+    tool = None
+		for i in animals[animal]['tools']:
+			if i in db['members'][str(message.author.id)]['tools']:
+				tool = i 
+				break
+
+    if tool == None:
+        r = animals[animal]["tool"][0]
+        await message.channel.send(f" buy a(n) `{r}` first")
         return
 
     toolbreak = ""
 
-    a = db["members"]
-		
+		a = db['members']
+
     amount = a[str(message.author.id)]["animals"][animal]["amount"]
     
     if amount > db["members"][str(message.author.id)]["tools"][tool]:
-       
-      f = db["members"][str(message.author.id)]["tools"][tool]
-      amount = f
-      a = db["members"]
-      del a[str(message.author.id)]["tools"][tool]
-      db["members"] = a
+			a = db["members"]
+			del a[str(message.author.id)]["tools"][tool]
+			db["members"] = a
+
       things = ["LOL", "u dum dum", "ur fat", "go donate to yogogiddap", "idiot"]
       thing = random.choice(things)
       toolbreak = f"your `{tool}` broke {thing}"
