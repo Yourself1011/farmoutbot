@@ -70,10 +70,10 @@ async def useanimal(message, animal, client, thing):
         return
 
     tool = None
-		for i in animals[animal]['tools']:
-			if i in db['members'][str(message.author.id)]['tools']:
-				tool = i 
-				break
+    for i in animals[animal]['tools']:
+      if i in db['members'][str(message.author.id)]['tools']:
+        tool = i 
+        break
 
     if tool == None:
         r = animals[animal]["tool"][0]
@@ -82,14 +82,14 @@ async def useanimal(message, animal, client, thing):
 
     toolbreak = ""
 
-		a = db['members']
+    a = db['members']
 
     amount = a[str(message.author.id)]["animals"][animal]["amount"]
     
     if amount > db["members"][str(message.author.id)]["tools"][tool]:
-			a = db["members"]
-			del a[str(message.author.id)]["tools"][tool]
-			db["members"] = a
+      a = db["members"]
+      del a[str(message.author.id)]["tools"][tool]
+      db["members"] = a
 
       things = ["LOL", "u dum dum", "ur fat", "go donate to yogogiddap", "idiot"]
       thing = random.choice(things)

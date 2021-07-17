@@ -52,113 +52,102 @@ async def trade_update(client):
 			sideOneVal = 0
 			sideOne = []
 
-			if j in [1, 2, 3]:
-				thing = random.randint(1,3)
+			while True:
 
-			if j in [1, 2, 3] and thing == 1:
-				a = db['trades']
-				trade = random.choice(builtintrades[j])
-				a[j]['give'] = trade['give']
-				a[j]['get'] = trade['get']
-				db['trades'] = a
+					obj = objList[random.randint(0, 1)]
 
-			if j not in [1, 2, 3] or thing in [2,3]:
-				while True:
+					thingInt = random.randint(1, len(obj) - 1)
+					thing = obj[list(obj)[thingInt]]
+					while "give" in thing:
+							if not thing["give"]:
+									break
+							thingInt = random.randint(1, len(obj) - 1)
+							thing = obj[list(obj)[thingInt]]
 
-						obj = objList[random.randint(0, 1)]
+					maxAmount = math.floor((tradeval - sideOneVal) / thing["tradevalue"])
+					fourCheck = math.ceil(tradeval / limits[j] / thing["tradevalue"])
 
-						thingInt = random.randint(1, len(obj) - 1)
-						thing = obj[list(obj)[thingInt]]
-						while "give" in thing:
-								if not thing["give"]:
-										break
-								thingInt = random.randint(1, len(obj) - 1)
-								thing = obj[list(obj)[thingInt]]
+					if maxAmount == 0:
+							continue
 
-						maxAmount = math.floor((tradeval - sideOneVal) / thing["tradevalue"])
-						fourCheck = math.ceil(tradeval / limits[j] / thing["tradevalue"])
+					if fourCheck > maxAmount:
+							fourCheck = maxAmount
 
-						if maxAmount == 0:
-								continue
+					amount = random.randint(fourCheck, maxAmount)
 
-						if fourCheck > maxAmount:
-								fourCheck = maxAmount
+					repeat = [i for i in sideOne if i[0] in [thing]]
 
-						amount = random.randint(fourCheck, maxAmount)
+					if bool(repeat):
+							sideOne[sideOne.index(repeat[0])][1] += amount
 
-						repeat = [i for i in sideOne if i[0] in [thing]]
+							sideOneVal += thing["tradevalue"] * amount
 
-						if bool(repeat):
-								sideOne[sideOne.index(repeat[0])][1] += amount
+					else:
 
-								sideOneVal += thing["tradevalue"] * amount
+							sideOne.append([thing, amount, list(obj.keys())[thingInt]])
 
-						else:
+							sideOneVal += thing["tradevalue"] * amount
 
-								sideOne.append([thing, amount, list(obj.keys())[thingInt]])
+					if sideOneVal < tradeval + diff[j] and sideOneVal > tradeval - diff[j]:
+							break
 
-								sideOneVal += thing["tradevalue"] * amount
+			sideTwoVal = 0
+			sideTwo = []
+			while True:
 
-						if sideOneVal < tradeval + diff[j] and sideOneVal > tradeval - diff[j]:
-								break
+					obj = objList[random.randint(0, 2)]
 
-				sideTwoVal = 0
-				sideTwo = []
-				while True:
+					thingInt = random.randint(1, len(obj) - 1)
+					thing = obj[list(obj)[thingInt]]
+					while "get" in thing:
+							if not thing["get"]:
+									break
+							thingInt = random.randint(1, len(obj) - 1)
+							thing = obj[list(obj)[thingInt]]
 
-						obj = objList[random.randint(0, 2)]
+					maxAmount = math.floor(
+							(tradeval + getTv[j] - sideTwoVal) / thing["tradevalue"]
+					)
+					fourCheck = math.ceil(
+							tradeval + getTv[j] / (limits[j] + j) / thing["tradevalue"]
+					)
 
-						thingInt = random.randint(1, len(obj) - 1)
-						thing = obj[list(obj)[thingInt]]
-						while "get" in thing:
-								if not thing["get"]:
-										break
-								thingInt = random.randint(1, len(obj) - 1)
-								thing = obj[list(obj)[thingInt]]
+					if maxAmount == 0:
+							continue
 
-						maxAmount = math.floor(
-								(tradeval + getTv[j] - sideTwoVal) / thing["tradevalue"]
-						)
-						fourCheck = math.ceil(
-								tradeval + getTv[j] / (limits[j] + j) / thing["tradevalue"]
-						)
+					if fourCheck > maxAmount:
+							fourCheck = maxAmount
 
-						if maxAmount == 0:
-								continue
+					amount = random.randint(fourCheck, maxAmount)
 
-						if fourCheck > maxAmount:
-								fourCheck = maxAmount
+					if obj["name"] == "tools":
+							amount = 1
 
-						amount = random.randint(fourCheck, maxAmount)
+					repeat = [i for i in sideTwo if i[0] in [thing]]
 
-						if obj["name"] == "tools":
-								amount = 1
+					if bool(repeat) and obj["name"] == "tools":
+							continue
+					if bool(repeat):
+							sideTwo[sideTwo.index(repeat[0])][1] += amount
 
-						repeat = [i for i in sideTwo if i[0] in [thing]]
+							sideTwoVal += thing["tradevalue"] * amount
 
-						if bool(repeat) and obj["name"] == "tools":
-								continue
-						if bool(repeat):
-								sideTwo[sideTwo.index(repeat[0])][1] += amount
+					else:
 
-								sideTwoVal += thing["tradevalue"] * amount
+							sideTwo.append([thing, amount, list(obj.keys())[thingInt]])
 
-						else:
+							sideTwoVal += thing["tradevalue"] * amount
 
-								sideTwo.append([thing, amount, list(obj.keys())[thingInt]])
+					if (
+							sideTwoVal < tradeval + getTv[j] + diff[j]
+							and sideTwoVal > tradeval + getTv[j] - diff[j]
+					):
+							break
 
-								sideTwoVal += thing["tradevalue"] * amount
-
-						if (
-								sideTwoVal < tradeval + getTv[j] + diff[j]
-								and sideTwoVal > tradeval + getTv[j] - diff[j]
-						):
-								break
-
-			trades = db["trades"]
-			trades[j]["give"] = sideOne
-			trades[j]["get"] = sideTwo
-			db["trades"] = trades
+	trades = db["trades"]
+	trades[j]["give"] = sideOne
+	trades[j]["get"] = sideTwo
+	db["trades"] = trades
 
 	e = {
 			"title": "Trade Offers: ",
