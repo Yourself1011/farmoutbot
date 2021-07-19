@@ -62,18 +62,6 @@ async def buy(message, client):
         return "I should take that away from you and charge you the normal price"
 
     cost = item["cost"]
-    rep = db["members"][str(message.author.id)]["reputation"]
-    if rep > 450 and rep < 550:
-        cost = cost
-    if rep < 450 and rep > 250:
-        cost = int(round(cost * 1.25))
-    if rep < 250:
-        cost = int(round(cost * 1.75))
-    if rep > 550 and rep < 750:
-        cost = int(round(cost * 0.95))
-    if rep > 750:
-        cost = int(round(cost * 0.9))
-    regprice = item["cost"]
     if cost * amount > db["members"][str(message.author.id)]["money"]:
         return f" you're too poor to buy `{amount} {key}(s)` at `{cost}` each."
         return
@@ -106,11 +94,10 @@ async def buy(message, client):
                 a[str(message.author.id)]["merch"][key] += amount
         a[str(message.author.id)]["money"] -= r
         nowmoney = a[str(message.author.id)]["money"]
-        rep = a[str(message.author.id)]["reputation"]
         a[str(message.author.id)]["amounts"]["bought"] += amount
         db["members"] = a
         thingstosay = [
-            f"You bought `{amount} {key}(s)` for `{r} coins`. You now have `{nowmoney} coins` and `{rep} reputation`.",
+            f"You bought `{amount} {key}(s)` for `{r} coins`. You now have `{nowmoney} coins`.",
             f"purchase successful, you paid `{r} coins` for `{amount} {key}(s)`.",
             f"yessir `{amount} {key}(s)` purchased",
             f"{message.author.name} bought `{amount} {key}(s)`",
@@ -118,23 +105,6 @@ async def buy(message, client):
         ]
         thingsaid = random.choice(thingstosay)
         out = thingsaid
-        thingi = random.randint(1, 20)
-        if thingi == 1:
-            thingj = random.randint(4, 9)
-            out += f"\n{message.author.mention} you lucky ducky, you bought something that the market was trying to get rid of and your rep increased by `{thingj}`."
-            a = db["members"]
-            a[str(message.author.id)]["reputation"] += thingj
-            db["members"] = a
-        if thingi == 2:
-            thingj = random.randint(10, 20)
-            out += f"\n{message.author.mention} bruh you bought something that the market didnt want to give, you lost `{thingj}` rep **and** `{int(round(thingj*2))} coins`."
-            a = db["members"]
-            if int(round(thingj * 2)) > a[str(message.author.id)]["money"]:
-                a[str(message.author.id)]["money"] = 0
-            else:
-                a[str(message.author.id)]["money"] -= int(round(thingj * 2))
-            a[str(message.author.id)]["reputation"] -= thingj
-            db["members"] = a
 
         return (out, True)
 

@@ -37,7 +37,7 @@ async def listtrades(message, client):
 
     e = discord.Embed(
         title="Trade Offers: ",
-        description="Trades update every 6 hours.",
+        description=f"Trades update every 6 hours. Next trade update <t:{(db['lasttradedate'] + 1) * 21600}",
         colour=discord.Colour.red(),
     )
     for i in range(len(db["trades"])):

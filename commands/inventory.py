@@ -6,6 +6,7 @@ import time
 
 async def inventory(message, client):
     args = message.content.split(" ")
+
     if len(args) == 2 and str(message.author.id) not in db["members"]:
         await message.channel.send("Gotta make an account first dummy")
         return
@@ -142,12 +143,7 @@ async def inventory(message, client):
                 kare = " ".join(kare)
             aout.append(f"{kare}: {c}")
 
-        aout = "".join(  # Join an array together
-            [
-                # If the index is a multiple of, add a newline
-                f"{val}\n" if (index + 1) % 5 == 0 else f"{val}, "
-                for index, val in enumerate(aout)  # For every element in arr
-            ],
+        aout = "".join([f"{val}\n" if (index + 1) % 5 == 0 else f"{val}, " for index, val in enumerate(aout)],
         )
 
     if db["members"][user]["tools"] == {}:

@@ -211,17 +211,10 @@ commands = {
     },
     "channel": {
         "name": "channel",
-        "usage": "<channel>",
-        "description": "Shows the current system messages channel",
+        "usage": "<channel> <(set), (show)>",
+        "description": "Shows or changes the current system messages channel",
         "aliases": ["cl"],
         "category": "misc",
-    },
-    "setchannel": {
-        "name": "setchannel",
-        "usage": "<setchannel> <new channel>",
-        "description": "Sets the current system messages channel to a new one",
-        "aliases": ["scl"],
-        "category": "utility",
     },
     "gift": {
         "name": "gift",
