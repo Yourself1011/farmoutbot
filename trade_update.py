@@ -33,7 +33,7 @@ def mapFunc(x):
 
 
 async def trade_update(client):
-	return
+	
 	print("updated trades")
 	for j in range(0, 5):
 			if j == 0:
@@ -151,7 +151,7 @@ async def trade_update(client):
 
 	e = {
 			"title": "Trade Offers: ",
-			"description": f"Trades update every 6 hours. Next trade update <t:{(db['lastTradeDate'] + 1) * 21600}",
+			"description": f"Trades update every 6 hours. Next trade update <t:{(db['lastTradeDate'] + 1) * 21600}:R>",
 			"color": 16711680,
 			"fields": [],
 	}

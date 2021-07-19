@@ -7,7 +7,7 @@ import discord
 from math import floor
 from random import randint
 import random
-
+from zstats import choosecolour
 
 def mapFunc(x):
     return f"`{x[1]}x` **{x[0]['name']}**"
@@ -37,8 +37,8 @@ async def listtrades(message, client):
 
     e = discord.Embed(
         title="Trade Offers: ",
-        description=f"Trades update every 6 hours. Next trade update <t:{(db['lastTradeDate'] + 1) * 21600}",
-        colour=discord.Colour.red(),
+        description=f"Trades update every 6 hours. Next trade update <t:{(db['lastTradeDate'] + 1) * 21600}:R>",
+        colour=choosecolour(),
     )
     for i in range(len(db["trades"])):
         give = db["trades"][i]["give"]
