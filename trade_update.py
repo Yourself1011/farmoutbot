@@ -151,7 +151,7 @@ async def trade_update(client):
 
 	e = {
 			"title": "Trade Offers: ",
-			"description": f"Trades update every 6 hours. Next trade update <t:{(db['lasttradedate'] + 1) * 21600}",
+			"description": f"Trades update every 6 hours. Next trade update <t:{(db['lastTradeDate'] + 1) * 21600}",
 			"color": 16711680,
 			"fields": [],
 	}
