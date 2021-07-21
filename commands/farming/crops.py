@@ -16,7 +16,7 @@ async def crops(message, client):
         await message.channel.send("no plants here")
         return
     thing = random.randint(1, 35)
-    if thing == 1:
+    if thing == 1 and db["members"][str(message.author.id)]["money"] > 500:
         if "undeadwool" in db["members"][str(message.author.id)]["merch"]:
             return
         things = [

@@ -2,6 +2,7 @@ from replit import db
 import discord
 from zstats import animals, tools, merch, seeds, getMember
 import time
+from emoji import emojize
 
 
 async def inventory(message, client):
@@ -136,11 +137,12 @@ async def inventory(message, client):
             kare = animals[i]["name"]
             if (
                 "emojionlyinv" in db["members"][user]["settings"]
-                and db["members"][user]["settings"]["emojionlyinv"]
+                and db["members"][user]["settings"]["emojionlyinv"] 
+                or (db["members"][user]["emojionlyinv"] == "auto" and message.author.is_on_mobile())
             ):
                 kare = kare.split(" ")
-                kare.pop(0)
-                kare = " ".join(kare)
+                hyperlinked = f"[{kare[1]}](https://youtu.be/dQw4w9WgXcQ \"{kare[0]}\")"
+                kare = f"{kare[0]} {kare[1]}" if hyperlinked == emojize(hyperlinked, use_aliases=True) else emojize(hyperlinked, use_aliases=True)
             aout.append(f"{kare}: {c}")
 
         aout = "".join([f"{val}\n" if (index + 1) % 5 == 0 else f"{val}, " for index, val in enumerate(aout)],
@@ -173,11 +175,12 @@ async def inventory(message, client):
             if (
                 "emojionlyinv" in db["members"][user]["settings"]
                 and db["members"][user]["settings"]["emojionlyinv"]
+                or (db["members"][user]["emojionlyinv"] == "auto" and message.author.is_on_mobile())
             ):
                 lengggg = 8
                 kare = kare.split(" ")
-                kare.pop(0)
-                kare = " ".join(kare)
+                hyperlinked = f"[{kare[1]}](https://youtu.be/dQw4w9WgXcQ \"{kare[0]}\")"
+                kare = f"{kare[0]} {kare[1]}" if hyperlinked == emojize(hyperlinked, use_aliases=True) else emojize(hyperlinked, use_aliases=True)
             mout.append(f"{kare}: {str(mercha[m])}")
 
         mout = "".join(  # Join an array together

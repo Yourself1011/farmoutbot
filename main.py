@@ -31,20 +31,14 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
 client = discord.Client(intents=discord.Intents.all())
 
-for file in os.scandir("./commands/"):
-    filename = file.name[:-3]
-    if file.name.endswith(".py") and filename not in [
-        "main",
-        "acommands",
-        "zstats",
-        "zuseanimal",
-        "keep_alive",
-        "trade_update",
-                'contract'
-    ]:
-        commands[filename]["execute"] = getattr(
-            import_module(f"commands.{filename}"), filename
-        )
+for folder in os.scandir("./commands/"):
+	if folder.name == '__pycache__': continue
+	for file in os.scandir(f"./commands/{folder.name}"):
+		if file.name == '__pycache__': continue
+		filename = file.name[:-3]
+		commands[filename]["execute"] = getattr(
+				import_module(f"commands.{folder.name}.{filename}"), filename
+		)
 
 
 @client.event
@@ -249,7 +243,7 @@ async def on_message(message):
                 )[i]
             ]
             try:
-                await message.channel.send(f"```{sys.exc_info()}```")
+                await message.channel.send(f"uh oh, there was a bug...\nyou can report the bug with `i report`, or join our support server to tell us about it there https://discord.gg/TX57HyWpsk\n\n```{sys.exc_info()}```")
             except:
                 if bool(permsNotGiven):
                     await message.author.send(

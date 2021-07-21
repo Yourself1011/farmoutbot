@@ -84,12 +84,6 @@ async def sell(message, client):
         return
 
     got = thing[key]["sellcost"]
-    if db["members"][str(message.author.id)]["reputation"] <= 250:
-        prefix = db["server"][str(message.guild.id)]["prefix"]
-        await message.channel.send(
-            f" your reputation is too low, use `{prefix} donate (amount)` to donate to the market man and increase your reputation."
-        )
-        return
     got *= amount
     got = round(got)
 
@@ -107,13 +101,6 @@ async def sell(message, client):
             await message.channel.send("you dont have that")
             return
         amount = 1
-        if tools[key]["durability"] != a[str(message.author.id)]["tools"][key]:
-            await message.channel.send(
-                "since your tool was damaged, it doesn't sell for as much **and you lost rep.**"
-            )
-            got = int(round(tools[key]["sellcost"] * 0.5))
-            replost = random.randint(15, 35)
-            a[str(message.author.id)]["reputation"] -= replost
     if thing["name"] == "tools":
         amount = 1
 
@@ -129,15 +116,12 @@ async def sell(message, client):
     else:
         del a[str(message.author.id)][thing["name"]][key]
     chance = random.randint(1, 10)
-    if chance == 1:
-        a[str(message.author.id)]["reputation"] += 1
     a[str(message.author.id)]["amounts"]["sold"] += amount
     db["members"] = a
 
     money = db["members"][str(message.author.id)]["money"]
-    reputation = db["members"][str(message.author.id)]["reputation"]
     tts = [
-        f"You sold `{amount} {key}(s)` for `{got} coins`. you now have `{money} coins` and `{reputation} reputation.`",
+        f"You sold `{amount} {key}(s)` for `{got} coins`. you now have `{money} coins`",
         f"`{amount} {key}(s)` sold successfully.",
         f"yessir you got `{got} coins`, now you have `{money}` total",
         f"selling success, you gained `{got} coins`",

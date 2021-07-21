@@ -18,13 +18,6 @@ commands = {
         "usage": "<prefix>",
         "description": "Shows prefix for current server",
         "aliases": ["px"],
-        "category": "misc",
-    },
-    "changeprefix": {
-        "name": "changeprefix",
-        "usage": "<changeprefix (new prefix)>",
-        "description": "Changes prefix for current server",
-        "aliases": ["cpx"],
         "category": "utility",
     },
     "fart": {
@@ -118,13 +111,6 @@ commands = {
         "aliases": [],
         "category": "market",
     },
-    "donate": {
-        "name": "donate",
-        "usage": "<donate> <amount(integer)>",
-        "description": "Donates coins to the marketplace while increasing your reputation",
-        "aliases": ["dt"],
-        "category": "market",
-    },
     "credits": {
         "name": "credits",
         "usage": "<credits>",
@@ -145,13 +131,6 @@ commands = {
         "description": "Bet your money with this slots game",
         "aliases": ["sl"],
         "category": "gamble",
-    },
-    "reputation": {
-        "name": "reputation",
-        "usage": "<reputation>",
-        "description": "Shows your reputation and info about rep",
-        "aliases": ["rep"],
-        "category": "market",
     },
     "share": {
         "name": "share",
@@ -214,7 +193,7 @@ commands = {
         "usage": "<channel> <(set), (show)>",
         "description": "Shows or changes the current system messages channel",
         "aliases": ["cl"],
-        "category": "misc",
+        "category": "utility",
     },
     "gift": {
         "name": "gift",
@@ -402,7 +381,7 @@ commands = {
         "usage": "stats",
         "description": "Shows bot stats",
         "aliases": [],
-        "category": "other",
+        "category": "misc",
     },
 		'arctic': {
 			'name' :'arctic',

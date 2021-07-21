@@ -24,11 +24,11 @@ async def trade(message, client):
             "lastTradeId": db["tradeId"],
             "tradeAmts": [0, 0, 0, 0, 0],
             "stock": [
-                floor((user["reputation"] / randint(200, 300)) * 10),
-                floor((user["reputation"] / randint(200, 300)) * 4),
-                floor(user["reputation"] / randint(200, 300)),
-                floor(user["reputation"] / randint(300, 400)),
-                floor(user["reputation"] / randint(400, 500)),
+                floor((500 / randint(200, 300)) * 10),
+                floor((500 / randint(200, 300)) * 4),
+                floor(500 / randint(200, 300)),
+                floor(500 / randint(300, 400)),
+                floor(500 / randint(400, 500)),
             ],
         }
 
@@ -40,9 +40,6 @@ async def trade(message, client):
         await message.channel.send("what trade are you doing lol")
         return
 
-    if db["members"][str(message.author.id)]["reputation"] < 350:
-        await message.channel.send("gotta have at least `350` rep to do trades")
-        return
     if not args[2].isnumeric() or int(args[2]) not in [0, 1, 2, 3, 4]:
         await message.channel.send(f"say a number from 0 to 4 not {args[2]} dumbo")
         return
@@ -113,10 +110,6 @@ async def trade(message, client):
                 a[str(message.author.id)]["merch"][i[2]] += i[1]
             else:
                 a[str(message.author.id)]["merch"][i[2]] = i[1]
-
-    reps = {0: [0, 5], 1: [7, 15], 2: [20, 35], 3: [35, 45], 4: [50, 60]}
-    repGain = round(randint(reps[trade][0], reps[trade][1]) / 3)
-    a[str(message.author.id)]["reputation"] += repGain
 
     db["members"] = a
     await message.channel.send(

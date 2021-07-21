@@ -41,10 +41,9 @@ async def profile(message, client):
             totalworth += seeds[i]["cost"]
     totalworth += money
 
-    reputation = db["members"][user]["reputation"]
     e.add_field(
         name="- :moneybag: Currency:",
-        value=f"coins: {money}\ntotal worth: {totalworth}\nreputation: {reputation}",
+        value=f"coins: {money}\ntotal worth: {totalworth}",
         inline=False,
     )
 

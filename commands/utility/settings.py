@@ -23,8 +23,8 @@ async def settings(message, client):
         },
         "emojionlyinv": {
             "name": "Emoji Only Inventory",
-            "desc": "Makes the inventory only show emojis for animals and merch",
-            "options": boolean,
+            "desc": "Makes the inventory only show emojis for animals and merch. Auto detects if youre on mobile and sets it off",
+            "options": boolean + ["auto"],
         },
         "replypings": {
             "name": "Reply pings",

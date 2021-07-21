@@ -28,19 +28,9 @@ async def daily(message, client):
         )
         return
     thing = random.randint(1, 35)
-    if db["members"][str(message.author.id)]["reputation"] < 250:
-        await message.channel.send(
-            "market: nah, your reputation is too low so i'm not giving you anything"
-        )
-        chance = random.randint(1, 5)
-        if chance > 3:
-            a = db["members"]
-            a[str(message.author.id)]["reputation"] += chance
-            db["members"] = a
-        return
 
-    one = round(db["members"][str(message.author.id)]["reputation"] / 25)
-    two = round(db["members"][str(message.author.id)]["reputation"] / 5)
+    one = round(500 / 25)
+    two = round(500 / 5)
     moneygained = random.randint(one, two)
 
     a = db["members"]

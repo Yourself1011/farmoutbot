@@ -23,11 +23,11 @@ async def listtrades(message, client):
             "lastTradeId": db["tradeId"],
             "tradeAmts": [0, 0, 0, 0, 0],
             "stock": [
-                floor((user["reputation"] / randint(200, 300)) * 10),
-                floor((user["reputation"] / randint(200, 300)) * 4),
-                floor(user["reputation"] / randint(200, 300)),
-                floor(user["reputation"] / randint(300, 400)),
-                floor(user["reputation"] / randint(400, 500)),
+                floor((500 / randint(200, 300)) * 10),
+                floor((500 / randint(200, 300)) * 4),
+                floor(500 / randint(200, 300)),
+                floor(500 / randint(300, 400)),
+                floor(500 / randint(400, 500)),
             ],
         }
 

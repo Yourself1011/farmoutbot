@@ -10,11 +10,6 @@ async def randomnumber(message, client):
     if len(args) == 2:
         await message.channel.send("what number do you think it is lol")
         return
-    if db["members"][str(message.author.id)]["reputation"] > 1000:
-        await message.channel.send(
-            "your reputation is too high to gamble,go do something better with your money"
-        )
-        return
     number = int(args[2])
     num2 = random.randint(1, 20)
     if number == num2:

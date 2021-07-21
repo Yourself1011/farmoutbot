@@ -17,11 +17,6 @@ async def lottery(message, client):
         await message.channel.send("you're already in the lottery drumbo")
         return
     if len(args) == 2:
-        if db["members"][str(message.author.id)]["reputation"] < 250:
-            await message.channel.send(
-                "your reputation is too low to participate in the lottery"
-            )
-            return
         if db["members"][str(message.author.id)]["money"] < 100:
             await message.channel.send("get 100 coins to do the lottery")
             return

@@ -5,11 +5,11 @@ async def guide(message, client):
     args = message.content.split(" ")
     if len(args) == 2:
         mess = await message.reply(
-            "things you can get guidance on: \n\n- locations\n- contracts\n- reputation\n- marketplace trades\n\nclick one of the buttons to get help about something",
+            "things you can get guidance on: \n\n- locations\n- contracts\n- marketplace trades\n- bot setup\n\nclick one of the buttons to get help about something",
             components=[
                 Button(style=ButtonStyle.blue, label="Locations"),
                 Button(style=ButtonStyle.blue, label="Contracts"),
-                Button(style=ButtonStyle.blue, label="Reputation"),
+                #Button(style=ButtonStyle.blue, label="Reputation"),
                 Button(style=ButtonStyle.blue, label="Trades"),
 								Button(style=ButtonStyle.blue, label="Bot Setup")
             ],
@@ -74,18 +74,18 @@ async def guide(message, client):
                       await msg.delete()
                       await mess.delete()
 
-          if res.component.label == "Reputation":
-              msg = await message.channel.send(
-									"**Reputation**\n\nReputation is exactly what it sounds like. It is how much the market likes or dislikes you. \n\n__How to gain and lose reputation__\nThere are a few ways to gain or lose rep.	If you do the beg command, there is a chance to lose reputation. If you trade, there is a chance to gain rep. Just playing farmout, buying, selling, and gambling, can help you gain or lose rep with the marketplace.\n\n__What does reputation affect?__\nReputation affects item cost and sellcost, daily and hourly, and some other little things too.\n\nTo see rep caps, do the `i reputation` command.",
-									components=[
-											Button(style=ButtonStyle.grey, label="❌"),
-									],
-							)
-              resp = await client.wait_for("button_click")
-              if resp.author == message.author:
-                  if resp.component.label == "❌":
-                      await msg.delete()
-                      await mess.delete()
+          # if res.component.label == "Reputation":
+          #     msg = await message.channel.send(
+					# 				"**Reputation**\n\nReputation is exactly what it sounds like. It is how much the market likes or dislikes you. \n\n__How to gain and lose reputation__\nThere are a few ways to gain or lose rep.	If you do the beg command, there is a chance to lose reputation. If you trade, there is a chance to gain rep. Just playing farmout, buying, selling, and gambling, can help you gain or lose rep with the marketplace.\n\n__What does reputation affect?__\nReputation affects item cost and sellcost, daily and hourly, and some other little things too.\n\nTo see rep caps, do the `i reputation` command.",
+					# 				components=[
+					# 						Button(style=ButtonStyle.grey, label="❌"),
+					# 				],
+					# 		)
+          #     resp = await client.wait_for("button_click")
+          #     if resp.author == message.author:
+          #         if resp.component.label == "❌":
+          #             await msg.delete()
+          #             await mess.delete()
 
           if res.component.label == "Trades":
               msg = await message.channel.send(

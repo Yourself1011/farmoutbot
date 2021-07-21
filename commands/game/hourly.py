@@ -23,19 +23,8 @@ async def hourly(message, client):
         )
         return
 
-    if db["members"][str(message.author.id)]["reputation"] < 250:
-        await message.channel.send(
-            "market: nah, your reputation is too low so i'm not giving you anything"
-        )
-        chance = random.randint(1, 5)
-        if chance < 3:
-            a = db["members"]
-            a[str(message.author.id)]["reputation"] += chance
-            db["members"] = a
-        return
-
-    one = round(db["members"][str(message.author.id)]["reputation"] / 500)
-    two = round(db["members"][str(message.author.id)]["reputation"] / 100)
+    one = round(500 / 500)
+    two = round(500 / 100)
     moneygained = random.randint(one, two)
     a = db["members"]
     a[str(message.author.id)]["money"] += moneygained

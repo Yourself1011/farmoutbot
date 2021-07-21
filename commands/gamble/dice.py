@@ -26,11 +26,6 @@ async def dice(message, client):
     if amount > db["members"][str(message.author.id)]["money"]:
         await message.channel.send("thats more than u have lol")
         return
-    if db["members"][str(message.author.id)]["reputation"] > 1000:
-        await message.channel.send(
-            "your reputation is too high to gamble,go do something better with your money"
-        )
-        return
     if db["members"][str(message.author.id)]["money"] == 0:
         await message.channel.send("You have no money. '-'")
         return
