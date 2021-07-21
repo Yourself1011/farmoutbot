@@ -1,4 +1,4 @@
-# Jeff's not here. I can do whatever I want. heheheheheheh also i wonder when he will see this i saw it already stupid no you didn't you didn't see anything whoosh you never saw this yes i did mf nope yap nap sapnap
+# Jeff's not here. I can do==   whatever I want. heheheheheheh also i wonder when he will see this i saw it already stupid no you didn't you didn't see anything whoosh you never saw this yes i did mf nope yap nap sapnap
 
 import os
 from os.path import join, dirname
@@ -158,6 +158,15 @@ async def on_message(message):
                     sites.append("discordbotlist.com")
                     links.append("https://discordbotlist.com/bots/farmout/upvote")
                     a[str(message.author.id)]["cooldowns"]["discordbotlist.com"] += 1
+                    
+                if (
+                    "top.gg" in user["cooldowns"]
+                    and user["cooldowns"]["top.gg"] / 10 <= time()
+                    and not bool(int(str(user["cooldowns"]["top.gg"])[-1]))
+                ):
+                    sites.append("top.gg")
+                    links.append("https://top.gg/bot/795319933314662452/vote")
+                    a[str(message.author.id)]["cooldowns"]["top.gg"] += 1
 
                 db["members"] = a
 

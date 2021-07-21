@@ -137,8 +137,8 @@ async def inventory(message, client):
             kare = animals[i]["name"]
             if (
                 "emojionlyinv" in db["members"][user]["settings"]
-                and db["members"][user]["settings"]["emojionlyinv"] 
-                or (db["members"][user]["emojionlyinv"] == "auto" and message.author.is_on_mobile())
+                and db["members"][user]["settings"]["emojionlyinv"] == True 
+                or (db["members"][user]["emojionlyinv"] == "auto" and not message.author.is_on_mobile())
             ):
                 kare = kare.split(" ")
                 hyperlinked = f"[{kare[1]}](https://youtu.be/dQw4w9WgXcQ \"{kare[0]}\")"
@@ -174,8 +174,8 @@ async def inventory(message, client):
             kare = merch[m]["name"]
             if (
                 "emojionlyinv" in db["members"][user]["settings"]
-                and db["members"][user]["settings"]["emojionlyinv"]
-                or (db["members"][user]["emojionlyinv"] == "auto" and message.author.is_on_mobile())
+                and db["members"][user]["settings"]["emojionlyinv"] == True
+                or (db["members"][user]["emojionlyinv"] == "auto" and not message.author.is_on_mobile())
             ):
                 lengggg = 8
                 kare = kare.split(" ")
