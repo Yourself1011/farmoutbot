@@ -1,6 +1,6 @@
 async def report(message, client):
     args = message.content.split(" ")
-    if client.name == 'Farmout beta':
+    if client.user.name == 'Farmout beta':
       return 'go do that on the main bot u meganerd'
     if len(args) == 2:
         await message.reply(

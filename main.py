@@ -40,7 +40,6 @@ for folder in os.scandir("./commands/"):
 				import_module(f"commands.{folder.name}.{filename}"), filename
 		)
 
-
 @client.event
 async def on_ready():
     DiscordComponents(client)
