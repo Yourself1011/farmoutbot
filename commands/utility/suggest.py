@@ -1,8 +1,10 @@
 import discord
 import random
-
+from replit import db
 
 async def suggest(message, client):
+
+    if message.author.id in db['blacklist']['suggest']: return 'you\'ve been blacklisted omegaLUL' 
     args = message.content.split(" ")
     if client.user.name == 'Farmout beta':
       return 'go do that on the main bot u meganerd'

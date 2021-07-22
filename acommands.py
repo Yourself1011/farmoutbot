@@ -45,7 +45,7 @@ commands = {
         "name": "balance",
         "usage": "<balance> <@user>",
         "description": "Shows the balance (or coins) of you or the person you mentioned",
-        "aliases": ["money", "coins", "wallet", "bal", "bl", "bank"],
+        "aliases": ["money", "coins", "wallet", "bal", "bank"],
         "category": "profile",
     },
     "profile": {
@@ -397,6 +397,13 @@ commands = {
      	"aliases": [],
      	"category": ""
      },
+		 'blacklist': {
+			 'name': 'blacklist',
+			 'usage': 'blacklist people',
+			 'description': ' ¯\_(ツ)_/¯',
+			 'aliases': ['bl'],
+			 'category': 'utility'
+		 }
 }
 
     # "": {

@@ -1,5 +1,9 @@
+from replit import db
+
 async def report(message, client):
     args = message.content.split(" ")
+
+    if message.author.id in db['blacklist']['report']: return 'you\'ve been blacklisted omegaLUL' 
     if client.user.name == 'Farmout beta':
       return 'go do that on the main bot u meganerd'
     if len(args) == 2:

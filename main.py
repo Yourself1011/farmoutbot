@@ -2,7 +2,7 @@
 
 import os
 from os.path import join, dirname
-from importlib import import_module
+from importlib import import_module	
 
 import discord
 from dotenv import load_dotenv
@@ -79,7 +79,8 @@ async def on_guild_join(guild):
     a[str(guild.id)] = {"prefix": "i", "channel": None}
     db["server"] = a
     print(f"woah woah woah new serverrrrr: {guild.name}")
-
+    me = 690577156006477875
+    await me.send(f'new server: {guild.name}')
 
 @client.event
 async def on_message(message):
@@ -111,6 +112,8 @@ async def on_message(message):
             + " help` to see all commands."
         )
         return
+
+    if message.author.id in db['blacklist']['use']: return 'ur blacklisted from using the bot, apparently'
 
     prefix = db["server"][str(message.guild.id)]["prefix"]
     args = message.content.split(" ")

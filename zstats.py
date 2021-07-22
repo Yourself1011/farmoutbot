@@ -13,7 +13,7 @@ def choosecolour():
 	colour = random.choice(colours)
 	return colour
 
-def getMember(search, guildId, client):
+async def getMember(search, guildId, client):
     if type(search) is list:
         search = " ".join(search)
     id = search.translate({ord(x): "" for x in ["<", "@", "!", ">"]})
@@ -859,14 +859,14 @@ merch = {
 
     "peacockfeather": {
         "name": "peacockfeather :feather:",
-        "cost": 19,
+        "cost": 'cant buy',
         "sellcost": 16,
         "tradevalue": 15,
         "description": "the feather of a peacock, commonly used to make pens",
     },
 		'walrustusk': {
 			'name': 'walrustusk :seal: :tooth:',
-			'cost': 50,
+			'cost': 'cant buy',
 			'sellcost': 35,
 			'tradevalue': 30,
 			'description': 'the tooth of a walrus. very nice'
@@ -1339,6 +1339,7 @@ tips = [
     "the creator of farmout made some really weird things like heavenheck bot, which is on display in the support server, before he made farmout",
     "`contracts show` will show you some contracts that you can sign for items",
     "eating your ginseng fruit can give you items",
+    "vote for the bot, and get some pretty op items, while supporting the bot! use `i vote`"
 ]
 
 dailys = [
@@ -1384,7 +1385,8 @@ dailys = [
     "for washing the road",
     "for smelling flowers",
     "for wiping grease off of cars",
-    "for seeing a cow",
+    "for seeing a cow (def wasnt Yourself)",
+    "for seeing a crab (def wasnt larg ank",
     "for using double quotation marks instead of single quotation marks",
 ]
 
