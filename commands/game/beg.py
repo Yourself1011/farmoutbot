@@ -26,10 +26,11 @@ async def beg(message, client):
     coins = 0
     thing = random.randint(1, 3)
     if thing == 1:
-        return f"**market:** no.\n{message.author.mention}"
+        coins = random.randint(-1, -3)
+        return f"**market:** no.\n{message.author.mention} you lost {coins} coins"
     if thing == 2:
         coins = random.randint(5, 10)
-        return f"**market:** UGH fineeeee\n{message.author.mention}"
+        return f"**market:** UGH fineeeee\n{message.author.mention} you gained {coins} coins "
     if thing == 3:
         coins = random.randint(10, 20)
         return (

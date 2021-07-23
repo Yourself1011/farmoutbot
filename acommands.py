@@ -279,13 +279,6 @@ commands = {
         "aliases": ["lo"],
         "category": "game",
     },
-    "contract": {
-        "name": "contract",
-        "usage": "<contract> <show, sign (contract number), complete, current>",
-        "description": "Sign some contracts or quests with other farms and the marketplace.\nShow: shows all contracts\nSign: signs a contract\nComplete: completes your currently signed contract\nCurrent: view your currently signed contract",
-        "aliases": ["co"],
-        "category": "market",
-    },
     "eat": {
         "name": "eat",
         "usage": "eat some stuff",

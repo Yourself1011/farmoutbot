@@ -128,6 +128,9 @@ async def on_message(message):
     msg = msg.lower()
 
     if msg in animals and msg != "name":
+        a = db['members']
+        a[str(message.author.id)]['reputation'] += 2
+        db['members'] = a
         await useanimal(message, msg, client, animals[msg]["thing"])
         return
         
@@ -189,6 +192,13 @@ async def on_message(message):
                 a = db["members"]
                 a[str(message.author.id)]["commandsused"] += 1
                 db["members"] = a
+
+                a = db['members'][str(message.author.id)]['reputation']
+                category = commands[command['name']]['category']
+                if category == 'farming':
+                  a += 2
+                if category == 'gamble' or command['name'] in ['daily', 'lottery', 'location', 'trade']:
+                  a += 1
 
             reply = (
                 outRaw[1]
