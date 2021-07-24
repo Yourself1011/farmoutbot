@@ -14,7 +14,7 @@ async def inventory(message, client):
 
     if len(args) >= 3 and args[2].lower() == "animals":
 
-        userObj = getMember(args[3:], message.guild.id, client)
+        userObj = await getMember(args[3:], message.guild.id, client)
         user = str(userObj.id) if userObj else False
 
         if len(args) == 3 or not user:
