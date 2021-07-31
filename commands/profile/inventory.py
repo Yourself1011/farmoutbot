@@ -171,17 +171,18 @@ async def inventory(message, client):
         mout = None
     else:
         for m in mercha:
-            kare = merch[m]["name"]
-            if (
-                "emojionlyinv" in db["members"][user]["settings"]
-                and db["members"][user]["settings"]["emojionlyinv"] == True
-                or (db["members"][user]["settings"]["emojionlyinv"] == "auto" and not message.author.is_on_mobile())
-            ):
-                lengggg = 8
-                kare = kare.split(" ")
-                hyperlinked = f"[{kare[1]}](https://youtu.be/dQw4w9WgXcQ \"{kare[0]}\")"
-                kare = f"{kare[0]} {kare[1]}" if hyperlinked == emojize(hyperlinked, use_aliases=True) else emojize(hyperlinked, use_aliases=True)
-            mout.append(f"{kare}: {str(mercha[m])}")
+            if "emojionlyinv" in db["members"][user]["settings"]: kare = merch[m]["name"].split(' ')[1]; lengggg = 9
+
+            # if (
+            #     "emojionlyinv" in db["members"][user]["settings"]
+            #     and db["members"][user]["settings"]["emojionlyinv"] == True
+            #     or (db["members"][user]["settings"]["emojionlyinv"] == "auto" and not message.author.is_on_mobile())
+            # ):
+            #     lengggg = 8
+            #     kare = kare.split(" ")
+            #     hyperlinked = f"[{kare[1]}](https://youtu.be/dQw4w9WgXcQ \"{kare[0]}\")"
+            #     kare = f"{kare[0]} {kare[1]}" if hyperlinked == emojize(hyperlinked, use_aliases=True) else emojize(hyperlinked, use_aliases=True)
+            mout.append(f"{kare}: {mercha[m]}")
 
         mout = "".join(  # Join an array together
             [
@@ -215,4 +216,4 @@ async def inventory(message, client):
 
     e.add_field(name="- :moneybag: Merchandise: ", value=mout, inline=False)
 
-    await message.channel.send(embed=e)
+    await message.reply(embed=e)
