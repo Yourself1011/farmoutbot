@@ -13,6 +13,9 @@ async def location(message, client):
 
     user = db["members"][str(message.author.id)]
 
+    a = db['members'][str(message.author.id)]['reputation']
+    if a < 1000: return 'cant move now, gotta have 1000 reputation first'
+
     if len(args) == 2:
         return await message.channel.send(
             "Please use a subcommand!\n\n`my` - shows your current locations\n`view` - look at all the locations. Include a location name to look at a specific location\n`buy` - purchase a location\n`transfer` - transfers you to a location. If you want to transfer animals to a different location, do it like this: ```\ni location transfer 5 cow, 1 camel desert\n```"

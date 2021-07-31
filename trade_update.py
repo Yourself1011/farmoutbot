@@ -33,6 +33,8 @@ def mapFunc(x):
 
 
 async def trade_update(client):
+
+	if client.user.name != 'Farmout': return
 	
 	print("updated trades")
 	for j in range(0, 5):

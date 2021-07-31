@@ -15,7 +15,7 @@ async def inventory(message, client):
     if len(args) >= 3 and args[2].lower() == "animals":
 
         userObj = await getMember(args[3:], message.guild.id, client)
-        user = str(userObj.id) if userObj else False
+        user = False if not userObj else str(userObj.id)
 
         if len(args) == 3 or not user:
             user = str(message.author.id)
@@ -108,7 +108,7 @@ async def inventory(message, client):
         await message.channel.send(embed=e)
         return
 
-    userObj = getMember(args[2:], message.guild.id, client)
+    userObj = await getMember(args[2:], message.guild.id, client)
     user = str(userObj.id) if userObj else False
 
     if len(args) == 2 or not user:

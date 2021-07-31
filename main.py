@@ -1,4 +1,4 @@
-# Jeff's not here. I can do==   whatever I want. heheheheheheh also i wonder when he will see this i saw it already stupid no you didn't you didn't see anything whoosh you never saw this yes i did mf nope yap nap sapnap
+# Jeff's not here. I can do==   whatever I want. heheheheheheh also i wonder when he will see this i saw it already stupid no you didn't you didn't see anything whoosh you never saw this yes i did mf nope yap nap sapnap hueee
 
 import os
 from os.path import join, dirname
@@ -8,7 +8,7 @@ import discord
 from dotenv import load_dotenv
 from replit import db
 import sys
-import random
+import random	
 import pprint
 import asyncio
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
@@ -199,6 +199,7 @@ async def on_message(message):
                   a += 2
                 if category == 'gamble' or command['name'] in ['daily', 'lottery', 'location', 'trade']:
                   a += 1
+                if category == 'gamble' and a < 700: await message.reply('can\'t gamble yet, get 700 rep first')
 
             reply = (
                 outRaw[1]

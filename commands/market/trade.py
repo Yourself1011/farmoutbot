@@ -7,7 +7,7 @@ import pprint
 from zstats import animals, seeds, merch, tools
 import time
 from math import floor
-from random import randint
+from random import randint, random
 
 
 async def trade(message, client):
@@ -16,6 +16,7 @@ async def trade(message, client):
         return
 
     user = db["members"][str(message.author.id)]
+    if user['reputation'] < 750: return 'gotta have 750 rep to trade with the market'
     if user["trades"]["lastTradeId"] != db["tradeId"]:
 
         m = db["members"]
@@ -112,6 +113,7 @@ async def trade(message, client):
                 a[str(message.author.id)]["merch"][i[2]] = i[1]
 
     db["members"] = a
+    repGain = random.randint(3,6)
     await message.channel.send(
         f"{message.author.mention} did trade `{trade}`.\n**market:**\nTank yoo fer trading wees us, heers {repGain} rep"
     )

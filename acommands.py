@@ -396,6 +396,13 @@ commands = {
 			 'description': ' ¯\_(ツ)_/¯',
 			 'aliases': ['bl'],
 			 'category': 'utility'
+		 },
+		 'reputation': {
+			 'name' :'reputation',
+			 'usage': '<reputation>',
+			 'description': "see ur rep",
+			 'aliases': ['rep'],
+			 'category': 'profile'
 		 }
 }
 
