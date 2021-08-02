@@ -20,7 +20,9 @@ async def invite(message, client):
         inline=False,
     )
     e.add_field(
-			name = '<:github:>'
+			name = '- :cat: Github',
+			value = 'https://github.com/Yourself1011/farmoutbot',
+			inline = False
 		)
     e.set_footer(text="If the bot is not responding, its probably missing permissions.")
     await message.channel.send(embed=e)
