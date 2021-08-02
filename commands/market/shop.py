@@ -55,7 +55,7 @@ async def shop(message, client):
             cost = item["cost"]
             sellcost = item["sellcost"]
             tv = item["tradevalue"]
-            tool = item["tool"]
+            tool = item["tools"][0]
             result = item["result"]
             cooldown = item["cooldown"] / 1000
             e = discord.Embed(
@@ -169,7 +169,7 @@ async def shop(message, client):
         await pages(
             message, 
             client, 
-            [{"name": animals[j]["name"], "value": f"Cost: `{animals[j]['cost']}`\nSell amount: `{animals[j]['sellcost']}`\nNeeded tool: `{animals[j]['tool']}`\nTrade value: `{animals[j]['tradevalue']}`\nResult: `{animals[j]['result']}`\n"} for j in r],
+            [{"name": animals[j]["name"], "value": f"Cost: `{animals[j]['cost']}`\nSell amount: `{animals[j]['sellcost']}`\nNeeded tool: `{animals[j]['tools'][0]}`\nTrade value: `{animals[j]['tradevalue']}`\nResult: `{animals[j]['result']}`\n"} for j in r],
             9,
             startPage = i/9 + 1,
             baseEmbed = e
