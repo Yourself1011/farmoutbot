@@ -19,5 +19,8 @@ async def invite(message, client):
         value="https://discord.gg/TX57HyWpsk",
         inline=False,
     )
+    e.add_field(
+			name = '<:github:>'
+		)
     e.set_footer(text="If the bot is not responding, its probably missing permissions.")
     await message.channel.send(embed=e)

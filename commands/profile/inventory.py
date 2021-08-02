@@ -14,7 +14,7 @@ async def inventory(message, client):
 
     if len(args) >= 3 and args[2].lower() == "animals":
 
-        userObj = await getMember(args[3:], message.guild.id, client)
+        userObj = getMember(args[3:], message.guild.id, client)
         user = False if not userObj else str(userObj.id)
 
         if len(args) == 3 or not user:
@@ -108,7 +108,7 @@ async def inventory(message, client):
         await message.channel.send(embed=e)
         return
 
-    userObj = await getMember(args[2:], message.guild.id, client)
+    userObj = getMember(args[2:], message.guild.id, client)
     user = str(userObj.id) if userObj else False
 
     if len(args) == 2 or not user:
@@ -171,7 +171,8 @@ async def inventory(message, client):
         mout = None
     else:
         for m in mercha:
-            if "emojionlyinv" in db["members"][user]["settings"]: kare = merch[m]["name"].split(' ')[1]; lengggg = 9
+            if "emojionlyinv" in db["members"][user]["settings"] and db["members"][user]["settings"]['emojionlyinv'] == True: kare = merch[m]["name"].split(' ')[1]; lengggg = 9
+            else: kare = merch[m]['name']
 
             # if (
             #     "emojionlyinv" in db["members"][user]["settings"]

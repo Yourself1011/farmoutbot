@@ -115,9 +115,17 @@ async def sell(message, client):
             del a[str(message.author.id)][thing["name"]][key]
     else:
         del a[str(message.author.id)][thing["name"]][key]
-    chance = random.randint(1, 10)
     a[str(message.author.id)]["amounts"]["sold"] += amount
     db["members"] = a
+
+    repgain = random.choice(1,4)
+    repmsg = ''
+    if repgain == 1:
+      a = db['members'][str(message.author.id)]['reputation']
+      gain = random.choice(1,3)
+      a = gain
+      repmsg = 'market: thanks for selling that thing, i really wanted it         **reputation +gain**'
+      db['members'][str(message.author.id)]['reputation'] = a
 
     money = db["members"][str(message.author.id)]["money"]
     tts = [
@@ -127,4 +135,4 @@ async def sell(message, client):
         f"selling success, you gained `{got} coins`",
     ]
     ts = random.choice(tts)
-    await message.reply(f"{ts}")
+    await message.reply(f"{ts}\n{repmsg}")

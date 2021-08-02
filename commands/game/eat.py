@@ -108,13 +108,13 @@ async def eat(message, client):
             return await message.channel.send("You don't have that")
 
         if len(args) == 4 and args[3].lower() in ["all", "a", "max"]:
-            repeat = user["merch"]["eated"]
+            repeat = user["merch"][eated]
 
         if (
             len(args) == 4
-            and args[3].isnumeric()
+            and (args[3].isnumeric()
             and user["merch"][eated] < int(args[3])
-            or int(args[3]) <= 0
+            or int(args[3]) >= 0)
         ):
             await message.channel.send(
                 "https://media.tenor.co/videos/e0b51ead5f9fd990f06a5582cdc996bf/mp4"

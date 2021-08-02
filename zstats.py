@@ -13,7 +13,7 @@ def choosecolour():
 	colour = random.choice(colours)
 	return colour
 
-async def getMember(search, guildId, client):
+def getMember(search, guildId, client):
     if type(search) is list:
         search = " ".join(search)
     id = search.translate({ord(x): "" for x in ["<", "@", "!", ">"]})

@@ -95,6 +95,14 @@ async def buy(message, client):
         a[str(message.author.id)]["money"] -= r
         nowmoney = a[str(message.author.id)]["money"]
         a[str(message.author.id)]["amounts"]["bought"] += amount
+        repgain = random.choice(1,4)
+        repmsg = ''
+        if repgain == 1:
+          a = db['members'][str(message.author.id)]['reputation']
+          gain = random.choice(1,3)
+          a = gain
+          repmsg = 'market: thanks for buying that thing, i really wanted to sell it **reputation +gain**'
+          db['members'][str(message.author.id)]['reputation'] = a
         db["members"] = a
         thingstosay = [
             f"You bought `{amount} {key}(s)` for `{r} coins`. You now have `{nowmoney} coins`.",
@@ -104,8 +112,8 @@ async def buy(message, client):
             f"you paid `{r} coins` for `{amount} {key}(s)`.",
         ]
         thingsaid = random.choice(thingstosay)
-        out = thingsaid
+        out = f'{thingsaid}\n{repmsg}'
 
-        return (out, True)
+        return (out)
 
     return await buye()
