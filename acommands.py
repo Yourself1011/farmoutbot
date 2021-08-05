@@ -122,7 +122,7 @@ commands = {
         "name": "invite",
         "usage": "<invite>",
         "description": "Invites the bot to your server",
-        "aliases": ["it", 'server', 'link'],
+        "aliases": ["it", 'server', 'link', 'website'],
         "category": "misc",
     },
     "slots": {
@@ -403,6 +403,13 @@ commands = {
 			 'description': "see ur rep",
 			 'aliases': ['rep'],
 			 'category': 'profile'
+		 },
+		 'about': {
+			 'name': 'about',
+			 'usage': '<about>',
+			 'description': 'shows some info about the bot',
+			 'aliases': [],
+			 'category': 'misc'
 		 }
 }
 
