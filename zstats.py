@@ -1487,7 +1487,7 @@ def newUser(datemade):
         "prestige": 0,
         "location": "default",
         "locations": {},
-        "settings": {"votedm": True, "tips": True, "replypings": True},
+        "settings": {"votedm": True, "tips": True, "replypings": True, 'emojionlyinv': False},
     }
 
     return newuser

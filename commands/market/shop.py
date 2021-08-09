@@ -149,9 +149,6 @@ async def shop(message, client):
         i = maxPage - 1
         amount = maxPage
 
-    i *= 9
-    a2 = i + 9
-
     if shop == "animals":
         dictCopy = dict(animals)
         del dictCopy["name"]
@@ -169,7 +166,7 @@ async def shop(message, client):
         await pages(
             message, 
             client, 
-            [{"name": animals[j]["name"], "value": f"Cost: `{animals[j]['cost']}`\nSell amount: `{animals[j]['sellcost']}`\nNeeded tool: `{animals[j]['tools'][0]}`\nTrade value: `{animals[j]['tradevalue']}`\nResult: `{animals[j]['result']}`\n"} for j in r],
+            [{"name": animals[j]["name"], "value": f"Cost: `{animals[j]['cost']}`\nSell amount: `{animals[j]['sellcost']}`\nNeeded tool: `{animals[j]['tools'][0]}`\nTrade value: `{animals[j]['tradevalue']}`\nCooldown: `{animals[j]['cooldown']/1000} secs`\nResult: `{animals[j]['result']}`\n"} for j in r],
             9,
             startPage = i/9 + 1,
             baseEmbed = e
