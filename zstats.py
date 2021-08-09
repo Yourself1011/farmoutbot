@@ -99,7 +99,8 @@ def gatheringCmd(msg, loottable, amount=[1, 1, 1]):
             out.append(
                 [
                     i,
-                    floor(
+                    max(
+                        floor(
                         # Average amount of times to get this item, plus or minus a little
                         (
                             (j[0] / total)
@@ -109,6 +110,8 @@ def gatheringCmd(msg, loottable, amount=[1, 1, 1]):
                         *
                         # average amounts per land
                         (j[2] + (j[1] - j[2]) * (uniform(0, 1) ** j[3]))
+                    ),
+                        1
                     ),
                 ]
             )
@@ -315,7 +318,7 @@ animals = {
         "tools": ["toilet"],
         "result": "cameldung",
         "cooldown": 50000,
-        "thing": "milk",
+        "thing":     "milk",
         "tradevalue": 350,
         "give": True,
     },
@@ -476,7 +479,7 @@ tools = {
         "cost": 500,
         "durability": 500,
         "sellcost": 250,
-        "animal": "chicken",
+        "animal": "    chicken",
         "tradevalue": 200,
     },
     "venomextractor": {
@@ -637,7 +640,7 @@ seeds = {
         "growtime": 3600000,
         "result": "pinetree",
         "tradevalue": 5,
-        "get": True,
+        "get": True,    
         "give": True,
     },
     # exotic seeds
@@ -771,7 +774,7 @@ merch = {
         "sellcost": 19,
         "tradevalue": 19,
     },
-    "bread": {
+    "bread": {    
         "name": "bread :bread:",
         "description": "not eatable but it probably should be lmao\ntradeable",
         "cost": 20,
@@ -903,7 +906,7 @@ merch = {
         "cost": 19,
         "sellcost": 17,
         "tradevalue": 16,
-        "get": True,
+        "ge    t": True,
     },
     "strawberry": {
         "name": "strawberry :strawberry:",
@@ -1029,7 +1032,7 @@ merch = {
     },
     # Exotic merch
     "cameldung": {
-        "name": "cameldung :camel: :poop:",
+            "name": "cameldung :camel: :poop:",
         "description": "dung of camel\nsellable",
         "cost": "Not purchasable",
         "sellcost": 50,
@@ -1160,7 +1163,7 @@ locations = {
         "desc": "You start here.",
         "baseMulti": 1,
         "shop": {},
-        "cost": 1000000,
+        "cost": 1000000,    
         "multis": {},
         "defaultLife": True,
         "lifeOverrides": {},
@@ -1302,7 +1305,7 @@ bal = [
 	"https://www.youtube.com/watch?v=AXrHbrMrun0",
 	"you gambler mambler",
 	"mar mar marino papido appeal",
-	"<< MONEY MONEY GO ROB",
+	"<< MONEY MONEY GO ROB"    ,
 	"babbons",
 	"(cents)",
 	"buttsmeller",
@@ -1406,7 +1409,7 @@ deaths = {
     "from eating too much": "digestion",
     "by snorkeling on land": "water",
     "from trying to code javascript": "python",
-    "from watching bad ytbers": "unsee",
+    "from watching bad ytbers":     "unsee",
     "because they didn't join farmout support": "joinjoin",
     "from playing fortnite": "minecraft",
     "from the E": "a",

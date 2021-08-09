@@ -122,6 +122,8 @@ async def devmode(message, client):
     elif args[2] == "other":
         if message.author.id not in [690577156006477875, 690575294674894879]:
             return await message.channel.send(responses[randint(0, len(responses) - 1)])
+				
+        if len(args) == 4 or len(args) == 5: return 'i just have this here so it doesn\'t error lamo'
 
         user = getMember(args[3], message.guild.id, client)
 

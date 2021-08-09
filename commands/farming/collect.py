@@ -3,27 +3,23 @@ from zstats import merch, seeds, softSearch, locations
 import time
 import random
 from math import floor
-
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+from commands.farming.crops import crops
 
 async def collect(message, client):
 
     args = message.content.split(" ")
     if str(message.author.id) not in db["members"]:
         return f" {message.author.mention}'s to-do list:\n\n1: make an account\n2: buy a seed\n3: buy a watering can\n4: plant the seeds\n5: water the plants\n6: wait for them to grow\n7: collect them"
-        return
     if db["members"][str(message.author.id)]["plantcooldowns"] == {}:
         return " you haven't planted anything u idiot"
-        return
     if len(args) == 2:
         return " what plant are you collecting lol"
-        return
     plant = softSearch(merch, args[2], ["name"])
     if not bool(plant):
         return " That's not a plant!"
-        return
     if plant not in db["members"][str(message.author.id)]["plantcooldowns"]:
         return " you haven't planted that"
-        return
 
     for i in seeds:
         if i != "name":
@@ -150,4 +146,31 @@ async def collect(message, client):
         f"collection successful, `{fart}` {name}(s) were collected from `{amount} {seed}(s)`.",
     ]
     ts = random.choice(tts)
-    return (f"{ts}", True)
+    msg = await message.reply(ts, components = [
+			Button(style = ButtonStyle.blue, label = "Quick Sell All"),
+			Button(style = ButtonStyle.blue, label = 'View Inventory'),
+			Button(style = ButtonStyle.red, label = '❌')
+		])
+    res = await client.wait_for("button_click")
+    if res.author == message.author:
+      if res.component.label == "❌":
+        msg.components = []
+        return
+      elif res.component.label == 'Quick Sell All':
+				
+        name = name.split(' ')[0]
+        cost = merch[name]['cost']
+        gained = fart*cost
+        a = db['members'][str(message.author.id)]
+        a['money'] += gained
+        a['merch'][name] -= fart
+        if a['merch'][name] == 0:
+          del a['merch'][name]
+        db['members'] = a
+        return f'{message.author.mention} gained `{gained} coins` from selling the {name}(s)'
+        msg.components = []
+      elif res.component.label == 'View Crops':
+        msg = message
+        msg.content = 'i crops'
+        crops(msg, client)
+        msg.components = []

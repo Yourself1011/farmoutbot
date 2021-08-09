@@ -95,11 +95,11 @@ async def buy(message, client):
         a[str(message.author.id)]["money"] -= r
         nowmoney = a[str(message.author.id)]["money"]
         a[str(message.author.id)]["amounts"]["bought"] += amount
-        repgain = random.choice(1,4)
+        repgain = random.randint(1,4)
         repmsg = ''
         if repgain == 1:
           a = db['members'][str(message.author.id)]['reputation']
-          gain = random.choice(1,3)
+          gain = random.randint(1,3)
           a = gain
           repmsg = 'market: thanks for buying that thing, i really wanted to sell it **reputation +gain**'
           db['members'][str(message.author.id)]['reputation'] = a

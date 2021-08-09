@@ -1,5 +1,5 @@
 from replit import db
-from zstats import animals, tools, deaths, births, locations
+from zstats import animals, tools, deaths, births, locations, merch
 import time
 import random
 import asyncio
@@ -8,6 +8,7 @@ from discord_components import DiscordComponents, Button, ButtonStyle, Interacti
 import discord
 
 async def useanimal(message, animal, client, thing):
+	
     if str(message.author.id) not in db["members"]:
         await message.channel.send(" Make an account first, then worry about animals**")
         return
@@ -76,7 +77,7 @@ async def useanimal(message, animal, client, thing):
         break
 
     if tool == None:
-        r = animals[animal]["tool"][0]
+        r = animals[animal]["tools"][0]
         await message.channel.send(f" buy a(n) `{r}` first")
         return
 
@@ -105,7 +106,7 @@ async def useanimal(message, animal, client, thing):
     now = int(round(time.time() * 1000))
     a = db["members"]
     a[str(message.author.id)]["animals"][animal]["lastused"] = now
-    merch = animals[animal]["result"]
+    result = animals[animal]["result"]
 
     location = locations[db["members"][str(message.author.id)]["location"]]
 
@@ -121,10 +122,10 @@ async def useanimal(message, animal, client, thing):
       		amount = int(round(amount * 0.7))
       if randomrea == 2:
       		amount = int(round(amount * 0.8))
-    if merch not in a[str(message.author.id)]["merch"]:
-        a[str(message.author.id)]["merch"][merch] = amount
+    if result not in a[str(message.author.id)]["merch"]:
+        a[str(message.author.id)]["merch"][result] = amount
     else:
-        a[str(message.author.id)]["merch"][merch] += amount
+        a[str(message.author.id)]["merch"][result] += amount
 
     a[str(message.author.id)]["amounts"]["used"] += amount
     thing = animals[animal]["thing"]
@@ -176,13 +177,13 @@ async def useanimal(message, animal, client, thing):
 				name=f"{message.author.name}",         icon_url=message.author.avatar_url
 		)
     animalamount = db['members'][str(message.author.id)]['animals'][animal]['amount']
-    e.add_field(name = f'{emoji} - {animalamount} {animal}(s) {thing}ed', value = f'- {animal} cooldown +{int(cooldown)}s\n- {toolbreak}\n- {merch} +{amount}')
+    e.add_field(name = f'{emoji} - {animalamount} {animal}(s) {thing}ed', value = f'- {animal} cooldown +{int(cooldown)}s\n- {toolbreak}\n- {result} +{amount}')
     e.set_footer(text = f'Wait {int(cooldown)} seconds before {thing}ing your {animal} again')
-    print(echance)
-    if echance == 1:
+
+    if echance == 1 or db['members'][str(message.author.id)]['money'] < 500:
         await message.reply(embed = e)
         return	
-    if echance == 2:
+    if echance == 2 and db['members'][str(message.author.id)]['money'] > 500:
         whatthingchance = random.randint(1, 4)
         if whatthingchance in [1, 2, 3]:
             randomra = random.randint(1, 2)

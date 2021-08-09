@@ -42,7 +42,12 @@ async def settings(message, client):
         values = list(settings.values())[page * 5 : page * 5 + 5]
 
         for i in range(len(ids)):
-            currentValue = db["members"][str(message.author.id)]["settings"][ids[i]]
+            currentValue = db["members"][str(message.author.id)]["settings"][ids[i]] if ids[i] in db["members"][str(message.author.id)]["settings"] else False
+
+            if ids[i] not in db["members"][str(message.author.id)]["settings"]:
+              a = db["members"][str(message.author.id)]["settings"]
+              a[ids[i]] = False
+              db["members"][str(message.author.id)]["settings"] = a
 
             embed.add_field(
                 name=values[i]["name"],

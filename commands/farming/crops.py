@@ -4,7 +4,6 @@ import time
 from zstats import seeds, merch
 import random
 
-
 async def crops(message, client):
     if str(message.author.id) not in db["members"]:
         await message.channel.send("make an account first strumfum")
