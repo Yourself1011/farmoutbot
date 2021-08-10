@@ -151,7 +151,7 @@ async def collect(message, client):
 			Button(style = ButtonStyle.blue, label = 'View Inventory'),
 			Button(style = ButtonStyle.red, label = '❌')
 		])
-    res = await client.wait_for("button_click")
+    res = await client.wait_for("button_click", timeout = 60)
     if res.author == message.author:
       if res.component.label == "❌":
         msg.components = []
