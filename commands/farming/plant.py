@@ -3,7 +3,8 @@ from zstats import seeds, tools, softSearch, convertInt
 import asyncio
 import random
 import time
-
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+from commands.farming.crops import crops
 
 async def plant(message, client):
     args = message.content.split(" ")
@@ -154,7 +155,22 @@ async def plant(message, client):
         f"plants watered. be sure to collect them in `{amountwait/1000}s` using `{prefix} collect {plantr}`.",
     ]
     tt = random.choice(tts)
-    await message.reply(tt)
+    msg = await message.reply(tt, components = [Button(style = ButtonStyle.blue, label = "View Crops"), Button(style = ButtonStyle.red, label = '❌')])
+    
+    try: 
+      res = await client.wait_for("button_click", timeout = 60)
+    except asyncio.TimeOutError:
+      msg.components = []
+    else:
+      if res.author == message.author:
+        if res.component.label == "❌":
+          msg.components = []
+          return
+      elif res.component.label == 'View Crops':
+        mass = message
+        mass.content = 'i crops'
+        crops(mass, client)
+        msg.components = []
     a = db["members"]
     now = int(round(time.time() * 1000))
     a[str(message.author.id)]["plantcooldowns"][seeds[seed]["result"]] = {

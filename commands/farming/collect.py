@@ -4,6 +4,7 @@ import time
 import random
 from math import floor
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+import asyncio
 from commands.farming.crops import crops
 
 async def collect(message, client):
@@ -148,29 +149,33 @@ async def collect(message, client):
     ts = random.choice(tts)
     msg = await message.reply(ts, components = [
 			Button(style = ButtonStyle.blue, label = "Quick Sell All"),
-			Button(style = ButtonStyle.blue, label = 'View Inventory'),
+			Button(style = ButtonStyle.blue, label = 'View Crops'),
 			Button(style = ButtonStyle.red, label = '❌')
 		])
-    res = await client.wait_for("button_click", timeout = 60)
-    if res.author == message.author:
-      if res.component.label == "❌":
-        msg.components = []
-        return
-      elif res.component.label == 'Quick Sell All':
-				
-        name = name.split(' ')[0]
-        cost = merch[name]['cost']
-        gained = fart*cost
-        a = db['members'][str(message.author.id)]
-        a['money'] += gained
-        a['merch'][name] -= fart
-        if a['merch'][name] == 0:
-          del a['merch'][name]
-        db['members'] = a
-        return f'{message.author.mention} gained `{gained} coins` from selling the {name}(s)'
-        msg.components = []
-      elif res.component.label == 'View Crops':
-        msg = message
-        msg.content = 'i crops'
-        crops(msg, client)
-        msg.components = []
+    try: 
+      res = await client.wait_for("button_click", timeout = 60)
+    except asyncio.TimeOutError:
+      msg.components = []
+    else:
+      if res.author == message.author:
+        if res.component.label == "❌":
+          msg.components = []
+          return
+        elif res.component.label == 'Quick Sell All':
+          
+          name = name.split(' ')[0]
+          cost = merch[name]['cost']
+          gained = fart*cost
+          a = db['members'][str(message.author.id)]
+          a['money'] += gained
+          a['merch'][name] -= fart
+          if a['merch'][name] == 0:
+            del a['merch'][name]
+          db['members'] = a
+          return f'{message.author.mention} gained `{gained} coins` from selling the {name}(s)'
+          msg.components = []
+        elif res.component.label == 'View Crops':
+          msg = message
+          msg.content = 'i crops'
+          crops(msg, client)
+          msg.components = []

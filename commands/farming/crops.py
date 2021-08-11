@@ -3,6 +3,8 @@ import discord
 import time
 from zstats import seeds, merch
 import random
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+import asyncio
 
 async def crops(message, client):
     if str(message.author.id) not in db["members"]:
@@ -86,4 +88,4 @@ async def crops(message, client):
     e.set_footer(
         text=f"Use <{prefix} collect (plant)> to collect your plants when they are ready."
     )
-    await message.channel.send(embed=e)
+    msg = await message.channel.send(embed=e)
