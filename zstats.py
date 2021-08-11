@@ -615,7 +615,7 @@ seeds = {
     },
     "tulipseeds": {
         "name": "tulipseeds",
-        "cost": 15,  # "Only available during spring",
+        "cost": "Only available during spring",  # 15,
         "sellcost": 13,
         "growtime": 40000,
         "result": "tulip",
@@ -625,7 +625,7 @@ seeds = {
     },
     "sunflowerseeds": {
         "name": "sunflowerseeds",
-        "cost": "Only available during summer",  # 20,
+        "cost": 20,  # "Only available during summer",
         "sellcost": 19,
         "growtime": 40000,
         "result": "sunflower",
