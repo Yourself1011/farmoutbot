@@ -5,7 +5,7 @@ from datetime import date
 import collections.abc
 from json import loads
 from os import environ
-
+from trade_update import trade_update
 
 async def devmode(message, client):
 
@@ -122,8 +122,9 @@ async def devmode(message, client):
     elif args[2] == "other":
         if message.author.id not in [690577156006477875, 690575294674894879]:
             return await message.channel.send(responses[randint(0, len(responses) - 1)])
-				
-        if len(args) == 4 or len(args) == 5: return 'i just have this here so it doesn\'t error lamo'
+
+        if len(args) == 4 or len(args) == 5:
+            return "i just have this here so it doesn't error lamo"
 
         user = getMember(args[3], message.guild.id, client)
 
@@ -139,6 +140,13 @@ async def devmode(message, client):
 
         db["members"] = members
         await message.channel.send(":white_check_mark: yessir")
+
+    elif args[2] == "trades":
+        if message.author.id not in [690577156006477875, 690575294674894879]:
+            return await message.channel.send(responses[randint(0, len(responses) - 1)])
+
+        await trade_update(client)
+        return ("Success")
 
     else:
         await message.channel.send('That\'s not a subcommand, "dev"')

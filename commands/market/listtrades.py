@@ -1,4 +1,3 @@
-
 # TEMPERARY THING IGNORE FOR NOW	NO IT"S NOT TEMPORARY ANYMORE
 
 
@@ -8,6 +7,7 @@ from math import floor
 from random import randint
 import random
 from zstats import choosecolour
+
 
 def mapFunc(x):
     return f"`{x[1]}x` **{x[0]['name']}**"

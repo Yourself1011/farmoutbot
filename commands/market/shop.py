@@ -3,6 +3,7 @@ from replit import db
 from zstats import softSearch, getShop, pages
 from math import ceil
 
+
 async def shop(message, client):
     args = message.content.split(" ")
 
@@ -35,10 +36,12 @@ async def shop(message, client):
     allStats.append(seeds.copy())
 
     if len(args) == 2:
-        await message.channel.send("**shops:** \n-animals\n-tools\n-seeds\n-merch")
+        await message.channel.send(
+            "**shops:** \n-animals\n-tools\n-seeds\n-merch\n- land"
+        )
         return
 
-    if args[2] not in ["animals", "tools", "merch", "merchandise", "seeds"]:
+    if args[2] not in ["animals", "tools", "merch", "merchandise", "seeds", "land"]:
         search = softSearch(check, args[2], ["name"])
 
         if not bool(search):
@@ -133,6 +136,8 @@ async def shop(message, client):
     )
     e.set_author(name=f"{args[2].lower()} shop:", icon_url=message.author.avatar_url)
     shop = args[2]
+    if shop == "land":
+        return "land you can buy:\n\n**- animal pen**\n  - 100 coins cost\n  - 50 coins sellcost\n  - can hold 50 animals\n\n**- farm land**\n   - 100 coins cost\n  - 50 coins sellcost\n  - can plant 100 plants"
     if len(args) == 3:
         i = 0
         amount = 0
@@ -147,7 +152,6 @@ async def shop(message, client):
 
     if i >= maxPage:
         i = maxPage - 1
-        amount = maxPage
 
     if shop == "animals":
         dictCopy = dict(animals)
@@ -164,12 +168,18 @@ async def shop(message, client):
         r = intsSorted + strsSorted
 
         await pages(
-            message, 
-            client, 
-            [{"name": animals[j]["name"], "value": f"Cost: `{animals[j]['cost']}`\nSell amount: `{animals[j]['sellcost']}`\nNeeded tool: `{animals[j]['tools'][0]}`\nTrade value: `{animals[j]['tradevalue']}`\nCooldown: `{animals[j]['cooldown']/1000} secs`\nResult: `{animals[j]['result']}`\n"} for j in r],
+            message,
+            client,
+            [
+                {
+                    "name": animals[j]["name"],
+                    "value": f"Cost: `{animals[j]['cost']}`\nSell amount: `{animals[j]['sellcost']}`\nNeeded tool: `{animals[j]['tools'][0]}`\nTrade value: `{animals[j]['tradevalue']}`\nCooldown: `{animals[j]['cooldown']/1000} secs`\nResult: `{animals[j]['result']}`\n",
+                }
+                for j in r
+            ],
             9,
-            startPage = i/9 + 1,
-            baseEmbed = e
+            startPage=i / 9 + 1,
+            baseEmbed=e,
         )
     elif shop == "tools":
         dictCopy = dict(tools)
@@ -186,12 +196,18 @@ async def shop(message, client):
         r = intsSorted + strsSorted
 
         await pages(
-            message, 
-            client, 
-            [{"name": tools[j]["name"], "value": f"Cost: `{tools[j]['cost']}`\nSell amount: `{tools[j]['sellcost']}`\nUse on: `{', '.join(tools[j]['animal']) if type(tools[j]['animal']) is list else tools[j]['animal']}`\nTrade value: `{tools[j]['tradevalue']}`\nResult: `{tools[j]['result']}`\n"} for j in r],
+            message,
+            client,
+            [
+                {
+                    "name": tools[j]["name"],
+                    "value": f"Cost: `{tools[j]['cost']}`\nSell amount: `{tools[j]['sellcost']}`\nUse on: `{', '.join(tools[j]['animal']) if type(tools[j]['animal']) is list else tools[j]['animal']}`\nTrade value: `{tools[j]['tradevalue']}`\nResult: `{tools[j]['result']}`\n",
+                }
+                for j in r
+            ],
             9,
-            startPage = i/9 + 1,
-            baseEmbed = e
+            startPage=i / 9 + 1,
+            baseEmbed=e,
         )
     elif shop == "merch":
         dictCopy = dict(merch)
@@ -208,12 +224,18 @@ async def shop(message, client):
         r = intsSorted + strsSorted
 
         await pages(
-            message, 
-            client, 
-            [{"name": merch[j]["name"], "value": f"Cost: `{merch[j]['cost']}`\nSell amount: `{merch[j]['sellcost']}`\nTrade value: `{merch[j]['tradevalue']}`"} for j in r],
+            message,
+            client,
+            [
+                {
+                    "name": merch[j]["name"],
+                    "value": f"Cost: `{merch[j]['cost']}`\nSell amount: `{merch[j]['sellcost']}`\nTrade value: `{merch[j]['tradevalue']}`",
+                }
+                for j in r
+            ],
             9,
-            startPage = i/9 + 1,
-            baseEmbed = e
+            startPage=i / 9 + 1,
+            baseEmbed=e,
         )
 
     elif shop == "seeds":
@@ -230,19 +252,26 @@ async def shop(message, client):
 
         r = intsSorted + strsSorted
 
-        growtime = { 
+        growtime = {
             seeds[j]["name"]: (
                 f"Grow time: `{seeds[j]['stages'][0]/1000}`\nCooldown: `{seeds[j]['stages'][1]/1000}`\nLifespan: `{seeds[j]['stages'][2]/1000}`"
                 if "stages" in seeds[j]
                 else f"Grow time: {seeds[j]['growtime']/1000}"
-            ) for j in r
+            )
+            for j in r
         }
 
         await pages(
-            message, 
-            client, 
-            [{"name": seeds[j]["name"], "value": f"Cost: `{seeds[j]['cost']}`\nSell amount: `{seeds[j]['sellcost']}`\n{growtime[seeds[j]['name']]}\nTrade value: `{seeds[j]['tradevalue']}`"} for j in r],
+            message,
+            client,
+            [
+                {
+                    "name": seeds[j]["name"],
+                    "value": f"Cost: `{seeds[j]['cost']}`\nSell amount: `{seeds[j]['sellcost']}`\n{growtime[seeds[j]['name']]}\nTrade value: `{seeds[j]['tradevalue']}`",
+                }
+                for j in r
+            ],
             9,
-            startPage = i/9 + 1,
-            baseEmbed = e
+            startPage=i / 9 + 1,
+            baseEmbed=e,
         )

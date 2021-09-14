@@ -2,6 +2,7 @@ from replit import db
 import discord
 from zstats import pages
 
+
 async def top(message: discord.Message, client):
     dbMembers = db["members"]
 
@@ -42,4 +43,12 @@ async def top(message: discord.Message, client):
         colour=discord.Colour.red(),
     )
 
-    await pages(message, client, list(map(lambda x: f"<@{x[0]}> ({x[1]}) - {x[2]}", balances)), 10, startPage = page, baseEmbed = embed, newField = False)
+    await pages(
+        message,
+        client,
+        list(map(lambda x: f"<@{x[0]}> ({x[1]}) - {x[2]}", balances)),
+        10,
+        startPage=page,
+        baseEmbed=embed,
+        newField=False,
+    )

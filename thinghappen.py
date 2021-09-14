@@ -80,18 +80,17 @@ async def thinghappen(message, client):
         yield
     else:
 
-        newamount = int(round(amount*0.2))
-        barm = amount-newamount
+        newamount = int(round(amount * 0.2))
+        barm = amount - newamount
         await channel.send(
             f"you managed to save {barm} animals, but {newamount} died anyway\n you paid {amountpaid*amount} coins for the medical bills"
-
         )
         a = db["members"]
         a[str(message.author.id)]["money"] -= amountpaid * amount
         if a[str(message.author.id)]["money"] < 0:
             a[str(message.author.id)]["money"] = 0
 
-        a[str(message.author.id)]['animals'][animal]['amount'] -= newamount
+        a[str(message.author.id)]["animals"][animal]["amount"] -= newamount
 
         db["members"] = a
         yield

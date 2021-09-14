@@ -2,13 +2,13 @@
 
 import os
 from os.path import join, dirname
-from importlib import import_module	
+from importlib import import_module
 
 import discord
 from dotenv import load_dotenv
 from replit import db
 import sys
-import random	
+import random
 import pprint
 import asyncio
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
@@ -22,7 +22,7 @@ import traceback
 from trade_update import startLoop, trade_update
 from thinghappen import thinghappen
 from drawlottery import drawlottery
-from time import time	
+from time import time
 from vote import vote
 
 dotenv_path = join(dirname(__file__), ".env")
@@ -32,13 +32,20 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN")
 client = discord.Client(intents=discord.Intents.all())
 
 for folder in os.scandir("./commands/"):
-	if folder.name == '__pycache__': continue
-	for file in os.scandir(f"./commands/{folder.name}"):
-		if file.name == '__pycache__': continue
-		filename = file.name[:-3]
-		commands[filename]["execute"] = getattr(
-				import_module(f"commands.{folder.name}.{filename}"), filename
-		)
+    if folder.name == "__pycache__":
+        continue
+    for file in os.scandir(f"./commands/{folder.name}"):
+        if file.name == "__pycache__":
+            continue
+        filename = file.name[:-3]
+        commands[filename]["execute"] = getattr(
+            import_module(f"commands.{folder.name}.{filename}"), filename
+        )
+
+aliases = []
+for command in commands:
+    commands[command]["aliases"].append(commands[command]["name"])
+
 
 @client.event
 async def on_ready():
@@ -64,14 +71,6 @@ async def on_ready():
     print("babbon babbon bot babbon burp")
 
     await startLoop(client)
-    things = [
-        "bong bong bong this is my song the bot is on",
-        "babbon babbon bot babbon burp",
-        "unga unga bunga boo, the bot is on, now time for poo",
-    ]
-
-    print(things[random.randint(0, len(things) - 1)])
-
 
 @client.event
 async def on_guild_join(guild):
@@ -80,7 +79,8 @@ async def on_guild_join(guild):
     db["server"] = a
     print(f"woah woah woah new serverrrrr: {guild.name}")
     me = 690577156006477875
-    await me.send(f'new server: {guild.name}')
+    await me.send(f"new server: {guild.name}")
+
 
 @client.event
 async def on_message(message):
@@ -90,6 +90,7 @@ async def on_message(message):
         user = await client.fetch_user(args[2])
         print(f"{user.name} has voted for {args[0]} on {args[1]}")
         await vote(args[2], args[1], client)
+
     if message.author.bot:
         return
     if client.user == message.author:
@@ -113,7 +114,8 @@ async def on_message(message):
         )
         return
 
-    if message.author.id in db['blacklist']['use']: return 'ur blacklisted from using the bot, apparently'
+    if message.author.id in db["blacklist"]["use"]:
+        return "ur blacklisted from using the bot, apparently"
 
     prefix = db["server"][str(message.guild.id)]["prefix"]
     args = message.content.split(" ")
@@ -127,27 +129,23 @@ async def on_message(message):
     msg = msg[1]
     msg = msg.lower()
 
-    if msg in animals and msg != "name":
-        a = db['members']
-        a[str(message.author.id)]['reputation'] += 2
-        db['members'] = a
+    if msg in animals and msg != "name" and str(message.author.id) in db["members"]:
+        a = db["members"]
+        a[str(message.author.id)]["reputation"] += 2
+        db["members"] = a
         await useanimal(message, msg, client, animals[msg]["thing"])
         return
-        
+    if msg in animals and msg != "name" and str(message.author.id) not in db["members"]:
+        await message.reply("make an account first to use animals")
+
     command = None
     for i in commands:
-        if msg == commands[i]["name"]:
+        if msg in commands[i]["aliases"]:
             command = commands[i]
-            break
-        for j in commands[i]["aliases"]:
-            if msg == j:
-                command = commands[i]
-                break
 
     if command == None:
         return
     if command:
-
         try:
             if str(message.author.id) in db["members"]:
                 user = db["members"][str(message.author.id)]
@@ -163,7 +161,7 @@ async def on_message(message):
                     sites.append("discordbotlist.com")
                     links.append("https://discordbotlist.com/bots/farmout/upvote")
                     a[str(message.author.id)]["cooldowns"]["discordbotlist.com"] += 1
-                    
+
                 if (
                     "top.gg" in user["cooldowns"]
                     and user["cooldowns"]["top.gg"] / 10 <= time()
@@ -193,13 +191,25 @@ async def on_message(message):
                 a[str(message.author.id)]["commandsused"] += 1
                 db["members"] = a
 
-                a = db['members'][str(message.author.id)]['reputation']
-                category = commands[command['name']]['category']
-                if category == 'farming':
-                  a += 2
-                if category == 'gamble' or command['name'] in ['daily', 'lottery', 'location', 'trade']:
-                  a += 1
-                if category == 'gamble' and a < 700: await message.reply('can\'t gamble yet, get 700 rep first')
+                a = db["members"][str(message.author.id)]["reputation"]
+                category = commands[command["name"]]["category"]
+                if category == "gamble" and a < 700:
+                    await message.reply("can't gamble yet, get 700 rep first")
+                    return
+                if command["name"] == "trade" and a < 750:
+                    await message.reply(
+                        "no trading until you have at least 750 reputation"
+                    ); return 
+                if category == "farming":
+                    a += 2
+                if category == "gamble" or command["name"] in [
+                    "daily",
+                    "lottery",
+                    "location",
+                    "trade",
+                ]:
+                    a += 1
+                db["members"][str(message.author.id)]["reputation"] = a
 
             reply = (
                 outRaw[1]
@@ -220,17 +230,18 @@ async def on_message(message):
             tipchance = random.randint(1, 50)
             if (
                 tipchance == 1
+                and str(message.author.id) in db["members"]
                 and db["members"][str(message.author.id)]["settings"]["tips"]
             ):
                 tip = random.choice(tips)
                 out += f"\n\ntip: {tip}"
                 return
             thingchance = random.randint(1, 250)
-            if thingchance == 1 and str(message.author.id) in db["members"]:
-                thing = thinghappen(message, client)
-                thingg = await thing.__anext__()
+            # if thingchance == 1 and str(message.author.id) in db["members"]:
+            #     thing = thinghappen(message, client)
+            #     thingg = await thing.__anext__()
 
-                out += f"\n\n{thingg}" if type(thingg) == str else ""
+            #     out += f"\n\n{thingg}" if type(thingg) == str else ""
 
             if type(out) == str and not reply and (out != "" or bool(embed)):
                 await message.channel.send(out, embed=embed)
@@ -244,8 +255,8 @@ async def on_message(message):
                     embed=embed,
                 )
 
-            if thingchance == 1 and str(message.author.id) in db["members"]:
-                await thing.__anext__()
+            # if thingchance == 1 and str(message.author.id) in db["members"]:
+            #     await thing.__anext__()
 
         except:
             traceback.print_exc()
@@ -265,7 +276,9 @@ async def on_message(message):
                 )[i]
             ]
             try:
-                await message.channel.send(f"uh oh, there was a bug...\nyou can report the bug with `i report`, or join our support server to tell us about it there https://discord.gg/TX57HyWpsk\n\n```{sys.exc_info()}```")
+                await message.channel.send(
+                    f"uh oh, there was a bug...\nyou can report the bug with `i report`, or join our support server to tell us about it there https://discord.gg/TX57HyWpsk\n\n```{sys.exc_info()}```"
+                )
             except:
                 if bool(permsNotGiven):
                     await message.author.send(

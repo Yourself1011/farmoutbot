@@ -1,10 +1,10 @@
-
 import discord
 from time import time
 from math import floor
 from replit import db
 
 start = time()
+
 
 async def stats(message, client):
     uptime = floor(time() - start)
@@ -13,10 +13,10 @@ async def stats(message, client):
     hour, min = divmod(min, 60)
     day, hour = divmod(hour, 24)
 
-    e =  discord.Embed(
-        title = "",
-        colour = discord.Colour.gold(),
-        description = f"""
+    e = discord.Embed(
+        title="",
+        colour=discord.Colour.gold(),
+        description=f"""
 **Ping**
 {round(client.latency * 1000)}ms
 
@@ -33,5 +33,5 @@ async def stats(message, client):
 {len(db["members"])}
         """,
     )
-    e.set_author(name = 'Stats', icon_url = client.user.avatar_url)
+    e.set_author(name="Stats", icon_url=client.user.avatar_url)
     return e

@@ -6,6 +6,7 @@ import time
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 from commands.farming.crops import crops
 
+
 async def plant(message, client):
     args = message.content.split(" ")
     if str(message.author.id) not in db["members"]:
@@ -52,9 +53,9 @@ async def plant(message, client):
 
     if len(args) == 3:
         amount = 1
-    if len(args) == 4 and args[3] in ["a", "all", "max"]:
+    if len(args) >= 4 and args[3] in ["a", "all", "max"]:
         amount = db["members"][str(message.author.id)]["seeds"][seed]["amount"]
-    elif len(args) == 4:
+    elif len(args) >= 4:
         amount = convertInt(args[3])
         if not bool(amount):
             amount = 1
@@ -62,11 +63,46 @@ async def plant(message, client):
         await message.channel.send(" cant be less than 0 bro")
         return
 
+    if db["members"][str(message.author.id)]["land"]["crops"] == {}:
+        return "you don't have any fields to plant stuff in lol"
+    if len(args) >= 5:
+        length = len(
+            list(db["members"][str(message.author.id)]["land"]["crops"].values())
+        )
+        if args[4].isnumeric() and int(args[4]) == length:
+            place = int(args[4]) - 1
+            print(place)
+            field = list(db["members"][str(message.author.id)]["land"]["crops"])[place]
+            if (
+                100
+                - db["members"][str(message.author.id)]["land"]["crops"][field]["total"]
+                < amount
+            ):
+                return "there isnt enough space on that field to plant stuff"
+            if (
+                seeds[seed]["result"]
+                in db["members"][str(message.author.id)]["land"]["crops"][field][
+                    "crops"
+                ]
+            ):
+                return "you already planted that in that field"
+    else:
+        field = False
+        for i in db["members"][str(message.author.id)]["land"]["crops"]:
+            if (
+                100 - db["members"][str(message.author.id)]["land"]["crops"][i]["total"]
+                > amount
+                and seeds[seed]["result"]
+                not in db["members"][str(message.author.id)]["land"]["crops"][i][
+                    "crops"
+                ]
+            ):
+                field = i
+        if field == False:
+            return "bruh you don't have enough land to plant stuff on, or you already planted the seed in all of your fields"
+
     if amount > db["members"][str(message.author.id)]["seeds"][seed]["amount"]:
         await message.channel.send(" thats more than you have nerd")
-        return
-    if seeds[seed]["result"] in db["members"][str(message.author.id)]["plantcooldowns"]:
-        await message.channel.send(" you already planted that, go collect it first")
         return
     if amount >= db["members"][str(message.author.id)]["tools"][tool]:
         amount = db["members"][str(message.author.id)]["tools"][tool]
@@ -154,37 +190,51 @@ async def plant(message, client):
         f"plants are successfully watered. they will be ready to collect in `{amountwait/1000}`s.",
         f"plants watered. be sure to collect them in `{amountwait/1000}s` using `{prefix} collect {plantr}`.",
     ]
-    tt = random.choice(tts)
-    msg = await message.reply(tt, components = [Button(style = ButtonStyle.blue, label = "View Crops"), Button(style = ButtonStyle.red, label = '❌')])
-    
-    try: 
-      res = await client.wait_for("button_click", timeout = 60)
-    except asyncio.TimeOutError:
-      msg.components = []
-    else:
-      if res.author == message.author:
-        if res.component.label == "❌":
-          msg.components = []
-          return
-      elif res.component.label == 'View Crops':
-        mass = message
-        mass.content = 'i crops'
-        crops(mass, client)
-        msg.components = []
+
     a = db["members"]
     now = int(round(time.time() * 1000))
-    a[str(message.author.id)]["plantcooldowns"][seeds[seed]["result"]] = {
+
+    a[str(message.author.id)]["land"]["crops"][field]["crops"][
+        seeds[seed]["result"]
+    ] = {
         "name": seeds[seed]["name"],
         "cooldown": now,
         "amount": amount,
     }
+    a[str(message.author.id)]["land"]["crops"][field]["total"] += amount
     if "stages" in seeds[seed]:
-        a[str(message.author.id)]["plantcooldowns"][seeds[seed]["result"]][
+        a[str(message.author.id)]["land"]["crops"][field][seeds[seed]["result"]][
             "start"
         ] = now
-        a[str(message.author.id)]["plantcooldowns"][seeds[seed]["result"]]["stage"] = 0
+        a[str(message.author.id)]["land"]["crops"][field][seeds[seed]["result"]][
+            "stage"
+        ] = 0
 
     a[str(message.author.id)]["seeds"][seed]["amount"] -= amount
     if a[str(message.author.id)]["seeds"][seed]["amount"] == 0:
         del a[str(message.author.id)]["seeds"][seed]
     db["members"] = a
+
+    tt = random.choice(tts)
+    msg = await message.reply(
+        tt,
+        components=[
+            Button(style=ButtonStyle.blue, label="View Crops"),
+            Button(style=ButtonStyle.grey, label="❌"),
+        ],
+    )
+
+    try:
+        res = await client.wait_for("button_click", timeout=60)
+    except asyncio.TimeoutError:
+        await msg.edit(components=[])
+    else:
+        if res.author == message.author:
+            if res.component.label == "❌":
+                await msg.edit(components=[])
+                return
+            if res.component.label == "View Crops":
+                await msg.edit(components=[])
+                mass = message
+                mass.content = "i crops"
+                await crops(mass, client)

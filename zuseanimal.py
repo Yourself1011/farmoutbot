@@ -7,74 +7,35 @@ from math import floor
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 import discord
 
+
 async def useanimal(message, animal, client, thing):
-	
+
     if str(message.author.id) not in db["members"]:
         await message.channel.send(" Make an account first, then worry about animals**")
         return
 
-    if animal not in db["members"][str(message.author.id)]["animals"]:
-        await message.channel.send(" You don't have that :angry:")
+    has = False
+    pens = []
+    for i in db["members"][str(message.author.id)]["land"]["animals"]:
+        print(db["members"][str(message.author.id)]["land"]["animals"][i])
+        if (
+            animal
+            in db["members"][str(message.author.id)]["land"]["animals"][i]["animals"]
+        ):
+            has = True
+            pens.append(i)
+
+    if has == False:
+        await message.reply(" You don't have that :angry:")
         return
-
-    now2 = int(round(time.time() * 1000))
-
-    f = db["members"][str(message.author.id)]["animals"][animal]["lastused"] - now2
-
-    f = str(f)
-
-    newvar = (
-        animals[animal]["cooldown"]
-        + db["members"][str(message.author.id)]["animals"][animal]["lastused"]
-    )
-
-    e = round((newvar - now2) / 1000)
-
-    f = animals[animal]["cooldown"] / 1000
-
-    if f - e <= 10 and db['members'][str(message.author.id)]['money'] > 250:
-
-        paid = random.randint(1, 3)
-
-        if db["members"][str(message.author.id)]["money"] < paid:
-            paid = db["members"][str(message.author.id)]["money"]
-
-        await message.channel.send(
-            f" You used your {animal} too early and hurt it. You paid `{paid}` coins for the medical bills"
-        )
-
-        a = db["members"]
-        a[str(message.author.id)]["money"] -= paid
-        db["members"] = a
 
     now = int(round(time.time() * 1000))
 
-    if (
-        db["members"][str(message.author.id)]["animals"][animal]["lastused"]
-        + animals[animal]["cooldown"]
-        > now
-    ):
-        now2 = int(round(time.time() * 1000))
-
-        f = db["members"][str(message.author.id)]["animals"][animal]["lastused"] - now2
-        f = str(f)
-
-        newvar = (
-            animals[animal]["cooldown"]
-            + db["members"][str(message.author.id)]["animals"][animal]["lastused"]
-        )
-
-        e = round((newvar - now2) / 1000)
-        await message.reply(
-            f" Your {animal}(s) are not ready, wait `" + str(e) + "` seconds.", True
-        )
-        return
-
     tool = None
-    for i in animals[animal]['tools']:
-      if i in db['members'][str(message.author.id)]['tools']:
-        tool = i 
-        break
+    for i in animals[animal]["tools"]:
+        if i in db["members"][str(message.author.id)]["tools"]:
+            tool = i
+            break
 
     if tool == None:
         r = animals[animal]["tools"][0]
@@ -83,19 +44,63 @@ async def useanimal(message, animal, client, thing):
 
     toolbreak = ""
 
-    a = db['members']
+    a = db["members"]
 
-    amount = a[str(message.author.id)]["animals"][animal]["amount"]
-    
+    available = False
+    cooldowns = []
+    for i in pens:
+        if (
+            animal
+            in db["members"][str(message.author.id)]["land"]["animals"][i]["animals"]
+            and db["members"][str(message.author.id)]["land"]["animals"][i]["animals"][
+                animal
+            ]["lastused"]
+            + animals[animal]["cooldown"]
+            < now
+        ):
+            available = True
+        if (
+            animal
+            in db["members"][str(message.author.id)]["land"]["animals"][i]["animals"]
+        ):
+            cooldowns.append(
+                db["members"][str(message.author.id)]["land"]["animals"][i]["animals"][
+                    animal
+                ]["lastused"]
+            )
+
+    if not available:
+        smallest = min(cooldowns)
+        now = int(round(time.time() * 1000))
+
+        f = smallest - now
+        f = str(f)
+
+        newvar = animals[animal]["cooldown"] + smallest
+
+        e = round((newvar - now) / 1000)
+
+        await message.reply(
+            f"your `{animal}(s)` aren't ready yet, wait at least `{e} secs`"
+        )
+        return
+
+    amount = 0
+    for i in pens:
+
+        amount += db["members"][str(message.author.id)]["land"]["animals"][i][
+            "animals"
+        ][animal]["amount"]
+
     if amount > db["members"][str(message.author.id)]["tools"][tool]:
-      a = db["members"]
-      del a[str(message.author.id)]["tools"][tool]
-      db["members"] = a
+        a = db["members"]
+        del a[str(message.author.id)]["tools"][tool]
+        db["members"] = a
 
-      things = ["LOL", "u dum dum", "ur fat", "go donate to yogogiddap", "idiot"]
-      thing = random.choice(things)
-      toolbreak = f"your `{tool}` broke {thing}"
-  
+        things = ["LOL", "u dum dum", "ur fat", "go donate to yogogiddap", "idiot"]
+        thing = random.choice(things)
+        toolbreak = f"your `{tool}` broke {thing}"
+
     else:
         a = db["members"]
         a[str(message.author.id)]["tools"][tool] -= amount
@@ -105,7 +110,10 @@ async def useanimal(message, animal, client, thing):
 
     now = int(round(time.time() * 1000))
     a = db["members"]
-    a[str(message.author.id)]["animals"][animal]["lastused"] = now
+    for i in pens:
+        a[str(message.author.id)]["land"]["animals"][i]["animals"][animal][
+            "lastused"
+        ] = now
     result = animals[animal]["result"]
 
     location = locations[db["members"][str(message.author.id)]["location"]]
@@ -117,11 +125,11 @@ async def useanimal(message, animal, client, thing):
     )
 
     if amount > 50:
-      randomrea = random.randint(1, 5)
-      if randomrea == 1:
-      		amount = int(round(amount * 0.7))
-      if randomrea == 2:
-      		amount = int(round(amount * 0.8))
+        randomrea = random.randint(1, 5)
+        if randomrea == 1:
+            amount = int(round(amount * 0.7))
+        if randomrea == 2:
+            amount = int(round(amount * 0.8))
     if result not in a[str(message.author.id)]["merch"]:
         a[str(message.author.id)]["merch"][result] = amount
     else:
@@ -146,16 +154,17 @@ async def useanimal(message, animal, client, thing):
         and animal in location["lifeOverrides"]
         and location["lifeOverrides"][animal]
     ):
+        pen = random.choice(pens)
         amountLost = floor(
             max(
-                user["animals"][animal]["amount"] * location["deathRate"],
+                user["land"]["animals"][pen][animal]["amount"] * location["deathRate"],
                 min(10, user["animals"][animal]["amount"]),
             )
         )
 
         user["animals"][animal]["amount"] -= amountLost
         await message.channel.send(
-            f"Idiot your {animal}(s) couldn't live there and {amountLost} died."
+            f"Idiot your {animal}(s) couldn't live there and {amountLost} died from pen `{pen}`."
         )
         db["members"] = a
         return
@@ -164,26 +173,35 @@ async def useanimal(message, animal, client, thing):
 
     thingsaid = ""
     echance = random.randint(1, 2)
-    if toolbreak == '':
-          regdur = tools[tool]['durability']
-          currentdur = db['members'][str(message.author.id)]['tools'][tool]
-          toolbreak = f'{tool}: {currentdur}/{regdur} durability'
-    emoji = animals[animal]['name'].split(' ')[1]
-    e = discord.Embed(
-        	title = '',
-        	colour = discord.Colour.green()
-        )
-    e.set_author(
-				name=f"{message.author.name}",         icon_url=message.author.avatar_url
-		)
-    animalamount = db['members'][str(message.author.id)]['animals'][animal]['amount']
-    e.add_field(name = f'{emoji} - {animalamount} {animal}(s) {thing}ed', value = f'- {animal} cooldown +{int(cooldown)}s\n- {toolbreak}\n- {result} +{amount}')
-    e.set_footer(text = f'Wait {int(cooldown)} seconds before {thing}ing your {animal} again')
+    if toolbreak == "":
+        regdur = tools[tool]["durability"]
+        currentdur = db["members"][str(message.author.id)]["tools"][tool]
+        toolbreak = f"{tool}: {currentdur}/{regdur} durability"
+    emoji = animals[animal]["name"].split(" ")[1]
+    e = discord.Embed(title="", colour=discord.Colour.green())
+    e.set_author(name=f"{message.author.name}", icon_url=message.author.avatar_url)
+    e.add_field(
+        name=f"{emoji} - {amount} {animal}(s) {thing}ed",
+        value=f"- {animal} cooldown +{int(cooldown)}s\n- {toolbreak}\n- {result} +{amount}",
+    )
+    e.set_footer(
+        text=f"Wait {int(cooldown)} seconds before {thing}ing your {animal} again"
+    )
 
-    if echance == 1 or db['members'][str(message.author.id)]['money'] < 500:
-        await message.reply(embed = e)
-        return	
-    if echance == 2 and db['members'][str(message.author.id)]['money'] > 500:
+    def animaldie(died):
+        a = db["members"][str(message.author.id)]["land"]["animals"]
+        for i in pens:
+            if a[i]["animals"][animal]["amount"] > died:
+                died -= a[i]["animals"][animal]["amount"]
+                del a[i]["animals"][animal]
+            else:
+                a[i]["animals"][animal]["amount"] -= died
+        db["members"][str(message.author.id)]["land"]["animals"] = a
+
+    if echance == 1 or db["members"][str(message.author.id)]["money"] < 500:
+        await message.reply(embed=e)
+        return
+    if echance == 2 and db["members"][str(message.author.id)]["money"] > 500:
         whatthingchance = random.randint(1, 4)
         if whatthingchance in [1, 2, 3]:
             randomra = random.randint(1, 2)
@@ -198,7 +216,7 @@ async def useanimal(message, animal, client, thing):
                     thingtotype = deaths[death]
                     thingsaid = f"Oh no!{deadamount} of your {animal}s are trying to die {death}! quick, type `{thingtotype}` in the chat now!"
 
-                    await message.reply(thingsaid, embed = e)
+                    await message.reply(thingsaid, embed=e)
 
                     channel = message.channel
 
@@ -216,29 +234,29 @@ async def useanimal(message, animal, client, thing):
                         )
                     except asyncio.TimeoutError:
                         await channel.send("idiot your animals died")
-                        a = db["members"]
-                        a[str(message.author.id)]["animals"][animal][
-                            "amount"
-                        ] -= deadamount
-                        if a[str(message.author.id)]["animals"][animal]["amount"] == 0:
-                            del a[str(message.author.id)]["animals"][animal]
-                        db["members"] = a
+                        animaldie(deadamount)
                         return
                     else:
-
-                        newamount = int(round(deadamount*0.2))
-                        await channel.send(f"you managed to save most of the animals, but {newamount} died anyway oof")
-                        a = db['members'][str(message.author.id)]
-                        a['animals'][animal]['amount'] -= newamount
-                        db['members'][str(message.author.id)] = a
-
+                        newamount = int(round(deadamount * 0.2))
+                        await channel.send(
+                            f"you managed to save most of the animals, but {newamount} died anyway oof"
+                        )
+                        a = db["members"][str(message.author.id)]["land"]["animals"]
+                        for i in pens:
+                            if a[i]["animals"][animal]["amount"] > newamount:
+                                newamount -= a[i]["animals"][animal]["amount"]
+                                del a[i]["animals"][animal]
+                            else:
+                                a[i]["animals"][animal]["amount"] -= newamount
+                        db["members"][str(message.author.id)]["land"]["animals"] = a
                         return
+
                 elif randomra == 2:
                     emojis = ["🐑", "🐔", "🐄"]
                     emoji = random.choice(emojis)
                     thingsaid = f"ahh your {deadamount} {animal}(s) are dying {death}, quick react with {emoji}"
 
-                    await message.reply(thingsaid, embed = e)
+                    await message.reply(thingsaid, embed=e)
 
                     def check(reaction, user):
                         return user == message.author and str(reaction.emoji) == emoji
@@ -249,13 +267,7 @@ async def useanimal(message, animal, client, thing):
                         )
                     except asyncio.TimeoutError:
                         await message.channel.send(f"bruh your {animal}s died")
-                        a = db["members"]
-                        a[str(message.author.id)]["animals"][animal][
-                            "amount"
-                        ] -= deadamount
-                        if a[str(message.author.id)]["animals"][animal]["amount"] == 0:
-                            del a[str(message.author.id)]["animals"][animal]
-                        db["members"] = a
+                        animaldie(deadamount)
                         return
                     else:
                         await message.channel.send("phew you saved your animals")
@@ -263,14 +275,18 @@ async def useanimal(message, animal, client, thing):
         now = int(round(time.time() * 1000))
         if whatthingchance == 4:
             if "lastbred" in db["members"][str(message.author.id)]["animals"][animal]:
-                if (
-                    db["members"][str(message.author.id)]["animals"][animal]["lastbred"]
-                    + 3600000
-                    > now
-                ):
+                lastbredtimes = []
+                for i in pens:
+                    lastbredtimes.append(
+                        db["members"][str(message.author.id)]["land"]["animals"][i][
+                            "animals"
+                        ][animal]["lastbred"]
+                    )
+                lastbred = min(lastbredtimes)
+                if lastbred + 3600000 > now:
                     return
             if amount < 8:
-                await message.reply(embed = e)
+                await message.reply(embed=e)
                 return
 
             randomrar = random.randint(1, 2)
@@ -278,7 +294,7 @@ async def useanimal(message, animal, client, thing):
                 thingtotype = random.choice(births)
                 thingsaid = f"{message.author.mention} ar ur animals are trying to breed, better type `{thingtotype}` or else they won't"
 
-                await message.reply(thingsaid, embed = e)
+                await message.reply(thingsaid, embed=e)
 
                 channel = message.channel
 
@@ -315,7 +331,10 @@ async def useanimal(message, animal, client, thing):
                 animale = random.choice(animales)
                 thingsaid = f"{message.author.mention} woah your {animal}s are breeding but they won't unless you say what animal this is\nuse the buttons to choose\n{animale}"
 
-                await message.reply(thingsaid, embed = e,                    components=[
+                msg = await message.reply(
+                    thingsaid,
+                    embed=e,
+                    components=[
                         Button(style=ButtonStyle.grey, label="Sheep"),
                         Button(style=ButtonStyle.grey, label="Chicken"),
                         Button(style=ButtonStyle.grey, label="Cow"),
@@ -352,7 +371,9 @@ async def useanimal(message, animal, client, thing):
                         ] += bornedamount
                         a[str(message.author.id)]["animals"][animal]["lastbred"] = now
                         db["members"] = a
+                        await msg.edit(components=[])
                         return
                     else:
                         await message.channel.send("bruh ur animals didnt breed")
+                        await msg.edit(components=[])
                         return

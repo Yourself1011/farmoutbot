@@ -5,8 +5,8 @@ from zstats import softSearch
 
 async def settings(message, client):
     args = message.content.split(" ")
-    if str(message.author.id) not in db['members']:
-      return 'do `i start` first, make a farm to have settings'
+    if str(message.author.id) not in db["members"]:
+        return "do `i start` first, make a farm to have settings"
 
     boolean = ["true", "false", "yes", "no", "y", "n", "enable", "disable", "on", "off"]
 
@@ -42,12 +42,16 @@ async def settings(message, client):
         values = list(settings.values())[page * 5 : page * 5 + 5]
 
         for i in range(len(ids)):
-            currentValue = db["members"][str(message.author.id)]["settings"][ids[i]] if ids[i] in db["members"][str(message.author.id)]["settings"] else False
+            currentValue = (
+                db["members"][str(message.author.id)]["settings"][ids[i]]
+                if ids[i] in db["members"][str(message.author.id)]["settings"]
+                else False
+            )
 
             if ids[i] not in db["members"][str(message.author.id)]["settings"]:
-              a = db["members"][str(message.author.id)]["settings"]
-              a[ids[i]] = False
-              db["members"][str(message.author.id)]["settings"] = a
+                a = db["members"][str(message.author.id)]["settings"]
+                a[ids[i]] = False
+                db["members"][str(message.author.id)]["settings"] = a
 
             embed.add_field(
                 name=values[i]["name"],

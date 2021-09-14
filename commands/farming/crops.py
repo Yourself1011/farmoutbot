@@ -1,91 +1,82 @@
 from replit import db
 import discord
 import time
-from zstats import seeds, merch
+from zstats import seeds, merch, pages, choosecolour
 import random
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 import asyncio
+from commands.profile.inventory import inventory
+
 
 async def crops(message, client):
+    args = message.content.split(" ")
     if str(message.author.id) not in db["members"]:
         await message.channel.send("make an account first strumfum")
         return
+    if db["members"][str(message.author.id)]["land"]["crops"] == {}:
+        await message.channel.send("no fields here")
+        return
+
+    fields = list(db["members"][str(message.author.id)]["land"]["crops"])
+    field = fields[0]
+    feld = 0
+    if len(args) >= 3 and args[2].lower() == "rename":
+        if len(args) == 3:
+            return "which field u renaming lol"
+        if int(args[3]) > len(fields):
+            return "that's not a field"
+
+        fields = db["members"][str(message.author.id)]["land"]["crops"]
+        field = list(fields)[int(args[3]) - 1]
+        print(field)
+        print(args[4])
+
+        newname = args[4]
+        a = db["members"][str(message.author.id)]
+        a["land"]["crops"][field]["name"] = newname
+        print(a["land"]["crops"])
+        db["members"][str(message.author.id)] = a
+        print(db["members"][str(message.author.id)]["land"]["crops"][field]["name"])
+
+        return f"you renamed `{field}` to `{args[4]}`"
+
+    # if len()
+
     if (
-        db["members"][str(message.author.id)]["plantcooldowns"] == {}
-        or "plantcooldowns" not in db["members"][str(message.author.id)]
+        len(args) == 3
+        and args[2].isnumeric()
+        and int(args[2]) <= len(fields)
+        and int(args[2]) > 0
     ):
-        await message.channel.send("no plants here")
-        return
-    thing = random.randint(1, 35)
-    if thing == 1 and db["members"][str(message.author.id)]["money"] > 500:
-        if "undeadwool" in db["members"][str(message.author.id)]["merch"]:
-            return
-        things = [
-            "pebble",
-            "stone",
-            "slipper",
-            "sweater",
-            "ice",
-            "tree branch",
-            "neighbour's crops",
-        ]
-        thing2 = random.choice(things)
-        await message.channel.send(
-            f"On the way over to looking at your crops, you accidentally slipped on a slippery {thing2} and died. you paid 100 coins to be reborn."
-        )
-        a = db["members"]
-        if a[str(message.author.id)]["money"] < 100:
-            a[str(message.author.id)]["money"] = 0
-        else:
-            a[str(message.author.id)]["money"] -= 100
-        db["members"] = a
-        return
-    name = message.author.name
-    e = discord.Embed(title=f"", colour=discord.Colour.green())
-    for i in db["members"][str(message.author.id)]["plantcooldowns"]:
-        name = merch[i]["name"]
-        amount = db["members"][str(message.author.id)]["plantcooldowns"][i]["amount"]
-        now = int(round(time.time() * 1000))
-        seed = seeds[db["members"][str(message.author.id)]["plantcooldowns"][i]["name"]]
-        growTime = (
-            seed["stages"][
-                db["members"][str(message.author.id)]["plantcooldowns"][i]["stage"]
-            ]
-            if "stages" in seed
-            else seed["growtime"]
-        )
-
-        if (
-            db["members"][str(message.author.id)]["plantcooldowns"][i]["cooldown"]
-            + growTime
-            > now
-        ):
-
-            now2 = int(round(time.time() * 1000))
-            f = (
-                db["members"][str(message.author.id)]["plantcooldowns"][i]["cooldown"]
-                - now2
-            )
-            f = str(f)
-
-            newvar = (
-                growTime
-                + db["members"][str(message.author.id)]["plantcooldowns"][i]["cooldown"]
-            )
-            cooldown = round((newvar - now2) / 1000)
-            r = f"Wait `{cooldown}` seconds."
-        else:
-            r = "**Ready!**"
-        e.add_field(
-            name=f"- {name}: ",
-            value=f"Amount: **{amount}** | Status: {r}",
-            inline=False,
-        )
-    prefix = db["server"][str(message.guild.id)]["prefix"]
+        feld = max(min(int(int(args[2]) - 1), len(fields)), 0)
+        field = fields[feld]
+    e = discord.Embed(title=f"", colour=choosecolour())
     e.set_author(
         name=f"{message.author.name}'s farm", icon_url=message.author.avatar_url
     )
-    e.set_footer(
-        text=f"Use <{prefix} collect (plant)> to collect your plants when they are ready."
+
+    fields = db["members"][str(message.author.id)]["land"]["crops"]
+    fields = list(fields.values())
+
+    now = int(round(time.time() * 1000))
+    await pages(
+        message,
+        client,
+        [
+            {
+                "name": i["name"],
+                "value": "\n".join(
+                    [
+                        f'\n\n**- {merch[j]["name"]}:**\nAmount: **{i["crops"][j]["amount"]}** | Status: **{str(round((j["cooldown"] + merch[k]["cooldown"]-now)/1000))+" secs" if j["cooldown"] + merch[k]["cooldown"] > now else "Ready!"}**'
+                        for j, k in i["crops"]
+                    ]
+                )
+                if i["crops"] != {}
+                else "Empty ***cricket noises***",
+            }
+            for i in fields
+        ],
+        1,
+        startPage=feld + 1,
+        baseEmbed=e,
     )
-    msg = await message.channel.send(embed=e)

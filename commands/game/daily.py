@@ -4,6 +4,10 @@ import datetime
 import random
 from zstats import dailys
 
+dailyItems = [
+    {"type": "merch", "item": "smallbox", "amount": 1, "interval": 7},
+    {"type": "merch", "item": "uncommonbox", "amount": 1, "interval": 10},
+]
 
 async def daily(message, client):
     if str(message.author.id) not in db["members"]:
@@ -37,7 +41,7 @@ async def daily(message, client):
 
     if db["members"][str(message.author.id)]["cooldowns"]["daily"] > now - (
         86400000 * 2
-    ):
+    ) + ((db["lasthours"][2] - db["lasthours"][1] - 1) * 3600):
         a[str(message.author.id)]["cooldowns"]["streak"] += 1
 
     else:

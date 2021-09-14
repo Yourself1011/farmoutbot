@@ -80,34 +80,36 @@ class Game:
         return total
 
     async def ask(self):
-        buttons = [Button(style = ButtonStyle.blue, label = self.bet)] if bool(self.bet) else []
-        buttons.extend([
-            Button(style = ButtonStyle.green, label = "All"),
-            Button(style = ButtonStyle.grey, label = "Half"),
-            Button(style = ButtonStyle.red, label = "Leave")
-        ])
-        buttonMsg = await self.message.channel.send(
-            "How much do you bet? Type leave to, well, leave",
-            components = [buttons]
+        buttons = (
+            [Button(style=ButtonStyle.blue, label=self.bet)] if bool(self.bet) else []
         )
-        done, pending = await wait([
-            self.client.wait_for(
-                "message",
-                check=lambda x: (
-                    bool(convertInt(x.content))
-                )
-                and x.author.id == self.message.author.id
-                and x.channel.id == self.message.channel.id,
-                timeout=60.0,
-            ),
-            self.client.wait_for(
-                "button_click",
-                check = lambda x:
-                x.author.id == self.message.author.id
-                and x.channel.id == self.message.channel.id,
-                timeout = 60.0
-            ),
-        ], return_when = FIRST_COMPLETED
+        buttons.extend(
+            [
+                Button(style=ButtonStyle.green, label="All"),
+                Button(style=ButtonStyle.grey, label="Half"),
+                Button(style=ButtonStyle.red, label="Leave"),
+            ]
+        )
+        buttonMsg = await self.message.channel.send(
+            "How much do you bet? Type leave to, well, leave", components=[buttons]
+        )
+        done, pending = await wait(
+            [
+                self.client.wait_for(
+                    "message",
+                    check=lambda x: (bool(convertInt(x.content)))
+                    and x.author.id == self.message.author.id
+                    and x.channel.id == self.message.channel.id,
+                    timeout=60.0,
+                ),
+                self.client.wait_for(
+                    "button_click",
+                    check=lambda x: x.author.id == self.message.author.id
+                    and x.channel.id == self.message.channel.id,
+                    timeout=60.0,
+                ),
+            ],
+            return_when=FIRST_COMPLETED,
         )
         try:
             msg = done.pop().result()
@@ -122,12 +124,16 @@ class Game:
         for future in pending:
             future.cancel()
 
-        await buttonMsg.edit(components = [])
+        await buttonMsg.edit(components=[])
 
         if hasattr(msg, "component"):
-            await msg.respond(type = 6)
+            await msg.respond(type=6)
 
-        msg = msg.content.lower() if hasattr(msg, "content") else msg.component.label.lower()
+        msg = (
+            msg.content.lower()
+            if hasattr(msg, "content")
+            else msg.component.label.lower()
+        )
 
         if msg == "leave":
             return await self.message.channel.send("aight looks like no more bj")
@@ -228,7 +234,7 @@ class Game:
                 "Split": 2,
                 "Insurance": 2,
                 "Double down": 4,
-                "Surrender": 4
+                "Surrender": 4,
             }
 
             e = discord.Embed(
@@ -245,9 +251,7 @@ class Game:
 
             buttonMsg = await self.message.channel.send(
                 embed=e,
-                components=[
-                    [Button(style=colours[i], label=i) for i in options]
-                ],
+                components=[[Button(style=colours[i], label=i) for i in options]],
             )
 
             try:

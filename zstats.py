@@ -5,13 +5,15 @@ import collections.abc
 from copy import deepcopy
 import discord
 from discord_components import Button
-from asyncio import TimeoutError
+import asyncio
 import random
 
+
 def choosecolour():
-	colours = [discord.Colour.red(), discord.Colour.orange(), discord.Colour.gold()]
-	colour = random.choice(colours)
-	return colour
+    colours = [discord.Colour.red(), discord.Colour.orange(), discord.Colour.gold()]
+    colour = random.choice(colours)
+    return colour
+
 
 def getMember(search, guildId, client):
     if type(search) is list:
@@ -101,24 +103,28 @@ def gatheringCmd(msg, loottable, amount=[1, 1, 1]):
                     i,
                     max(
                         floor(
-                        # Average amount of times to get this item, plus or minus a little
-                        (
-                            (j[0] / total)
-                            + ((j[0] / total) * uniform(0, 0.10) * choice([-1, 1], 1))
-                        )
-                        * repeat
-                        *
-                        # average amounts per land
-                        (j[2] + (j[1] - j[2]) * (uniform(0, 1) ** j[3]))
-                    ),
-                        1
+                            # Average amount of times to get this item, plus or minus a little
+                            (
+                                (j[0] / total)
+                                + (
+                                    (j[0] / total)
+                                    * uniform(0, 0.10)
+                                    * choice([-1, 1], 1)
+                                )
+                            )
+                            * repeat
+                            *
+                            # average amounts per land
+                            (j[2] + (j[1] - j[2]) * (uniform(0, 1) ** j[3]))
+                        ),
+                        1,
                     ),
                 ]
             )
         return out
     print(total)
     print([i[0] / total for i in loottable.values()])
-    
+
     # Gets all the items
     sample = choice(
         list(loottable.keys()),
@@ -156,7 +162,8 @@ def updateDict(d, u):
 
 def getShop(shops, location):
     for i, j in zip(
-        [animals, tools, seeds, merch], ["animals", "tools", "seeds", "merch"]
+        [animals, tools, seeds, merch, land],
+        ["animals", "tools", "seeds", "merch", "land"],
     ):
         update = {k: v for k, v in locations[location]["shop"].items() if k in i}
         shops[j] = updateDict(deepcopy(i), update)
@@ -168,7 +175,16 @@ def getShop(shops, location):
 # getShop(obj, db["members"][str(message.author.id)]["location"])
 # animals, tools, seeds, merch = obj["animals"], obj["tools"], obj["seeds"], obj["merch"]
 
-async def pages(message, client, items, displayAmount, startPage = 1, baseEmbed = discord.Embed(), newField = True):
+
+async def pages(
+    message,
+    client,
+    items,
+    displayAmount,
+    startPage=1,
+    baseEmbed=discord.Embed(),
+    newField=True,
+):
     """
     Button pagination
 
@@ -182,7 +198,7 @@ async def pages(message, client, items, displayAmount, startPage = 1, baseEmbed 
     baseEmbed: discord.Embed() - defaults to an empty embed, the base embed to use
     newField: bool - whether each item gets placed in a new field or not
     """
-    
+
     page = int(startPage) - 1
     maxPages = ceil(len(items) / displayAmount)
     msg = None
@@ -190,81 +206,110 @@ async def pages(message, client, items, displayAmount, startPage = 1, baseEmbed 
 
     while loop:
         embed = baseEmbed.copy()
-        displayItems = items[page * displayAmount:page * displayAmount + displayAmount]
+        displayItems = items[
+            page * displayAmount : page * displayAmount + displayAmount
+        ]
 
         if newField:
             for i in displayItems:
-                embed.add_field(
-                    name = i["name"],
-                    value = i["value"]
-                )
+                embed.add_field(name=i["name"], value=i["value"])
         else:
             embed.description = embed.description + "\n".join(displayItems)
-        
-        embed.set_footer(text = f"Page {page + 1}/{maxPages}")
+
+        embed.set_footer(text=f"Page {page + 1}/{maxPages}")
 
         if not bool(msg):
             msg = await message.channel.send(
-                embed = embed,
-                components = [[
-                    Button(emoji = "⏮️", style = 1, disabled = True if page == 0 else False),
-                    Button(emoji = "◀️", style = 1, disabled = True if page == 0 else False),
-                    Button(emoji = "✖️", style = 4),
-                    Button(emoji = "▶️", style = 1, disabled = True if page == maxPages - 1 else False),
-                    Button(emoji = "⏭️", style = 1, disabled = True if page == maxPages - 1 else False),
-                ]]
+                embed=embed,
+                components=[
+                    [
+                        Button(
+                            emoji="⏮️", style=1, disabled=True if page == 0 else False
+                        ),
+                        Button(
+                            emoji="◀️", style=1, disabled=True if page == 0 else False
+                        ),
+                        Button(style=2, emoji="❌"),
+                        Button(
+                            emoji="▶️",
+                            style=1,
+                            disabled=True if page == maxPages - 1 else False,
+                        ),
+                        Button(
+                            emoji="⏭️",
+                            style=1,
+                            disabled=True if page == maxPages - 1 else False,
+                        ),
+                    ]
+                ],
             )
-        
+
         else:
             await msg.edit(
-                embed = embed,
-                components = [[
-                    Button(emoji = "⏮️", style = 1, disabled = True if page == 0 else False),
-                    Button(emoji = "◀️", style = 1, disabled = True if page == 0 else False),
-                    Button(emoji = "✖️", style = 4),
-                    Button(emoji = "▶️", style = 1, disabled = True if page == maxPages - 1 else False),
-                    Button(emoji = "⏭️", style = 1, disabled = True if page == maxPages - 1 else False),
-                ]]
+                embed=embed,
+                components=[
+                    [
+                        Button(
+                            emoji="⏮️", style=1, disabled=True if page == 0 else False
+                        ),
+                        Button(
+                            emoji="◀️", style=1, disabled=True if page == 0 else False
+                        ),
+                        Button(style=2, emoji="❌"),
+                        Button(
+                            emoji="▶️",
+                            style=1,
+                            disabled=True if page == maxPages - 1 else False,
+                        ),
+                        Button(
+                            emoji="⏭️",
+                            style=1,
+                            disabled=True if page == maxPages - 1 else False,
+                        ),
+                    ]
+                ],
             )
 
         try:
             res = await client.wait_for(
-                "button_click", 
-                timeout = 100.0,
-                check = lambda x: x.author.id == message.author.id and msg.id == x.message.id
+                "button_click",
+                timeout=60.0,
+                check=lambda x: x.author.id == message.author.id
+                and msg.id == x.message.id,
             )
-        except TimeoutError:
-            await msg.edit(components = [])
+        except asyncio.TimeoutError:
+            await msg.edit(components=[])
             loop = False
         else:
-            if res.component.emoji.name == "⏮️":
-                page = 0
+            if res.author == message.author:
+                if res.component.emoji.name == "⏮️":
+                    page = 0
 
-            elif res.component.emoji.name == "◀️":
-                page = max(0, page - 1)
+                elif res.component.emoji.name == "◀️":
+                    page = max(0, page - 1)
 
-            elif res.component.emoji.name == "✖️":
-                print('adit')
-                await msg.edit(components = [])
-                loop = False
+                elif res.component.emoji.name == "❌":
+                    await msg.edit(components=[])
+                    loop = False
 
-            elif res.component.emoji.name == "▶️":
-                page = min(maxPages - 1, page + 1)
+                elif res.component.emoji.name == "▶️":
+                    page = min(maxPages - 1, page + 1)
 
-            elif res.component.emoji.name == "⏭️":
-                page = maxPages - 1
-            
-            await res.respond(type = 6)
+                elif res.component.emoji.name == "⏭️":
+                    page = maxPages - 1
 
-#sellcost is exactly half of cost
-#tv is 25, 50, or 100 less than sellcost
+                await res.respond(type=6)
+
+
+# sellcost is exactly half of cost
+# tv is 25, 50, or 100 less than sellcost
 animals = {
     "name": "animals",
     "sheep": {
         "name": "sheep :sheep:",
         "cost": 250,
         "sellcost": 175,
-        "tools": ["shears", 'steelshears', 'shaver'],
+        "tools": ["shears", "steelshears", "shaver"],
         "result": "wool",
         "cooldown": 70000,
         "thing": "shear",
@@ -274,7 +319,7 @@ animals = {
         "name": "cow :cow:",
         "cost": 775,
         "sellcost": 387,
-        "tools": ["bucket", 'steelbucket'],
+        "tools": ["bucket", "steelbucket"],
         "result": "milk",
         "cooldown": 60000,
         "thing": "milk",
@@ -284,7 +329,7 @@ animals = {
         "name": "chicken :chicken:",
         "cost": 75,
         "sellcost": 38,
-        "tools": ["nest", 'chickenhouse', 'megacoop'],
+        "tools": ["nest", "chickenhouse", "megacoop"],
         "result": "egg",
         "cooldown": 50000,
         "tradevalue": 35,
@@ -294,7 +339,7 @@ animals = {
         "name": "goat :goat:",
         "cost": 275,
         "sellcost": 138,
-        "tools": ["bucket", 'steelbucket'],
+        "tools": ["bucket", "steelbucket"],
         "result": "goatsmilk",
         "cooldown": 50000,
         "tradevalue": 100,
@@ -310,6 +355,16 @@ animals = {
         "tradevalue": 600,
         "thing": "haired",
     },
+    "primechicken": {
+        "name": "primechicken :chicken: :crown: ",
+        "cost": 300,
+        "sellcost": 150,
+        "tools": ["nest", "chickenhouse", "megacoop"],
+        "result": "egg",
+        "cooldown": 25000,
+        "tradevalue": 200,
+        "thing": "collect",
+    },
     # Exotic animals
     "camel": {
         "name": "camel :dromedary_camel:",
@@ -318,7 +373,7 @@ animals = {
         "tools": ["toilet"],
         "result": "cameldung",
         "cooldown": 50000,
-        "thing":     "milk",
+        "thing": "milk",
         "tradevalue": 350,
         "give": True,
     },
@@ -353,21 +408,20 @@ animals = {
         "thing": "get",
         "tradevalue": 200,
     },
-		'walrus': {
-			'name': 'walrus :seal: ',
-			'cost': 'trade only',
-			'sellcost': 600,
-			'tools': ['toothbrush'],
-			'result': 'walrustusk',
-			'cooldown': 50000,
-			'thing': 'brush',
-			'tradevalue': 350
-		}
-
+    "walrus": {
+        "name": "walrus :seal: ",
+        "cost": "trade only",
+        "sellcost": 600,
+        "tools": ["toothbrush"],
+        "result": "walrustusk",
+        "cooldown": 50000,
+        "thing": "brush",
+        "tradevalue": 350,
+    },
 }
 
-#durability is cost
-#sellcost is 1/2 cost
+# durability is cost
+# sellcost is 1/2 cost
 tools = {
     "name": "tools",
     "shears": {
@@ -522,7 +576,6 @@ tools = {
         "animal": "jungle",
         "tradevalue": 15,
     },
-
     "feathergetter": {
         "name": "feathergetter",
         "cost": 150,
@@ -531,23 +584,22 @@ tools = {
         "animal": "peacock",
         "tradevalue": 70,
     },
-		'wintercoat' :{
-			'name': 'wintercoat',
-			'cost': 45,
-			'durability': 40,
-			'sellcost': 25,
-			'animal': 'arctic',
-			'tradevalue': 29
-		},
-		'toothbrush': {
-			'name': 'toothbrush',
-			'cost': 50,
-			'sellcost': 25,
-			'durability': 50,
-			'animal': 'walrus',
-			'tradevalue': 25
-		}
-
+    "wintercoat": {
+        "name": "wintercoat",
+        "cost": 45,
+        "durability": 40,
+        "sellcost": 25,
+        "animal": "arctic",
+        "tradevalue": 29,
+    },
+    "toothbrush": {
+        "name": "toothbrush",
+        "cost": 50,
+        "sellcost": 25,
+        "durability": 50,
+        "animal": "walrus",
+        "tradevalue": 25,
+    },
 }
 
 seeds = {
@@ -640,7 +692,7 @@ seeds = {
         "growtime": 3600000,
         "result": "pinetree",
         "tradevalue": 5,
-        "get": True,    
+        "get": True,
         "give": True,
     },
     # exotic seeds
@@ -656,7 +708,7 @@ seeds = {
     },
     "pridewatermelonseeds": {
         "name": "pridewatermelonseeds",
-        "cost": 'Only available in pride month, even though you should always be pround', #100
+        "cost": "Only available in pride month, even though you should always be pround",  # 100
         "sellcost": 90,
         "result": "pridewatermelon",
         "tradevalue": 10,
@@ -725,13 +777,13 @@ merch = {
         "sellcost": 3,
         "tradevalue": 5,
     },
-		'shirt': {
-			'name': 'shirt :shirt: ',
-			'description': 'not wearable (yet)',
-			'cost': 15,
-			'sellcost': 13,
-			'tradevalue': 15
-		},
+    "shirt": {
+        "name": "shirt :shirt: ",
+        "description": "not wearable (yet)",
+        "cost": 15,
+        "sellcost": 13,
+        "tradevalue": 15,
+    },
     "voldysnose": {
         "name": "voldysnose :nose:",
         "description": "collectible, tradeable",
@@ -774,7 +826,7 @@ merch = {
         "sellcost": 19,
         "tradevalue": 19,
     },
-    "bread": {    
+    "bread": {
         "name": "bread :bread:",
         "description": "not eatable but it probably should be lmao\ntradeable",
         "cost": 20,
@@ -859,22 +911,20 @@ merch = {
         "tradevalue": 18,
         "description": "babbon your babbons for kidneys, usually sell for a lot but these are defective",
     },
-
     "peacockfeather": {
         "name": "peacockfeather :feather:",
-        "cost": 'cant buy',
+        "cost": "cant buy",
         "sellcost": 16,
         "tradevalue": 15,
         "description": "the feather of a peacock, commonly used to make pens",
     },
-		'walrustusk': {
-			'name': 'walrustusk :seal: :tooth:',
-			'cost': 'cant buy',
-			'sellcost': 35,
-			'tradevalue': 30,
-			'description': 'the tooth of a walrus. very nice'
-		},
-
+    "walrustusk": {
+        "name": "walrustusk :seal: :tooth:",
+        "cost": "cant buy",
+        "sellcost": 35,
+        "tradevalue": 30,
+        "description": "the tooth of a walrus. very nice",
+    },
     # Plant merch
     "grass": {
         "name": "grass :seedling:",
@@ -933,13 +983,13 @@ merch = {
         "tradevalue": 20,
     },
     "pridewatermelon": {
-				"name": "pridewatermelon :watermelon: :rainbow_flag:",
-				"description": "happy pride month! only available in june, found in the jungle",
-				"cost": 'only available in pride month', #180
-				"sellcost": 150,
+        "name": "pridewatermelon :watermelon: :rainbow_flag:",
+        "description": "happy pride month! only available in june, found in the jungle",
+        "cost": "only available in pride month",  # 180
+        "sellcost": 150,
         "tradevalue": 65,
-				'get': False,
-				'give': False
+        "get": False,
+        "give": False,
     },
     # Gather only merch
     "mushroom": {
@@ -987,7 +1037,7 @@ merch = {
     },
     "tulip": {
         "name": "tulip :tulip:",
-        "cost": 'Only available during spring',  #25
+        "cost": "Only available during spring",  # 25
         "description": "tulip, looks nice\nsellable",
         "sellcost": 20,
         "tradevalue": 16,
@@ -1032,7 +1082,7 @@ merch = {
     },
     # Exotic merch
     "cameldung": {
-            "name": "cameldung :camel: :poop:",
+        "name": "cameldung :camel: :poop:",
         "description": "dung of camel\nsellable",
         "cost": "Not purchasable",
         "sellcost": 50,
@@ -1163,7 +1213,7 @@ locations = {
         "desc": "You start here.",
         "baseMulti": 1,
         "shop": {},
-        "cost": 1000000,    
+        "cost": 1000000,
         "multis": {},
         "defaultLife": True,
         "lifeOverrides": {},
@@ -1171,20 +1221,23 @@ locations = {
     },
     "desert": {
         "name": "desert :desert:",
-
         "desc": "A hot tundra without much, home to camels and cacti and sand",
         "baseMulti": 1.05,
-
         "shop": {
             "camel": {"cost": 775, "give": False},
             "cameldung": {"cost": 75, "give": False, "get": False},
             "cactusseeds": {"cost": 20, "sellcost": 19},
             "cactus": {"cost": 27, "sellcost": 24},
         },
-
         "cost": 500000,
-        "multis": {"camel": 1.5, "sunflower": 1.1, "snake": 1.5, "cactus": 2, 'sheep': 0.9, 'cow': 0.9},
-
+        "multis": {
+            "camel": 1.5,
+            "sunflower": 1.1,
+            "snake": 1.5,
+            "cactus": 2,
+            "sheep": 0.9,
+            "cow": 0.9,
+        },
         "defaultLife": False,
         "lifeOverrides": {
             "camel": True,
@@ -1192,43 +1245,35 @@ locations = {
             "snake": True,
             "cactus": True,
         },
-
         "deathRate": 0.75,
     },
     "jungle": {
         "name": "jungle :coconut:",
         "desc": "A thick, rainy forest",
         "baseMulti": 1.2,
-        "shop": {
-					'peacock': {'cost': 350}
-				},
+        "shop": {"peacock": {"cost": 350}},
         "cost": 850000,
-        "multis": {
-            "mango": 1.75,
-						'peacock': 1.25
-        },
+        "multis": {"mango": 1.75, "peacock": 1.25},
         "defaultLife": True,
         "lifeOverrides": {"cactus": False, "camel": False},
         "deathRate": 0.85,
     },
-    'arctic': {
-        'name': 'arctic :snowflake: ',
-        'desc': 'A cold, dumb, cold, snow, cold place where walruses and stuff live',
-        'baseMulti': 1.25,
-				'shop' :{
-					'walrus': {'cost': 700}
-				},
-				'cost': 1500000,
-				'multis': {
-					'sheep': 1.1,
-					'chicken': 0.9,
-					'sunflower': 0.9,
-					'mango': 0.9,
-					'walrus': 1.25
-				},
-				'defaultLife': True,
-				'lifeOverrides': {},
-				'deathrate': 0.8
+    "arctic": {
+        "name": "arctic :snowflake: ",
+        "desc": "A cold, dumb, cold, snow, cold place where walruses and stuff live",
+        "baseMulti": 1.25,
+        "shop": {"walrus": {"cost": 700}},
+        "cost": 1500000,
+        "multis": {
+            "sheep": 1.1,
+            "chicken": 0.9,
+            "sunflower": 0.9,
+            "mango": 0.9,
+            "walrus": 1.25,
+        },
+        "defaultLife": True,
+        "lifeOverrides": {},
+        "deathrate": 0.8,
     },
     "devlocation": {
         "name": "devlocation :test_tube:",
@@ -1241,6 +1286,11 @@ locations = {
         "lifeOverrides": {},
         "deathRate": 0,
     },
+}
+
+land = {
+    "pen": {"canhold": 50, "cost": 100, "sellcost": 50},
+    "field": {"canhold": 100, "cost": 100, "sellcost": 50},
 }
 # "": { # Location name, self-explanatory
 
@@ -1263,72 +1313,73 @@ eatable = [i for i, j in merch.items() if "loottable" in j]
 eatable.extend(["applepie", "mango", "ginseng", "mushroom", "cake", "pridewatermelon"])
 
 bal = [
-	"better grind for more before you can compare with me idiot",
-	"POOR",
-	"you stinky little sewage rat",
-	"u big dumdum",
-	"you dumb diaperwearer",
-	"you big fat fart",
-	"you boogerfarter",
-	"you babbonhater",
-	"you baconwearer",
-	'you baboonseer',
-	'you birdwatcher',
-	'you toileter',
-	'you pant farter'
-	"fat",
-	'cacar',
-	'ehee',
-	'BONG BONG BONG THIS IS MY SONG',
-	'DANG it MAN, i didnt even ANTICIPATE that move',
-	'friday night in the sunlight bing bang bong',
-	'saturday morning in the moonlight ning nang nong',
-	"NERD",
-	"oversimplification",
-	"nerds are nerds, go eat some useless stone-filled birds",
-	"ryanbutt",
-	"still less than me, gotta grind for more first dumum",
-	"omg ur so fat go exercise ewww",
-	"bung bung bung bung bung bung bung bung bung",
-	"cOW",
-	"( ͡° ͜ʖ ͡°)",
-	"yogogiddap",
-	"!@#$%#%&*(&)*",
-	"`-`",
-	"~_~",
-	"[][][][][]",
-	"dee dee doo doo der dee doo",
-	"fafart",
-	"kekw",
-	"mall tycoon roblox player",
-	":notes: elevator music plays :notes:",
-	"https://www.youtube.com/watch?v=AXrHbrMrun0",
-	"you gambler mambler",
-	"mar mar marino papido appeal",
-	"<< MONEY MONEY GO ROB"    ,
-	"babbons",
-	"(cents)",
-	"buttsmeller",
-	"cow seeer",
-	"ungbridge",
-	"ocker",
-	"step on a crack",
-	"cameldung",
-	"Yourself was here",
-	"https://www.youtube.com/watch?v=o_LskiXQ73c",
-	'ima call u hua'
+    "better grind for more before you can compare with me idiot",
+    "POOR",
+    "you stinky little sewage rat",
+    "u big dumdum",
+    "you dumb diaperwearer",
+    "you big fat fart",
+    "you boogerfarter",
+    "you babbonhater",
+    "you baconwearer",
+    "you baboonseer",
+    "you birdwatcher",
+    "you toileter",
+    "you pant farter" "fat",
+    "cacar",
+    "ehee",
+    "BONG BONG BONG THIS IS MY SONG",
+    "DANG it MAN, i didnt even ANTICIPATE that move",
+    "friday night in the sunlight bing bang bong",
+    "saturday morning in the moonlight ning nang nong",
+    "NERD",
+    "oversimplification",
+    "nerds are nerds, go eat some useless stone-filled birds",
+    "ryanbutt",
+    "still less than me, gotta grind for more first dumum",
+    "omg ur so fat go exercise ewww",
+    "bung bung bung bung bung bung bung bung bung",
+    "cOW",
+    "( ͡° ͜ʖ ͡°)",
+    "yogogiddap",
+    "!@#$%#%&*(&)*",
+    "`-`",
+    "~_~",
+    "[][][][][]",
+    "dee dee doo doo der dee doo",
+    "fafart",
+    "kekw",
+    "mall tycoon roblox player",
+    ":notes: elevator music plays :notes:",
+    "https://www.youtube.com/watch?v=AXrHbrMrun0",
+    "you gambler mambler",
+    "mar mar marino papido appeal",
+    "<< MONEY MONEY GO ROB",
+    "babbons",
+    "(cents)",
+    "buttsmeller",
+    "cow seeer",
+    "ungbridge",
+    "ocker",
+    "step on a crack",
+    "cameldung",
+    "Yourself was here",
+    "https://www.youtube.com/watch?v=o_LskiXQ73c",
+    "ima call u hua",
+    "can i call you hua???",
+    "dumby??????????",
+    "(cents)",
+    '"lay an egg" - inspirational quote',
 ]
 
 tips = [
-		'confused? do the `guide` command to get help about specific aspects of the bot', 
+    "confused? do the `guide` command to get help about specific aspects of the bot",
     "Admins, use `setchannel` to set a system messages channel for your server.",
     "Do `donate` to get rep fast",
     "You can use `profile` to see things like when your farm started, and how many commands you've used.",
     "come join our support server at `discord.gg/tvCmtkBAkc`",
     "encounter a bug while playing? use `report` to report it directly to our support server.",
-
     "do `suggest` to suggest anything from new animals to new tips!",
-
     "`showtrades` can show currently available trades.",
     "You may be tempted to sell all your merchandise right away, but you should save some to do trades.",
     "`crops` is a handy command to show all the things currently planted and how long they've been growing.",
@@ -1342,7 +1393,7 @@ tips = [
     "the creator of farmout made some really weird things like heavenheck bot, which is on display in the support server, before he made farmout",
     "`contracts show` will show you some contracts that you can sign for items",
     "eating your ginseng fruit can give you items",
-    "vote for the bot, and get some pretty op items, while supporting the bot! use `i vote`"
+    "vote for the bot, and get some pretty op items, while supporting the bot! use `i vote`",
 ]
 
 dailys = [
@@ -1409,7 +1460,7 @@ deaths = {
     "from eating too much": "digestion",
     "by snorkeling on land": "water",
     "from trying to code javascript": "python",
-    "from watching bad ytbers":     "unsee",
+    "from watching bad ytbers": "unsee",
     "because they didn't join farmout support": "joinjoin",
     "from playing fortnite": "minecraft",
     "from the E": "a",
@@ -1454,14 +1505,23 @@ emojis = [
     ":gem:",
 ]
 
+
 def newUser(datemade):
     newuser = {
-        "animals": {},
+        "land": {
+            "animals": {
+                "Animal Pen 1": {"animals": {}, "total": 0, "name": "Animal Pen 1"}
+            },
+            "crops": {
+                "Crop Field 1": {"crops": {}, "total": 0, "name": "Crop Field 1"}
+            },
+        },
+        # "animals": {},
         "tools": {"wateringcan": tools["wateringcan"]["durability"]},
         "merch": {},
         "seeds": {"grassseeds": {"amount": 5}},
-        "plantcooldowns": {},
-        "plants": {},
+        # "plantcooldowns": {},
+        # "plants": {},
         "money": 100,
         "reputation": 500,
         "amounts": {
@@ -1487,150 +1547,12 @@ def newUser(datemade):
         "prestige": 0,
         "location": "default",
         "locations": {},
-        "settings": {"votedm": True, "tips": True, "replypings": True, 'emojionlyinv': False},
+        "settings": {
+            "votedm": True,
+            "tips": True,
+            "replypings": True,
+            "emojionlyinv": False,
+        },
     }
 
     return newuser
-
-builtintrades = {
-	'1': [
-		{
-		'give': [
-			[
-				{
-        "name": "wool :cloud:",
-        "description": "its from sheep, keep it away from dirt cuz it can get dirty easily",
-        "cost": "Not buyable",
-        "sellcost": 15,
-        "tradevalue": 14,
-        "get": True,
-    		},
-				1,
-				'wool'
-			]
-		],
-		'get': [
-			[
-				{
-				'name': 'shirt :shirt: ',
-				'description': 'not wearable (yet)',
-				'cost': 15,
-				'sellcost': 13,
-				'tradevalue': 15
-				},
-				1,
-				'shirt'
-			]
-		]
-	},
-	{
-		'give': [
-			[
-				{
-					"name": "apple :apple:",
-					"description": "apples from the apple tree, sell it",
-					"cost": 19,
-					"sellcost": 17,
-					"tradevalue": 16,
-					"get": True,
-				},
-				3,
-				'apple'
-			],
-			[
-				{
-					"name": "apple :apple:",
-					"description": "apples from the apple tree, sell it",
-					"cost": 19,
-					"sellcost": 17,
-					"tradevalue": 16,
-					"get": True,
-				},
-				1,
-				'flatbread'
-			]
-		],
-		'get': [
-			[
-				{
-					"name": "applepie :apple: :pie:",
-					"description": "eatable, might taste good idk",
-					"cost": 25,
-					"sellcost": 19,
-					"tradevalue": 19,
-				},
-				1,
-				'applepie'
-			]
-		]
-	}
-	],
-	'2': {
-		'give': [
-			[
-				{
-        "name": "milk :milk:",
-        "description": "milk, you can sell it or trade it",
-        "cost": "Not buyable",
-        "sellcost": 21,
-        "tradevalue": 20,
-        "get": True,
-				},
-				5,
-				'milk'
-			]
-		],
-		'get': [
-			[
-				{
-        "name": "cheese :cheese:",
-        "cost": 11,
-        "description": "cheese, collectible",
-        "sellcost": 9,
-        "tradevalue": 8,
-				},
-				8,
-				'cheese'
-			]
-		]
-	},
-	'3': {
-		'give': [
-			[
-				{
-					"name": "computer :computer:",
-					"cost": 1000,
-					"description": "it can compute, but only when it wants to\ncollectible, trade it with people",
-					"sellcost": "Not sellable",
-					"tradevalue": 875,
-				},
-				1,
-				'computer',
-			],
-			[
-				{
-					"name": "keyboard :keyboard:",
-					"cost": 20,
-					"description": "can't actually type\ntradeable",
-					"sellcost": 18,
-					"tradevalue": 17,
-				},
-				1,
-				'keyboard'
-			],
-		],
-		'get': [
-			[
-				{
-					"name": "gamingpc :video_game:",
-					"description": "game on it or smth but you can't actually\nnot sellable",
-					"cost": 5000,
-					"sellcost": "Not sellable",
-					"tradevalue": 4500,
-				},
-				1,
-				'gamingpc'
-			]
-		]
-	}
-}

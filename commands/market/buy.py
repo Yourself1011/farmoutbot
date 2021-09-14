@@ -19,16 +19,17 @@ async def buy(message, client):
     allPos = []
     objs = []
 
-    obj = {"animals": {}, "tools": {}, "seeds": {}, "merch": {}}
+    obj = {"animals": {}, "tools": {}, "seeds": {}, "merch": {}, "land": {}}
     getShop(obj, db["members"][str(message.author.id)]["location"])
-    animals, tools, seeds, merch = (
+    animals, tools, seeds, merch, land = (
         obj["animals"],
         obj["tools"],
         obj["seeds"],
         obj["merch"],
+        obj["land"],
     )
 
-    for i in [seeds, merch, tools, animals]:
+    for i in [seeds, merch, tools, animals, land]:
         possibilities = [j for j in list(i.keys()) if args[2] in j and j != "name"]
         if not bool(possibilities):
             continue
@@ -69,17 +70,45 @@ async def buy(message, client):
         amount = 1
         thing = tools
 
-    async def buye():
+    async def buye(amount):
         a = db["members"]
         r = cost * amount
         if thing == animals:
-            if key not in db["members"][str(message.author.id)]["animals"]:
-                a[str(message.author.id)]["animals"][key] = {
-                    "lastused": 0,
-                    "amount": amount,
-                }
-            else:
-                a[str(message.author.id)]["animals"][key]["amount"] += amount
+            now = int(round(time.time() * 1000))
+            if a[str(message.author.id)]["land"]["animals"] == {}:
+                return "you don't have any pens to put the animals into, buy one first"
+
+            pens = []
+            for i in a[str(message.author.id)]["land"]["animals"]:
+                if a[str(message.author.id)]["land"]["animals"][i]["total"] < 50:
+                    pens.append(i)
+            for i in pens:
+                if (
+                    50 - a[str(message.author.id)]["land"]["animals"][i]["total"]
+                    < amount
+                ):
+                    newmount = (
+                        50 - a[str(message.author.id)]["land"]["animals"][i]["total"]
+                    )
+                    amount = amount - newmount
+                    a[str(message.author.id)]["land"]["animals"][i]["animals"][key] = {
+                        "amount": newmount,
+                        "lastused": now,
+                        "lastbred": now,
+                    }
+                    a[str(message.author.id)]["land"]["animals"][i]["total"] = 50
+                    continue
+                elif (
+                    50 - a[str(message.author.id)]["land"]["animals"][i]["total"]
+                    > amount
+                ):
+                    a[str(message.author.id)]["land"]["animals"][i]["animals"][key] = {
+                        "amount": amount,
+                        "lastused": now,
+                        "lastbred": now,
+                    }
+                    a[str(message.author.id)]["land"]["animals"][i]["total"] += amount
+
         if thing == tools:
             a[str(message.author.id)]["tools"][key] = tools[key]["durability"]
         if thing == seeds:
@@ -92,28 +121,55 @@ async def buy(message, client):
                 a[str(message.author.id)]["merch"][key] = amount
             else:
                 a[str(message.author.id)]["merch"][key] += amount
+        if thing == land:
+            amount = (
+                len(list(db["members"][str(message.author.id)]["land"]["crops"])) + 1
+            )
+            print(key)
+            if key == "pen":
+                fartat = "animals"
+                mass = "Animal Pen"
+            if key == "field":
+                fartat = "crops"
+                mass = "Crop Field"
+            mart = f"{mass} {amount}"
+            print(mart)
+            a[str(message.author.id)]["land"][fartat][mart] = {
+                f"{fartat}": {},
+                "total": 0,
+                "name": mart,
+            }
+            amount = 1
         a[str(message.author.id)]["money"] -= r
         nowmoney = a[str(message.author.id)]["money"]
         a[str(message.author.id)]["amounts"]["bought"] += amount
-        repgain = random.randint(1,4)
-        repmsg = ''
+
+        repgain = random.randint(1, 4)
+        repmsg = ""
         if repgain == 1:
-          rep = db['members'][str(message.author.id)]['reputation']
-          gain = random.randint(1,3)
-          rep = gain
-          repmsg = f'market: thanks for buying that thing, i really wanted to sell it **reputation +{gain}**'
-          db['members'][str(message.author.id)]['reputation'] = rep
+            rep = db["members"][str(message.author.id)]["reputation"]
+            gain = random.randint(1, 3)
+            rep = gain
+            repmsg = f"market: thanks for buying that thing, i really wanted to sell it **reputation +{gain}**"
+            db["members"][str(message.author.id)]["reputation"] = rep
         db["members"] = a
+
         thingstosay = [
             f"You bought `{amount} {key}(s)` for `{r} coins`. You now have `{nowmoney} coins`.",
             f"purchase successful, you paid `{r} coins` for `{amount} {key}(s)`.",
             f"yessir `{amount} {key}(s)` purchased",
             f"{message.author.name} bought `{amount} {key}(s)`",
             f"you paid `{r} coins` for `{amount} {key}(s)`.",
+            f"mk, {message.author.name} bought `{amount} {key}(s)`",
+            f"ty for `{r} coins` {message.author.mention}, please come again",
+            f"hee hee hee money for me and `{key}(s)` for you",
+            f"tysm tysm {message.author.mention}, have a good day",
+            f"{message.author.name} just bought `{amount} {key}(s)`, from the market",
+            f"{message.author.name} bought some `{key}(s)`, they're now {nowmoney} coins poor",
         ]
         thingsaid = random.choice(thingstosay)
-        out = f'{thingsaid}\n{repmsg}'
+        out = f"{thingsaid}\n{repmsg}"
 
-        return (out)
+        return out
 
-    return await buye()
+    return await buye(amount)

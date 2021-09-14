@@ -1,5 +1,5 @@
 from replit import db
-from zstats import locations, merch, animals, seeds, tools, softSearch
+from zstats import locations, merch, animals, seeds, tools, softSearch, pages
 import discord
 
 
@@ -13,8 +13,9 @@ async def location(message, client):
 
     user = db["members"][str(message.author.id)]
 
-    a = db['members'][str(message.author.id)]['reputation']
-    if a < 1000: return 'cant move now, gotta have 1000 reputation first'
+    a = db["members"][str(message.author.id)]["reputation"]
+    if a < 1000:
+        return "cant move now, gotta have 1000 reputation first"
 
     if len(args) == 2:
         return await message.channel.send(
@@ -26,12 +27,14 @@ async def location(message, client):
     for k, v in user["merch"].items():
         netWorth += merch[k]["sellcost"] * v if type(merch[k]["sellcost"]) is int else 0
 
-    for k, v in user["animals"].items():
-        netWorth += (
-            animals[k]["sellcost"] * v["amount"]
-            if type(animals[k]["sellcost"]) is int
-            else 0
-        )
+    #gotta iterate through all pens AHHHHHHHHHH quoi? annoying oh that's it no? bruh
+    for i in user["land"]['animals']:
+        for k, v in user['land']['animals'][i]['animals']: #this should work
+            netWorth += (
+                animals[k]["sellcost"] * v["amount"]
+                if type(animals[k]["sellcost"]) is int
+                else 0
+            )
 
     for k in user["tools"].keys():
         netWorth += tools[k]["sellcost"] if type(tools[k]["sellcost"]) is int else 0
@@ -69,17 +72,22 @@ async def location(message, client):
 
             page = max(min(int(args[3]), len(r)), 1) - 1
 
-            location = locations[r[page]]
+            embed = discord.Embed(title="Locations")
 
-            embed = discord.Embed(title=location["name"], description=location["desc"])
-            embed.add_field(
-                name="Price",
-                value=f"Regular: {location['cost']}\nBuy and liquidate: {max(location['cost'] - netWorth if type(location['cost']) is int else location['cost'], 0)}",
+            return await pages(
+                message,
+                client,
+                [
+                    {
+                        "name": locations[i]["name"],
+                        "value": f"{locations[i]['desc']}\n\n**Price:**\nRegular: {locations[i]['cost']}\nBuy and liquidate: {max(locations[i]['cost'] - netWorth, 0) if type(locations[i]['cost']) is int else locations[i]['cost']}",
+                    }
+                    for i in r
+                ],
+                1,
+                page,
+                embed,
             )
-
-            embed.set_footer(text=f"Page {page + 1}/{len(r)}")
-
-            return await message.channel.send(embed=embed)
 
         else:
             embed = discord.Embed(

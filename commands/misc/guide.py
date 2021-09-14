@@ -1,6 +1,7 @@
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 import asyncio
 
+
 async def guide(message, client):
     args = message.content.split(" ")
     if len(args) == 2:
@@ -11,17 +12,17 @@ async def guide(message, client):
                 Button(style=ButtonStyle.blue, label="Contracts"),
                 Button(style=ButtonStyle.blue, label="Reputation"),
                 Button(style=ButtonStyle.blue, label="Trades"),
-								Button(style=ButtonStyle.blue, label="Bot Setup")
+                Button(style=ButtonStyle.blue, label="Bot Setup"),
             ],
         )
         try:
-          res = await client.wait_for("button_click", timeout = 30.0)
+            res = await client.wait_for("button_click", timeout=30.0)
         except asyncio.TimeoutError:
-          mess.components = []
+            await mess.edit(components=[])
         else:
-          if res.component.label == "Locations":
-            msg = await message.channel.send(
-									"""**Locations** \n\nLocations are kind of like rebirths. There are 4 subcommands: my, view, buy, and transfer.
+            if res.component.label == "Locations":
+                msg = await message.channel.send(
+                    """**Locations** \n\nLocations are kind of like rebirths. There are 4 subcommands: my, view, buy, and transfer.
 	my
 	> Shows the locations you own, and your current location
 
@@ -49,62 +50,64 @@ async def guide(message, client):
 
 	Each location has multipliers for different plants and animals, and some plants and animals will die in the wrong location!
 	""",
-									components=[
-											Button(style=ButtonStyle.grey, label="❌"),
-									],
-							)
-            resp = await client.wait_for("button_click")
-            if resp.author == message.author:
-              print(resp.component.label)
-              if resp.component.label == "❌":
-                await msg.delete()
-                await mess.delete()
-                return
+                    components=[
+                        Button(style=ButtonStyle.grey, label="❌"),
+                    ],
+                )
+                resp = await client.wait_for("button_click")
+                if resp.author == message.author:
+                    if resp.component.label == "❌":
+                        await msg.delete()
+                        await mess.delete()
+                        return
 
-          if res.component.label == "Contracts":
-              msg = await message.channel.send(
-									"**Contracts**\n\nContracts are a soft of side-quest feature in farmout. They're a good way to get some quick cash or items while you're waiting for your crops to grow. Contracts are like quests themselves, with a story behind each one.\nContracts have 4 subcommands: `show, sign, complete`, and `current`.\n\n__`show`__\nShow shows the current contracts that you can sign. You must complete all 3 contracts in 1 part before moving on to the next part.\n\n__`sign`__\nSign is for signing contracts. Once you have completed your current contract, you use this command to sign a new one.\n\n__`complete`__\nComplete is when you have gathered all the things for your current contract, and is ready to complete it and claim your reward.\n\n__`current`__\nCurrent shows the contract that you have signed currently.\n\nThat's about it for contracts. There are 4 parts of 3 contracts, for a total of 12. Also, you get a pretty cool item once you complete all the contracts.",
-									components=[
-											Button(style=ButtonStyle.grey, label="❌"),
-									],
-							)
-              resp = await client.wait_for("button_click")
-              if resp.author == message.author:
-                  if resp.component.label == "❌":
-                      await msg.delete()
-                      await mess.delete()
+            if res.component.label == "Contracts":
+                msg = await message.channel.send(
+                    "**Contracts**\n\nContracts are a soft of side-quest feature in farmout. They're a good way to get some quick cash or items while you're waiting for your crops to grow. Contracts are like quests themselves, with a story behind each one.\nContracts have 4 subcommands: `show, sign, complete`, and `current`.\n\n__`show`__\nShow shows the current contracts that you can sign. You must complete all 3 contracts in 1 part before moving on to the next part.\n\n__`sign`__\nSign is for signing contracts. Once you have completed your current contract, you use this command to sign a new one.\n\n__`complete`__\nComplete is when you have gathered all the things for your current contract, and is ready to complete it and claim your reward.\n\n__`current`__\nCurrent shows the contract that you have signed currently.\n\nThat's about it for contracts. There are 4 parts of 3 contracts, for a total of 12. Also, you get a pretty cool item once you complete all the contracts.",
+                    components=[
+                        Button(style=ButtonStyle.grey, label="❌"),
+                    ],
+                )
+                resp = await client.wait_for("button_click")
+                if resp.author == message.author:
+                    if resp.component.label == "❌":
+                        await msg.delete()
+                        await mess.delete()
 
-          if res.component.label == "Reputation":
-              msg = await message.channel.send(
-									"**Reputation**\n\nReputation is kind of like experience. It\'s how much the market likes you. The higher reputation you have, the more things that you can do. \n\n**Gaining**\nYou gain reputation by doing things with the market, or things that prove yourself as a farmer. For example, you can gain rep by taking care of your plants and animals.\n\n**Limits**\nYou need:\n- 700 rep to gamble\n- 750 to trade\n- 1000 rep to switch locations\n- a lot to own some exotic animals",
-									components=[
-											Button(style=ButtonStyle.grey, label="❌"),
-									],
-							)
-              resp = await client.wait_for("button_click")
-              if resp.author == message.author:
-                  if resp.component.label == "❌":
-                      await msg.delete()
-                      await mess.delete()
+            if res.component.label == "Reputation":
+                msg = await message.channel.send(
+                    "**Reputation**\n\nReputation is kind of like experience. It's how much the market likes you. The higher reputation you have, the more things that you can do. \n\n**Gaining**\nYou gain reputation by doing things with the market, or things that prove yourself as a farmer. For example, you can gain rep by taking care of your plants and animals.\n\n**Limits**\nYou need:\n- 700 rep to gamble\n- 750 to trade\n- 1000 rep to switch locations\n- a lot to own some exotic animals",
+                    components=[
+                        Button(style=ButtonStyle.grey, label="❌"),
+                    ],
+                )
+                resp = await client.wait_for("button_click")
+                if resp.author == message.author:
+                    if resp.component.label == "❌":
+                        await msg.delete()
+                        await mess.delete()
 
-          if res.component.label == "Trades":
-              msg = await message.channel.send(
-              "**Trades**\n\nTrades are a great way to trade your items for profits with the marketplace. Things to know about trades:\n\n- trades update every 6 hours\n- there are 5 trades, from less expensive to more\n- every trade has a stock limit\n- you get rep for trading\n- trades usually give a large profit",
-              components=[Button(style=ButtonStyle.grey, label="❌"),],)
-              resp = await client.wait_for("button_click")
-              if resp.author == message.author:
-                if resp.component.label == "❌":
-                  await msg.delete()
-                  await mess.delete()
-          if res.component.label == 'Bot Setup':
-            msg = await message.channel.send(
-									"**Setting up the bot**\n\nIf you\'re not an admin, this won\'t help you much.\n\n- Prefix\nThe prefix is the phrase that you put at the start of a message to make the bot respond to you (ie. `i help`, where `i` is the prefix). By default, the prefix is `i`. You can change it with `i prefixchange`. If you want to know the current prefix, you can ping the bot and it\'ll tell you.\n\n- System Messages\nYou can have the bot send messages to alert when trades update. You use the `setchannel` command and specify a channel that the bot will alert trade updates to. Make sure that the bot has permissions to talk there first.",
-									components=[
-											Button(style=ButtonStyle.grey, label="❌"),
-									],
-							)
-            resp = await client.wait_for("button_click")
-            if resp.author == message.author:
-              if resp.component.label == "❌":
-                await msg.delete()
-                await mess.delete()
+            if res.component.label == "Trades":
+                msg = await message.channel.send(
+                    "**Trades**\n\nTrades are a great way to trade your items for profits with the marketplace. Things to know about trades:\n\n- trades update every 6 hours\n- there are 5 trades, from less expensive to more\n- every trade has a stock limit\n- you get rep for trading\n- trades usually give a large profit",
+                    components=[
+                        Button(style=ButtonStyle.grey, label="❌"),
+                    ],
+                )
+                resp = await client.wait_for("button_click")
+                if resp.author == message.author:
+                    if resp.component.label == "❌":
+                        await msg.delete()
+                        await mess.delete()
+            if res.component.label == "Bot Setup":
+                msg = await message.channel.send(
+                    "**Setting up the bot**\n\nIf you're not an admin, this won't help you much.\n\n- Prefix\nThe prefix is the phrase that you put at the start of a message to make the bot respond to you (ie. `i help`, where `i` is the prefix). By default, the prefix is `i`. You can change it with `i prefixchange`. If you want to know the current prefix, you can ping the bot and it'll tell you.\n\n- System Messages\nYou can have the bot send messages to alert when trades update. You use the `setchannel` command and specify a channel that the bot will alert trade updates to. Make sure that the bot has permissions to talk there first.",
+                    components=[
+                        Button(style=ButtonStyle.grey, label="❌"),
+                    ],
+                )
+                resp = await client.wait_for("button_click")
+                if resp.author == message.author:
+                    if resp.component.label == "❌":
+                        await msg.delete()
+                        await mess.delete()

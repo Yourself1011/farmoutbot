@@ -10,7 +10,10 @@ async def arctic(message, client):
 
     user = str(message.author.id)
     if user not in db["members"]:
-        responses = ["make an account to scour the arctic", 'gotta exist before exploring the arctic we don\'t do that here']
+        responses = [
+            "make an account to scour the arctic",
+            "gotta exist before exploring the arctic we don't do that here",
+        ]
         return random.choice(responses)
 
     user = db["members"][str(message.author.id)]
@@ -80,7 +83,11 @@ async def arctic(message, client):
         fine = randint(floor(user["money"] / 10), floor(user["money"] / 4))
 
         user["money"] -= fine
-        lesréponses = [f"You met a polarbear and taunted it with maracas for some reason. It pushed you onto a floating ice cube, which drifted for a week and took you to a volcano. You fell in and died, and had to pay {fine} to be reborn. \n\nno polarbears were harmed", f'you searched the arctic for a while, and found nothing. when you turned to leave, you tripped over the outhouse that everyone was sharing and fell into a frozen lake. you paid {fine} to be rescued', f'you got impaled on a dead walrus\nyou paid {fine} to be reborn']
+        lesréponses = [
+            f"You met a polarbear and taunted it with maracas for some reason. It pushed you onto a floating ice cube, which drifted for a week and took you to a volcano. You fell in and died, and had to pay {fine} to be reborn. \n\nno polarbears were harmed",
+            f"you searched the arctic for a while, and found nothing. when you turned to leave, you tripped over the outhouse that everyone was sharing and fell into a frozen lake. you paid {fine} to be rescued",
+            f"you got impaled on a dead walrus\nyou paid {fine} to be reborn",
+        ]
         reserveMsg = random.choice(lesréponses)
 
     user["cooldowns"]["gather"] = time() + 60
@@ -91,8 +98,11 @@ async def arctic(message, client):
         return f"You dug some ~~dirt~~ snow in the arctic. After a few long, cold hours, and battling a couple wolves and a polar bear, you finally found it. Hidden behind a prehistoric snowman, there were {item[1]} gaming pc(s).\n{durabilityMsg}\n{reserveMsg}"
 
     elif item[0] == "nothing":
-       responses = ['You didn\'t find anything in the arctic, not even snow', 'you found absolutely nothing in the arctic']
-       return f"{random.choice(responses)}\n{durabilityMsg}\n{reserveMsg}"
+        responses = [
+            "You didn't find anything in the arctic, not even snow",
+            "you found absolutely nothing in the arctic",
+        ]
+        return f"{random.choice(responses)}\n{durabilityMsg}\n{reserveMsg}"
 
     elif item[0] == "death":
         if "undeadwool" in db["members"][message.author.id]["merch"]:
@@ -109,7 +119,7 @@ async def arctic(message, client):
             "discovered",
             "found",
             "looked in a polar bear's den and found",
-						'brushed a walrus\'s teeth and discovered',
-						'sacrificed your pants and conjured'
+            "brushed a walrus's teeth and discovered",
+            "sacrificed your pants and conjured",
         ]
         return f"You {responses[randint(0, len(responses)-1)]} {item[1]}x {itemName}\n{durabilityMsg}\n{reserveMsg}"

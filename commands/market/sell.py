@@ -40,15 +40,42 @@ async def sell(message, client):
     if not str(item["sellcost"]).isnumeric():
         await message.channel.send(" You can't sell that item!")
         return
-    if key not in db["members"][str(message.author.id)][thing["name"]]:
-        await message.channel.send(" you don't have that")
-        return
+    if thing["name"] != "animals":
+        if key not in db["members"][str(message.author.id)][thing["name"]]:
+            await message.channel.send(" you don't have that")
+            return
+    else:
+        has = False
+        for i in db["members"][str(message.author.id)]["land"]["animals"]:
+            print(db["members"][str(message.author.id)]["land"]["animals"][i])
+            if (
+                key
+                in db["members"][str(message.author.id)]["land"]["animals"][i][
+                    "animals"
+                ]
+            ):
+                has = True
+        if not has:
+            await message.channel.send("you don't have that")
+
     if key in tools:
         thing = tools
     if len(args) == 3:
         amount = 1
     elif len(args) == 4 and args[3] in ["a", "all", "max"]:
-        if thing["name"] in ["animals", "seeds"]:
+        if thing["name"] == "animals":
+            amount = 0
+            for i in db["members"][str(message.author.id)]["land"]["animals"]:
+                if (
+                    key
+                    in db["members"][str(message.author.id)]["land"]["animals"][i][
+                        "animals"
+                    ]
+                ):
+                    amount += db["members"][str(message.author.id)]["land"]["animals"][
+                        i
+                    ]["animals"][key]["amount"]
+        if thing["name"] in ["seeds"]:
             amount = db["members"][str(message.author.id)][thing["name"]][key]["amount"]
         if thing["name"] in ["merch"]:
             amount = db["members"][str(message.author.id)]["merch"][key]
@@ -88,10 +115,19 @@ async def sell(message, client):
     got = round(got)
 
     a = db["members"]
-    if thing["name"] in ["animals", "seeds"]:
+    if thing["name"] in ["seeds"]:
         if amount > a[str(message.author.id)][thing["name"]][key]["amount"]:
             await message.channel.send(" you don't have that many")
             return
+    if thing["name"] == ["animals"]:
+        total = 0
+        for i in a[str(message.author.id)]["land"]["animals"]:
+            for j in a[str(message.author.id)]["land"]["animals"][i]["animals"]:
+                total += a[str(message.author.id)]["land"]["animals"][i]["animals"][j][
+                    "amount"
+                ]
+        if amount > total:
+            return "you don't have that many"
     if thing["name"] == "merch":
         if amount > a[str(message.author.id)]["merch"][key]:
             await message.channel.send(" you don't have that many")
@@ -109,23 +145,36 @@ async def sell(message, client):
         a[str(message.author.id)][thing["name"]][key] -= amount
         if a[str(message.author.id)][thing["name"]][key] == 0:
             del a[str(message.author.id)]["merch"][key]
-    elif thing["name"] in ["animals", "seeds"]:
+    elif thing["name"] in ["seeds"]:
         a[str(message.author.id)][thing["name"]][key]["amount"] -= amount
         if a[str(message.author.id)][thing["name"]][key]["amount"] == 0:
             del a[str(message.author.id)][thing["name"]][key]
+    elif thing["name"] == "animals":
+        for i in a[str(message.author.id)]["land"]["animals"]:
+            if key in a[str(message.author.id)]["land"]["animals"][i]["animals"]:
+                a[str(message.author.id)]["land"]["animals"][i]["animals"][key][
+                    "amount"
+                ] -= amount
+                if (
+                    a[str(message.author.id)]["land"]["animals"][i]["animals"][key][
+                        "amount"
+                    ]
+                    == 0
+                ):
+                    del a[str(message.author.id)]["land"]["animals"][i]["animals"][key]
     else:
         del a[str(message.author.id)][thing["name"]][key]
     a[str(message.author.id)]["amounts"]["sold"] += amount
     db["members"] = a
 
-    repgain = random.choice(1,4)
-    repmsg = ''
+    repgain = random.randint(1, 4)
+    repmsg = ""
     if repgain == 1:
-      a = db['members'][str(message.author.id)]['reputation']
-      gain = random.choice(1,3)
-      a = gain
-      repmsg = 'market: thanks for selling that thing, i really wanted it         **reputation +gain**'
-      db['members'][str(message.author.id)]['reputation'] = a
+        rep = db["members"][str(message.author.id)]["reputation"]
+        gain = random.randint(1, 3)
+        rep = gain
+        repmsg = f"market: thanks for selling that thing, i really wanted it\n**reputation +{gain}**"
+        db["members"][str(message.author.id)]["reputation"] = rep
 
     money = db["members"][str(message.author.id)]["money"]
     tts = [
@@ -133,6 +182,10 @@ async def sell(message, client):
         f"`{amount} {key}(s)` sold successfully.",
         f"yessir you got `{got} coins`, now you have `{money}` total",
         f"selling success, you gained `{got} coins`",
+        f"here's ur money, you sold `{amount} {key}(s)`",
+        f"ty for selling some of ur `{key}(s)`",
+        f"{message.author.mention} sold `{amount} {key}(s)` for `{got} coins`",
+        f"{message.author.name} got `{got} coins` from selling some of their `{key}(s)`",
     ]
     ts = random.choice(tts)
     await message.reply(f"{ts}\n{repmsg}")

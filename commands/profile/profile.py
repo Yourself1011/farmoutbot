@@ -27,9 +27,25 @@ async def profile(message, client):
 
     totalworth = 0
     money = db["members"][user]["money"]
-    for i in db["members"][user]["animals"]:
-        if type(animals[i]["cost"]) == int:
-            totalworth += animals[i]["cost"]
+    if db["members"][user]["land"]["animals"] != {}:
+        for i in db["members"][user]["land"]["animals"]:
+            if db["members"][user]["land"]["animals"][i]["total"] != 0:
+                for j in db["members"][user]["land"]["animals"][i]["animals"]:
+                    if type(animals[j]["cost"]) == int:
+                        print(i, j)
+                        totalworth += int(
+                            animals[j]["cost"]
+                            * db["members"][user]["land"]["animals"][i]["animals"][j][
+                                "amount"
+                            ]
+                        )
+                    elif type(animals[j]["sellcost"]) == int:
+                        totalworth += int(
+                            animals[j]["sellcost"]
+                            * db["members"][user]["land"]["animals"][i]["total"][j][
+                                "amount"
+                            ]
+                        )
     for i in db["members"][user]["tools"]:
         if type(tools[i]["cost"]) == int:
             totalworth += tools[i]["cost"]
@@ -48,8 +64,11 @@ async def profile(message, client):
     )
 
     totalanimals = 0
-    for i in db["members"][user]["animals"]:
-        totalanimals += db["members"][user]["animals"][i]["amount"]
+    if db["members"][user]["land"]["animals"] != {}:
+        for i in db["members"][user]["land"]["animals"]:
+            if db["members"][user]["land"]["animals"][i]["total"] != 0:
+                for j in db["members"][user]["land"]["animals"][i]["animals"]:
+                    totalanimals += db["members"][user]["land"]["animals"][i]["total"]
 
     totaltools = 0
     for i in db["members"][user]["tools"]:
@@ -65,7 +84,7 @@ async def profile(message, client):
 
     e.add_field(
         name="- :1234: Totals:",
-        value=f"animals: {totalanimals}\ntools: {totaltools}\nmerch: {totalmerch}",
+        value=f"animals: {totalanimals}\ntools: {totaltools}\nmerch: {totalmerch}\nseeds: {totalseeds}",
         inline=False,
     )
 

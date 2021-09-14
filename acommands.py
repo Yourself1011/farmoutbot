@@ -1,7 +1,7 @@
 commands = {
     "help": {
         "name": "help",
-        "usage": "<help> shows all commands | <help (command)> shows help about that command",
+        "usage": "<help> shows all commands | <help (command)> shows help about that command | <help (category)> shows help about a category",
         "description": "Helps you about a command or shows all commands",
         "aliases": ["commands", "hp"],
         "category": "misc",
@@ -36,7 +36,7 @@ commands = {
     },
     "inventory": {
         "name": "inventory",
-        "usage": "<inventory> <@user>",
+        "usage": "<inventory> <@user> shows inv of a user | <inv> stats <@user> shows inv info of a user",
         "description": "Shows the inventory of you or the person you mentioned",
         "aliases": ["inv", "iv"],
         "category": "profile",
@@ -122,7 +122,7 @@ commands = {
         "name": "invite",
         "usage": "<invite>",
         "description": "Invites the bot to your server",
-        "aliases": ["it", 'server', 'link', 'website'],
+        "aliases": ["it", "server", "link", "website"],
         "category": "misc",
     },
     "slots": {
@@ -220,7 +220,7 @@ commands = {
         "name": "crops",
         "usage": "<crops>",
         "description": "Shows currently planted crops",
-        "aliases": ["field", "garden", "cs"],
+        "aliases": ["fields", "garden", "cs"],
         "category": "farming",
     },
     "beg": {
@@ -376,47 +376,54 @@ commands = {
         "aliases": [],
         "category": "misc",
     },
-		'arctic': {
-			'name' :'arctic',
-			'usage': '<arctic>',
-			'description': 'search the arctic for cool stuff',
-			'aliases': [],
-			'category': 'gather'
-		},
-     "setping": {
-     	"name": "",
-     	"usage": "",
-     	"description": "",
-     	"aliases": [],
-     	"category": ""
-     },
-		 'blacklist': {
-			 'name': 'blacklist',
-			 'usage': 'blacklist people',
-			 'description': ' ¯\_(ツ)_/¯',
-			 'aliases': ['bl'],
-			 'category': 'utility'
-		 },
-		 'reputation': {
-			 'name' :'reputation',
-			 'usage': '<reputation>',
-			 'description': "see ur rep",
-			 'aliases': ['rep'],
-			 'category': 'profile'
-		 },
-		 'about': {
-			 'name': 'about',
-			 'usage': '<about>',
-			 'description': 'shows some info about the bot',
-			 'aliases': [],
-			 'category': 'misc'
-		 }
+    "arctic": {
+        "name": "arctic",
+        "usage": "<arctic>",
+        "description": "search the arctic for cool stuff",
+        "aliases": [],
+        "category": "gather",
+    },
+    "blacklist": {
+        "name": "blacklist",
+        "usage": "blacklist people",
+        "description": " ¯\_(ツ)_/¯",
+        "aliases": ["bl"],
+        "category": "utility",
+    },
+    "reputation": {
+        "name": "reputation",
+        "usage": "<reputation>",
+        "description": "see ur rep",
+        "aliases": ["rep"],
+        "category": "profile",
+    },
+    "about": {
+        "name": "about",
+        "usage": "<about>",
+        "description": "shows some info about the bot",
+        "aliases": [],
+        "category": "misc",
+    },
+    "pens": {
+        "name": "pens",
+        "usage": "<pens> <pen number (optional)>",
+        "description": "shows animal pens",
+        "aliases": ["pen"],
+        "category": "profile",
+    },
+    "zoo2": {
+        "name": "zoo2",
+        "usage": "<zoo2>",
+        "description": " part 2 of zoo, your fart smells like poo",
+        "aliases": ["z2"],
+        "category": "other",
+    },
 }
 
-    # "": {
-    # 	"name": "",
-    # 	"usage": "",
-    # 	"description": "",
-    # 	"aliases": [],
-    # 	"category": ""
-    # },
+# "": {
+# 	"name": "",
+# 	"usage": "",
+# 	"description": "",
+# 	"aliases": [],
+# 	"category": ""
+# },
