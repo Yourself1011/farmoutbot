@@ -7,6 +7,7 @@ from json import loads
 from os import environ
 from trade_update import trade_update
 
+
 async def devmode(message, client):
 
     args = message.content.lower().split(" ")
@@ -146,7 +147,7 @@ async def devmode(message, client):
             return await message.channel.send(responses[randint(0, len(responses) - 1)])
 
         await trade_update(client)
-        return ("Success")
+        return "Success"
 
     else:
         await message.channel.send('That\'s not a subcommand, "dev"')

@@ -72,6 +72,7 @@ async def on_ready():
 
     await startLoop(client)
 
+
 @client.event
 async def on_guild_join(guild):
     a = db["server"]
@@ -199,7 +200,8 @@ async def on_message(message):
                 if command["name"] == "trade" and a < 750:
                     await message.reply(
                         "no trading until you have at least 750 reputation"
-                    ); return 
+                    )
+                    return
                 if category == "farming":
                     a += 2
                 if category == "gamble" or command["name"] in [

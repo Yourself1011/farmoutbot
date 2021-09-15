@@ -4,7 +4,7 @@ import time
 from zstats import animals, pages, choosecolour
 
 
-async def pens(message, client): #pens more like peni-
+async def pens(message, client):  # pens more like peni-
     args = message.content.split(" ")
     if str(message.author.id) not in db["members"]:
         await message.channel.send("make an account first strumfum")
@@ -13,7 +13,7 @@ async def pens(message, client): #pens more like peni-
         await message.channel.send("no pens here")
         return
 
-    pens1324 = list(db["members"][str(message.author.id)]["land"]["animals"].values()) 
+    pens1324 = list(db["members"][str(message.author.id)]["land"]["animals"].values())
     pen = pens1324[0]
     feld = 0
     if len(args) >= 3 and args[2].lower() == "rename":
@@ -50,18 +50,19 @@ async def pens(message, client): #pens more like peni-
     await pages(
         message,
         client,
-        [{
-            "name": f"{i['name']}",  #no name is name of pen
-            "value": '\n'.join(
-              [
-             f'**- {animals[k]["name"]}:**\nAmount: **{j["amount"]}** | Status: **{str(round((j["lastused"] + animals[k]["cooldown"]-now)/1000))+" secs" if j["lastused"] + animals[k]["cooldown"] > now else "Ready!"}**'
-                for k, j in i["animals"].items() 
-              ]
-            )
-            if i["animals"] != {}
-            else "***cricket noises***",
-          }
-          for i in pens1324 #tf lmao
+        [
+            {
+                "name": f"{i['name']}",  # no name is name of pen
+                "value": "\n".join(
+                    [
+                        f'**- {animals[k]["name"]}:**\nAmount: **{j["amount"]}** | Status: **{str(round((j["lastused"] + animals[k]["cooldown"]-now)/1000))+" secs" if j["lastused"] + animals[k]["cooldown"] > now else "Ready!"}**'
+                        for k, j in i["animals"].items()
+                    ]
+                )
+                if i["animals"] != {}
+                else "***cricket noises***",
+            }
+            for i in pens1324  # tf lmao
         ],
         1,
         startPage=feld + 1,

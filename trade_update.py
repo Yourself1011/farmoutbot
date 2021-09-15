@@ -10,16 +10,21 @@ from requests import post, exceptions
 
 
 async def startLoop(client):
+    print(
+        f"{math.floor(((db['lastTradeDate'] + 1)  * 21600) - time())}s to trade update"
+    )
     while True:
         if math.floor(((db["lastTradeDate"] + 1) * 21600) - time()) <= 0:
+            print(
+                f"{math.floor(((db['lastTradeDate'] + 1)  * 21600) - time())}s to trade update"
+            )
+
             db["lastTradeDate"] = math.floor(time() / 21600)
             await trade_update(client)
 
-        print(
-            f"{math.floor(((db['lastTradeDate'] + 1)  * 21600) - time())}s to trade update"
+        await asyncio.sleep(
+            math.ceil((math.ceil(time() / 3600) - (time() / 3600)) * 60) * 60000
         )
-
-        await asyncio.sleep(math.ceil((math.ceil(time() / 3600) - (time() / 3600)) * 60))
         lh = db["lasthours"]
         lh.append(math.ceil(time() / 3600))
         lh.pop()

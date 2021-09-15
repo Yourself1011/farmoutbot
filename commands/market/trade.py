@@ -1,4 +1,5 @@
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+
 # TEMPERARY THING IGNORE FOR NOW	TEMPORARY*
 
 from replit import db
@@ -9,6 +10,7 @@ from math import floor
 from random import randint
 import asyncio
 from commands.market.listtrades import listtrades
+
 
 async def trade(message, client):
     if str(message.author.id) not in db["members"]:
@@ -116,11 +118,11 @@ async def trade(message, client):
     db["members"] = a
     repGain = randint(3, 6)
     msg = await message.reply(
-        f"{message.author.mention} did trade `{trade}`.\n**market:**\nTank yoo fer trading wees us, heers {repGain} rep", components = 
-        [
-          Button(style=ButtonStyle.blue, label="View Trades"),
-          Button(style=ButtonStyle.grey, label="❌"),
-        ]
+        f"{message.author.mention} did trade `{trade}`.\n**market:**\nTank yoo fer trading wees us, heers {repGain} rep",
+        components=[
+            Button(style=ButtonStyle.blue, label="View Trades"),
+            Button(style=ButtonStyle.grey, label="❌"),
+        ],
     )
     try:
         res = await client.wait_for("button_click", timeout=60)
@@ -129,9 +131,9 @@ async def trade(message, client):
     else:
         if res.author == message.author:
             if res.component.label == "❌":
-                await msg.edit(components = [])
+                await msg.edit(components=[])
                 return
-            if res.component.label == 'View Trades':
+            if res.component.label == "View Trades":
                 mass = message
                 mass.content = "i listtrades"
                 await listtrades(mass, client)

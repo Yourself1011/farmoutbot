@@ -27,9 +27,9 @@ async def location(message, client):
     for k, v in user["merch"].items():
         netWorth += merch[k]["sellcost"] * v if type(merch[k]["sellcost"]) is int else 0
 
-    #gotta iterate through all pens AHHHHHHHHHH quoi? annoying oh that's it no? bruh
-    for i in user["land"]['animals']:
-        for k, v in user['land']['animals'][i]['animals']: #this should work
+    # gotta iterate through all pens AHHHHHHHHHH quoi? annoying oh that's it no? bruh
+    for i in user["land"]["animals"]:
+        for k, v in user["land"]["animals"][i]["animals"]:  # this should work
             netWorth += (
                 animals[k]["sellcost"] * v["amount"]
                 if type(animals[k]["sellcost"]) is int

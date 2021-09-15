@@ -1,8 +1,4 @@
-quests = {
-    "neighbour": {
-
-    }
-}
+quests = {"neighbour": {}}
 
 
 async def quests(message, client):
